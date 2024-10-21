@@ -5,17 +5,17 @@ export default function HomePage() {
     <div className="home-page">
       <div className="top-banner">
         {/* 这里可以放置长方形圆边盒子的内容 */}
-        <h1>欢迎来到我们的平台</h1>
       </div>
       
       <div className="tutorial-section">
-        <h2>新手教程</h2>
-        <Link href="/tutorial">
+        <h2 style={{display: 'flex', flexDirection: 'row'}}>新手教程
+          <Link href="/tutorial">
           <a className="tutorial-link">
-            <span>开始学习</span>
-            <span className="icon">→</span>
+            <span className="icon">🔗</span>
           </a>
         </Link>
+        </h2>
+        
       </div>
       
       <div className="feature-section">
@@ -37,19 +37,22 @@ export default function HomePage() {
         .home-page {
           display: flex;
           flex-direction: column;
-          gap: 30px;
+          gap: 20px;
         }
         .top-banner {
-          background-color: #f0f0f0;
+          background-image: url('/banner.jpeg');
+          background-size: cover;
+          height: 30vh;
+          background-position: center;
           border-radius: 15px;
-          padding: 40px;
+          padding:20px 40px;
           text-align: center;
         }
         .tutorial-section {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 20px 0;
+          padding: 0px 0;
           border-bottom: 1px solid #e0e0e0;
         }
         .tutorial-link {

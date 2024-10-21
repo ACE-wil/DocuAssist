@@ -19,7 +19,7 @@ export default function MainNavigation({ activeNav, setActiveNav }) {
     <nav className="main-nav">
       <div className="top-section">
         <div className="logo">
-          <Image src="/logo.png" alt="Logo" width={40} height={40} />
+          <Image src="/logo.png" alt="Logo" width={40} height={40} style={{borderRadius: '10px'}}/>
         </div>
         <button className="add-button">+</button>
         {navItems.map((item) => (
@@ -42,7 +42,7 @@ export default function MainNavigation({ activeNav, setActiveNav }) {
           </a>
         ))}
         <div className="avatar">
-          <Image src="/avatar.png" alt="Avatar" width={40} height={40} />
+          <Image src="/avatar.png" alt="Avatar" width={40} height={40} style={{borderRadius: '10px'}}/>
         </div>
       </div>
       <style jsx>{`

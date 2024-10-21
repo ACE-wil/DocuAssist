@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 const navContents = {
   home: [
@@ -22,26 +23,45 @@ const navContents = {
 
 export default function SecondaryNavigation({ activeMainNav }) {
   const router = useRouter();
+  const [isExpanded, setIsExpanded] = useState(true);
 
   if (activeMainNav === 'home') {
     return (
-      <nav className="secondary-nav">
+      <nav className={`secondary-nav ${isExpanded ? 'expanded' : 'collapsed'}`}>
         <h3>最近编辑</h3>
-        {/* 这里可以添加最近编辑的项目列表 */}
-        <p>暂无最近编辑的内容</p>
+        <p style={{color: '#ccc'}}>暂无最近编辑的内容</p>
         
         <h3>收藏</h3>
-        {/* 这里可以添加收藏的项目列表 */}
-        <p>暂无收藏的内容</p>
+        <p style={{color: '#ccc'}}>暂无收藏的内容</p>
+        
+        <button className="toggle-btn" onClick={() => setIsExpanded(!isExpanded)}>
+          {isExpanded ? '<<' : '>>'}
+        </button>
         
         <style jsx>{`
           .secondary-nav {
-            width: 200px;
-            padding: 20px;
+            width: ${isExpanded ? '200px' : '0px'};
+            padding: ${isExpanded ? '20px' : '0px'};;
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
           }
           h3 {
             margin-top: 20px;
             margin-bottom: 10px;
+            white-space: nowrap;
+          }
+          p {
+            white-space: nowrap;
+          }
+          .toggle-btn {
+            position: fixed;
+            bottom: 40px;
+            left: ${isExpanded ? '240px' : '120px'};
+            background: none;
+            border: none;
+            transition: width 0.3s ease;
+            cursor: pointer;
           }
         `}</style>
       </nav>
@@ -51,7 +71,7 @@ export default function SecondaryNavigation({ activeMainNav }) {
   const items = navContents[activeMainNav] || [];
 
   return (
-    <nav className="secondary-nav">
+    <nav className={`secondary-nav ${isExpanded ? 'expanded' : 'collapsed'}`}>
       {items.map((item, index) => (
         <Link href={item.href} key={index}>
           <a className={`nav-item ${router.pathname === item.href ? 'active' : ''}`}>
@@ -60,13 +80,18 @@ export default function SecondaryNavigation({ activeMainNav }) {
           </a>
         </Link>
       ))}
+
+
       <style jsx>{`
         .secondary-nav {
-          width: 200px;
+          width: ${isExpanded ? '200px' : '50px'};
           background-color: white;
           padding: 20px;
           display: flex;
           flex-direction: column;
+          transition: width 0.3s ease;
+          position: relative;
+          overflow: hidden;
         }
         .nav-item {
           display: flex;
@@ -77,6 +102,7 @@ export default function SecondaryNavigation({ activeMainNav }) {
           border-radius: 10px;
           margin-bottom: 5px;
           transition: background-color 0.3s;
+          white-space: nowrap;
         }
         .nav-item:hover {
           background-color: #f0f0f0;
@@ -87,6 +113,17 @@ export default function SecondaryNavigation({ activeMainNav }) {
         }
         .icon {
           margin-right: 10px;
+        }
+        .toggle-btn {
+          position: absolute;
+          bottom: 20px;
+          right: 20px;
+          background: none;
+          border: none;
+          cursor: pointer;
+        }
+        .collapsed {
+          display: none;
         }
       `}</style>
     </nav>

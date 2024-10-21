@@ -32,7 +32,7 @@ export default function Layout({ children }) {
         }
         .navigation-container {
           display: flex;
-          width: 280px; // 调整宽度以适应您的需求
+          max-width: 280px; // 调整宽度以适应您的需求
           background-color: white;
           border-radius: 20px;
           overflow: hidden;
