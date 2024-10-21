@@ -25,68 +25,38 @@ export default function SecondaryNavigation({ activeMainNav }) {
   const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(true);
 
-  if (activeMainNav === 'home') {
-    return (
-      <nav className={`secondary-nav ${isExpanded ? 'expanded' : 'collapsed'}`}>
-        <h3>最近编辑</h3>
-        <p style={{color: '#ccc'}}>暂无最近编辑的内容</p>
-        
-        <h3>收藏</h3>
-        <p style={{color: '#ccc'}}>暂无收藏的内容</p>
-        
-        <button className="toggle-btn" onClick={() => setIsExpanded(!isExpanded)}>
-          {isExpanded ? '<<' : '>>'}
-        </button>
-        
-        <style jsx>{`
-          .secondary-nav {
-            width: ${isExpanded ? '200px' : '0px'};
-            padding: ${isExpanded ? '20px' : '0px'};;
-            transition: width 0.3s ease;
-            position: relative;
-            overflow: hidden;
-          }
-          h3 {
-            margin-top: 20px;
-            margin-bottom: 10px;
-            white-space: nowrap;
-          }
-          p {
-            white-space: nowrap;
-          }
-          .toggle-btn {
-            position: fixed;
-            bottom: 40px;
-            left: ${isExpanded ? '240px' : '120px'};
-            background: none;
-            border: none;
-            transition: width 0.3s ease;
-            cursor: pointer;
-          }
-        `}</style>
-      </nav>
-    );
-  }
-
   const items = navContents[activeMainNav] || [];
 
   return (
     <nav className={`secondary-nav ${isExpanded ? 'expanded' : 'collapsed'}`}>
-      {items.map((item, index) => (
-        <Link href={item.href} key={index}>
-          <a className={`nav-item ${router.pathname === item.href ? 'active' : ''}`}>
-            <span className="icon">{item.icon}</span>
-            <span className="label">{item.label}</span>
-          </a>
-        </Link>
-      ))}
-
+      {activeMainNav === 'home' ? (
+        <>
+          <h3>最近编辑</h3>
+          <p style={{color: '#ccc'}}>暂无最近编辑的内容</p>
+          
+          <h3>收藏</h3>
+          <p style={{color: '#ccc'}}>暂无收藏的内容</p>
+        </>
+      ) : (
+        items.map((item, index) => (
+          <Link href={item.href} key={index}>
+            <a className={`nav-item ${router.pathname === item.href ? 'active' : ''}`}>
+              <span className="icon">{item.icon}</span>
+              <span className="label">{item.label}</span>
+            </a>
+          </Link>
+        ))
+      )}
+      
+      <button className="toggle-btn" onClick={() => setIsExpanded(!isExpanded)}>
+        {isExpanded ? '<<' : '>>'}
+      </button>
 
       <style jsx>{`
         .secondary-nav {
-          width: ${isExpanded ? '200px' : '50px'};
+          width: ${isExpanded ? '200px' : '0px'};
           background-color: white;
-          padding: 20px;
+          padding: ${isExpanded ? '20px' : '0px'};
           display: flex;
           flex-direction: column;
           transition: width 0.3s ease;
@@ -115,14 +85,15 @@ export default function SecondaryNavigation({ activeMainNav }) {
           margin-right: 10px;
         }
         .toggle-btn {
-          position: absolute;
-          bottom: 20px;
-          right: 20px;
+          position: fixed;
+          bottom: 50px;
+          left: ${isExpanded ? '240px' : '120px'};
+          transition: left 0.3s ease;
           background: none;
           border: none;
           cursor: pointer;
         }
-        .collapsed {
+        .collapsed .label {
           display: none;
         }
       `}</style>
