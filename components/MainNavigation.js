@@ -29,7 +29,7 @@ export default function MainNavigation({ activeNav, setActiveNav }) {
               onClick={() => setActiveNav(item.id)}
             >
               <span>{item.icon}</span>
-              <span>{item.label}</span>
+              <span style={{fontSize: '12px'}}>{item.label}</span>
             </a>
           </Link>
         ))}
@@ -48,6 +48,7 @@ export default function MainNavigation({ activeNav, setActiveNav }) {
       <style jsx>{`
         .main-nav {
           width: 80px;
+          min-width:80px;
           background-color: #f8f8f8;
           display: flex;
           flex-direction: column;

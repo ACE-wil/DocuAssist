@@ -5,6 +5,7 @@ import SecondaryNavigation from './SecondaryNavigation';
 
 export default function Layout({ children }) {
   const [activeMainNav, setActiveMainNav] = useState('home');
+  const [isExpanded, setIsExpanded] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -17,9 +18,12 @@ export default function Layout({ children }) {
 
   return (
     <div className="layout">
-      <div className="navigation-container">
+      <div className={`navigation-container ${isExpanded ? 'expanded' : 'collapsed'}`}>
         <MainNavigation activeNav={activeMainNav} setActiveNav={setActiveMainNav} />
-        <SecondaryNavigation activeMainNav={activeMainNav} />
+        <SecondaryNavigation activeMainNav={activeMainNav} isExpanded={isExpanded} />
+        <button className="toggle-btn" onClick={() => setIsExpanded(!isExpanded)}>
+          {isExpanded ? '<<' : '>>'}
+        </button>
       </div>
       <main className="content-container">
         {children}
@@ -32,17 +36,33 @@ export default function Layout({ children }) {
         }
         .navigation-container {
           display: flex;
-          max-width: 280px; // 调整宽度以适应您的需求
           background-color: white;
           border-radius: 20px;
           overflow: hidden;
           box-shadow: 0 0 10px rgba(0,0,0,0.1);
           margin: 20px;
+          position: relative;
+          transition: width 0.3s ease;
+        }
+        .navigation-container.expanded {
+          width: 280px;
+        }
+        .navigation-container.collapsed {
+          width: 80px;
         }
         .content-container {
           flex-grow: 1;
           padding: 20px;
           overflow-y: auto;
+        }
+        .toggle-btn {
+          position: absolute;
+          bottom: 20px;
+          right: 10px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          z-index: 10;
         }
       `}</style>
     </div>

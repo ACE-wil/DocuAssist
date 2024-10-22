@@ -20,15 +20,15 @@ export default function HomePage() {
       
       <div className="feature-section">
         <div className="feature-item">
-          <img src="/feature1.jpg" alt="功能1" />
+          <img src="/bn-1.jpeg" alt="功能1" />
           <h3>功能1</h3>
         </div>
         <div className="feature-item">
-          <img src="/feature2.jpg" alt="功能2" />
+          <img src="/bn-2.jpeg" alt="功能2" />
           <h3>功能2</h3>
         </div>
         <div className="feature-item">
-          <img src="/feature3.jpg" alt="功能3" />
+          <img src="/bn-3.jpeg" alt="功能3" />
           <h3>功能3</h3>
         </div>
       </div>

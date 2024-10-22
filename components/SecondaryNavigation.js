@@ -48,9 +48,6 @@ export default function SecondaryNavigation({ activeMainNav }) {
         ))
       )}
       
-      <button className="toggle-btn" onClick={() => setIsExpanded(!isExpanded)}>
-        {isExpanded ? '<<' : '>>'}
-      </button>
 
       <style jsx>{`
         .secondary-nav {
@@ -87,7 +84,7 @@ export default function SecondaryNavigation({ activeMainNav }) {
         .toggle-btn {
           position: fixed;
           bottom: 50px;
-          left: ${isExpanded ? '240px' : '120px'};
+          left: ${isExpanded ? '180px' : '120px'};
           transition: left 0.3s ease;
           background: none;
           border: none;
