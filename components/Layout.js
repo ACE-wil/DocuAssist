@@ -14,6 +14,7 @@ export default function Layout({ children }) {
     else if (path.startsWith('/workspace')) setActiveMainNav('workspace');
     else if (path.startsWith('/store')) setActiveMainNav('store');
     else if (path.startsWith('/templates')) setActiveMainNav('templates');
+    else if (path.startsWith('/docs')) setActiveMainNav('docs');
   }, [router.pathname]);
 
   return (
@@ -59,7 +60,7 @@ export default function Layout({ children }) {
         .toggle-btn {
           position: absolute;
           bottom: 20px;
-          right: ${isExpanded ? '10px' : '25px'};
+          right: ${isExpanded ? '20px' : '26px'};
           background: none;
           border: none;
           cursor: pointer;

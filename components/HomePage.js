@@ -3,7 +3,9 @@ import Link from 'next/link';
 export default function HomePage() {
   return (
     <div className="home-page">
-      <div className="top-banner">
+      <div className="top-banner cursor-pointer" style={{display:'flex',justifyContent:'center',flexDirection:'column'}}>
+      <div style={{position:'relative',color:'white',fontSize:'40px',fontWeight:'bold',textAlign:'left',marginTop:'-20px'}}>以自己的方式创建 AI 代理</div>
+      <div style={{position:'relative',color:'gray',fontSize:'20px',fontWeight:'bold',textAlign:'left'}}>新一代AI Agent构建平台，无需编码即可快速创建Agent并发布到各大平台。</div>
         {/* 这里可以放置长方形圆边盒子的内容 */}
       </div>
       
@@ -19,18 +21,21 @@ export default function HomePage() {
       </div>
       
       <div className="feature-section">
-        <div className="feature-item">
-          <img src="/bn-1.jpeg" alt="功能1" />
-          <h3>功能1</h3>
-        </div>
-        <div className="feature-item">
-          <img src="/bn-2.jpeg" alt="功能2" />
-          <h3>功能2</h3>
-        </div>
-        <div className="feature-item">
-          <img src="/bn-3.jpeg" alt="功能3" />
-          <h3>功能3</h3>
-        </div>
+        {[
+          { img: '/bn-1.jpeg', title: '什么是DocuAssist', description: '' },
+          { img: '/bn-2.jpeg', title: '快速启动', description: '' },
+          { img: '/bn-3.jpeg', title: '发行说明', description: '' },
+        ].map((feature, index) => (
+          <div key={index} className="feature-item">
+            <div className="feature-image cursor-pointer">
+              <img src={feature.img} alt={feature.title} />
+              <div className="feature-text">
+                <h3>{feature.title}</h3>
+                <p>{feature.description}</p>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
       
       <style jsx>{`
@@ -47,6 +52,9 @@ export default function HomePage() {
           border-radius: 15px;
           padding:20px 40px;
           text-align: center;
+        }
+        .cursor-pointer {
+          cursor: pointer;
         }
         .tutorial-section {
           display: flex;
@@ -74,12 +82,40 @@ export default function HomePage() {
         .feature-item {
           flex: 1;
           text-align: center;
+          overflow: hidden;
         }
         .feature-item img {
           width: 100%;
           height: 200px; // 设置一个固定高度，确保长方形
           object-fit: cover; // 确保图片填充整个区域
           border-radius: 10px;
+        }
+        .feature-image {
+          position: relative;
+          overflow: hidden;
+        }
+        .feature-image img {
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+          border-radius: 10px;
+        }
+        .feature-text {
+          width: 100%;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          padding: 20px;
+          color: white;
+          background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%);
+          border-radius: 10px;
+        }
+        .feature-text h3 {
+        }
+        .feature-text p {
+          margin: 0;
+          font-size: 14px;
+         
         }
       `}</style>
     </div>

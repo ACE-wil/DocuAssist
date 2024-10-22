@@ -10,9 +10,9 @@ export default function MainNavigation({ activeNav, setActiveNav }) {
   ];
 
   const bottomNavItems = [
-    { id: 'docs', icon: '📄', label: '文档' },
-    { id: 'messages', icon: '💬', label: '消息' },
-    { id: 'upgrade', icon: '⭐', label: '升级' },
+    { id: 'docs', icon: '📄', label: '文档', href: '/docs' },
+    { id: 'messages', icon: '💬', label: '消息', href: '/messages' },
+    { id: 'upgrade', icon: '⭐', label: '升级', href: '/upgrade' },
   ];
 
   return (
@@ -29,36 +29,49 @@ export default function MainNavigation({ activeNav, setActiveNav }) {
               onClick={() => setActiveNav(item.id)}
             >
               <span>{item.icon}</span>
-              <span style={{fontSize: '12px'}}>{item.label}</span>
+              <span style={{}}>{item.label}</span>
             </a>
           </Link>
         ))}
       </div>
       <div className="bottom-section">
         {bottomNavItems.map((item) => (
-          <a key={item.id} href="#" className="bottom-nav-item">
-            <span>{item.icon}</span>
-            <span>{item.label}</span>
-          </a>
+          <Link href={item.href} key={item.id}>
+            <a
+              className={`bottom-nav-item ${activeNav === item.id ? 'active' : ''}`}
+              onClick={() => setActiveNav(item.id)}
+            >
+              <span>{item.icon}</span>
+              <span>{item.label}</span>
+            </a>
+          </Link>
         ))}
-        <div className="avatar">
+        <div className="avatar cursor-pointer">
           <Image src="/avatar.png" alt="Avatar" width={40} height={40} style={{borderRadius: '10px'}}/>
         </div>
       </div>
       <style jsx>{`
         .main-nav {
           width: 80px;
-          min-width:80px;
+          min-width: 80px;
           background-color: #f8f8f8;
           display: flex;
           flex-direction: column;
           align-items: center;
           padding: 20px 0;
+          height: 100vh;
         }
-        .top-section, .bottom-section {
+        .top-section {
           display: flex;
           flex-direction: column;
           align-items: center;
+        }
+        .bottom-section {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-top: auto;
+          padding-bottom: 60px;
         }
         .logo, .add-button, a, .bottom-nav-item, .avatar {
           margin-bottom: 20px;
@@ -81,6 +94,9 @@ export default function MainNavigation({ activeNav, setActiveNav }) {
         }
         .active {
           color: #007bff;
+        }
+        .cursor-pointer {
+          cursor: pointer;
         }
       `}</style>
     </nav>

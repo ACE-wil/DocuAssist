@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const navContents = {
   home: [
@@ -14,18 +14,77 @@ const navContents = {
   store: [
     { icon: '🔥', label: '热门应用', href: '/store/popular' },
     { icon: '🆕', label: '最新上架', href: '/store/new-arrivals' },
+    {
+      icon: '🏪', label: '代理店', href: '/store/agency', subItems: [
+        { icon: '📌', label: '热门代理', href: '/store/agency/popular' },
+        { icon: '🔍', label: '搜索代理', href: '/store/agency/search' },
+      ]
+    },
+    {
+      icon: '🔌', label: '插件商店', href: '/store/plugins', subItems: [
+        { icon: '⭐', label: '推荐插件', href: '/store/plugins/recommended' },
+        { icon: '🔍', label: '浏览全部', href: '/store/plugins/browse' },
+      ]
+    },
   ],
   templates: [
     { icon: '💡', label: '推荐模板', href: '/templates/recommended' },
     { icon: '🔍', label: '浏览全部', href: '/templates/browse-all' },
   ],
+  docs: [
+    { icon: '📚', label: '快速入门', href: '/docs/quick-start' },
+    { icon: '🔧', label: '基本功能', href: '/docs/basic-features' },
+    { icon: '🚀', label: '高级功能', href: '/docs/advanced-features' },
+    { icon: '🔌', label: '插件使用', href: '/docs/plugins' },
+    { icon: '🔍', label: 'API文档', href: '/docs/api' },
+    { icon: '❓', label: '常见问题', href: '/docs/faq' },
+  ],
 };
 
-export default function SecondaryNavigation({ activeMainNav }) {
+export default function SecondaryNavigation({ activeMainNav, isExpanded }) {
   const router = useRouter();
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [expandedSubItems, setExpandedSubItems] = useState({});
+  const [expandedItems, setExpandedItems] = useState({});
 
   const items = navContents[activeMainNav] || [];
+
+  useEffect(() => {
+    const path = router.pathname;
+    items.forEach((item, index) => {
+      if (item.subItems && path.startsWith(item.href)) {
+        setExpandedSubItems(prev => ({ ...prev, [index]: true }));
+      }
+    });
+  }, [router.pathname, items]);
+
+  const toggleSubItems = (index) => {
+    setExpandedSubItems(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
+  const handleItemClick = (e, item, index) => {
+    e.preventDefault();
+    if (item.subItems) {
+      setExpandedSubItems(prev => ({
+        ...prev,
+        [index]: !prev[index]
+      }));
+      if (!expandedSubItems[index]) {
+        router.push(item.subItems[0].href);
+      }
+    } else {
+      router.push(item.href);
+    }
+  };
+
+  const toggleExpand = (index) => {
+    setExpandedItems(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
 
   return (
     <nav className={`secondary-nav ${isExpanded ? 'expanded' : 'collapsed'}`}>
@@ -39,15 +98,43 @@ export default function SecondaryNavigation({ activeMainNav }) {
         </>
       ) : (
         items.map((item, index) => (
-          <Link href={item.href} key={index}>
-            <a className={`nav-item ${router.pathname === item.href ? 'active' : ''}`}>
+          <div key={index}>
+            <a
+              href={item.href}
+              className={`nav-item ${router.pathname.startsWith(item.href) ? 'active' : ''}`}
+              onClick={(e) => handleItemClick(e, item, index)}
+            >
               <span className="icon">{item.icon}</span>
               <span className="label">{item.label}</span>
+              {item.subItems && (
+                <span className="expand-icon">
+                  {expandedSubItems[index] ? (
+                    <svg width="12" height="12" viewBox="0 0 12 12">
+                      <path d="M2 4 L6 8 L10 4" stroke="currentColor" strokeWidth="2" fill="none"/>
+                    </svg>
+                  ) : (
+                    <svg width="12" height="12" viewBox="0 0 12 12">
+                      <path d="M4 2 L8 6 L4 10" stroke="currentColor" strokeWidth="2" fill="none"/>
+                    </svg>
+                  )}
+                </span>
+              )}
             </a>
-          </Link>
+            {item.subItems && expandedSubItems[index] && (
+              <div className="sub-items">
+                {item.subItems.map((subItem, subIndex) => (
+                  <Link href={subItem.href} key={subIndex}>
+                    <a className={`nav-item sub-item ${router.pathname === subItem.href ? 'active' : ''}`}>
+                      <span className="icon">{subItem.icon}</span>
+                      <span className="label">{subItem.label}</span>
+                    </a>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         ))
       )}
-      
 
       <style jsx>{`
         .secondary-nav {
@@ -56,8 +143,7 @@ export default function SecondaryNavigation({ activeMainNav }) {
           padding: ${isExpanded ? '20px' : '0px'};
           display: flex;
           flex-direction: column;
-          transition: width 0.3s ease;
-          position: relative;
+          transition: all 0.3s ease;
           overflow: hidden;
         }
         .nav-item {
@@ -81,17 +167,26 @@ export default function SecondaryNavigation({ activeMainNav }) {
         .icon {
           margin-right: 10px;
         }
-        .toggle-btn {
-          position: fixed;
-          bottom: 50px;
-          left: ${isExpanded ? '180px' : '120px'};
-          transition: left 0.3s ease;
-          background: none;
-          border: none;
+        .expand-icon {
+          margin-left: auto;
           cursor: pointer;
         }
-        .collapsed .label {
+        .sub-items {
+          margin-left: 20px;
+        }
+        .sub-item {
+          font-size: 0.9em;
+        }
+        .collapsed .label, .collapsed .expand-icon {
           display: none;
+        }
+        .parent-active {
+          background-color: #e6f2ff;
+          font-weight: bold;
+        }
+        .sub-item.active {
+          background-color: #007bff;
+          color: white;
         }
       `}</style>
     </nav>
