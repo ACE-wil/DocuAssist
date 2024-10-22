@@ -35,6 +35,7 @@ export default function Layout({ children }) {
           background-color: #f0f0f0;
         }
         .navigation-container {
+          min-width: 80px;
           display: flex;
           background-color: white;
           border-radius: 20px;
