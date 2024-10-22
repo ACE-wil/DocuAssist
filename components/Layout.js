@@ -59,7 +59,7 @@ export default function Layout({ children }) {
         .toggle-btn {
           position: absolute;
           bottom: 20px;
-          right: 10px;
+          right: ${isExpanded ? '10px' : '25px'};
           background: none;
           border: none;
           cursor: pointer;
