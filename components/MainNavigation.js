@@ -76,9 +76,11 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
             )}
           </div>
         ))}
-        <div className="avatar cursor-pointer">
-          <Image src="/avatar.png" alt="Avatar" width={40} height={40} style={{borderRadius: '10px'}}/>
-        </div>
+        <Link href="/profile-settings">
+          <div className="avatar cursor-pointer">
+            <Image src="/avatar.png" alt="Avatar" width={40} height={40} style={{borderRadius: '10px'}}/>
+          </div>
+        </Link>
       </div>
       
 
