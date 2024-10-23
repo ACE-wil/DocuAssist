@@ -6,6 +6,7 @@ import SecondaryNavigation from './SecondaryNavigation';
 export default function Layout({ children }) {
   const [activeMainNav, setActiveMainNav] = useState('home');
   const [isExpanded, setIsExpanded] = useState(true);
+  const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -20,13 +21,18 @@ export default function Layout({ children }) {
   return (
     <div className="layout">
       <div className={`navigation-container ${isExpanded ? 'expanded' : 'collapsed'}`}>
-        <MainNavigation activeNav={activeMainNav} setActiveNav={setActiveMainNav} />
+        <MainNavigation 
+          activeNav={activeMainNav} 
+          setActiveNav={setActiveMainNav} 
+          isMessageBoxOpen={isMessageBoxOpen}
+          setIsMessageBoxOpen={setIsMessageBoxOpen}
+        />
         <SecondaryNavigation activeMainNav={activeMainNav} isExpanded={isExpanded} />
         <button className="toggle-btn" onClick={() => setIsExpanded(!isExpanded)}>
           {isExpanded ? '<<' : '>>'}
         </button>
       </div>
-      <main className="content-container">
+      <main className="content-container" onClick={() => setIsMessageBoxOpen(false)}>
         {children}
       </main>
       <style jsx>{`

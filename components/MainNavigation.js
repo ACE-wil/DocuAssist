@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 
 import UpgradeModal from './UpgradeModal';
 
-export default function MainNavigation({ activeNav, setActiveNav }) {
+export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOpen, setIsMessageBoxOpen }) {
+  
   const navItems = [
     { id: 'home', icon: '🏠', label: '主页', href: '/' },
     { id: 'workspace', icon: '💼', label: '工作空间', href: '/workspace' },
@@ -14,10 +15,8 @@ export default function MainNavigation({ activeNav, setActiveNav }) {
 
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
-  const [isOpen, setIsOpen] = useState(false);
-
   const handleToggle = () => {
-    setIsOpen(!isOpen);
+    setIsMessageBoxOpen(!isMessageBoxOpen);
   };
 
   const bottomNavItems = [
@@ -25,10 +24,6 @@ export default function MainNavigation({ activeNav, setActiveNav }) {
     { id: 'messages', icon: '💬', label: '消息' },
     { id: 'upgrade', icon: '⭐', label: '升级', href: '/upgrade' },
   ];
-
-  const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
-
-
 
   return (
     <nav className="main-nav">
@@ -87,9 +82,9 @@ export default function MainNavigation({ activeNav, setActiveNav }) {
       </div>
       
 
-        <div className={`message-box-overlay ${isOpen ? 'open' : ''}`} onClick={() => setIsOpen(false)}>
-          <div className={`message-box ${isOpen ? 'open' : ''}`} onClick={(e) => e.stopPropagation()}>
-            <button className="close-button" onClick={() => setIsOpen(false)}>×</button>
+        <div className={`message-box-overlay ${isMessageBoxOpen ? 'open' : ''}`} onClick={() => setIsMessageBoxOpen(false)}>
+          <div className={`message-box ${isMessageBoxOpen ? 'open' : ''}`} onClick={(e) => e.stopPropagation()}>
+            <button className="close-button" onClick={handleToggle}>×</button>
             <h3>消息</h3>
             <div className="message-content">
               {[
