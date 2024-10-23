@@ -42,7 +42,7 @@ export default function Layout({ children }) {
           border-radius: 20px;
           overflow: hidden;
           box-shadow: 0 0 10px rgba(0,0,0,0.1);
-          margin: 20px;
+          margin: 15px;
           position: relative;
           transition: width 0.3s ease;
         }
@@ -59,7 +59,7 @@ export default function Layout({ children }) {
         }
         .toggle-btn {
           position: absolute;
-          bottom: 20px;
+          bottom: 10px;
           right: ${isExpanded ? '20px' : '26px'};
           background: none;
           border: none;

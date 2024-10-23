@@ -39,6 +39,11 @@ const navContents = {
     { icon: '🔍', label: 'API文档', href: '/docs/api' },
     { icon: '❓', label: '常见问题', href: '/docs/faq' },
   ],
+  messages: [
+    { icon: '📥', label: '收件箱', href: '/messages/inbox' },
+    { icon: '📤', label: '已发送', href: '/messages/sent' },
+    { icon: '📝', label: '草稿', href: '/messages/drafts' },
+  ],
 };
 
 export default function SecondaryNavigation({ activeMainNav, isExpanded }) {

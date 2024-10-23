@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState, useEffect, useRef } from 'react';
+import MessageBox from './MessageBox';
+import UpgradeModal from './UpgradeModal';
 
 export default function MainNavigation({ activeNav, setActiveNav }) {
   const navItems = [
@@ -10,10 +13,37 @@ export default function MainNavigation({ activeNav, setActiveNav }) {
   ];
 
   const bottomNavItems = [
-    { id: 'docs', icon: '📄', label: '文档', href: '/docs' },
-    { id: 'messages', icon: '💬', label: '消息', href: '/messages' },
+    { id: 'docs', icon: '📄', label: '文档', href: '/docs/quick-start' },
+    { id: 'messages', icon: '💬', label: '消息' },
     { id: 'upgrade', icon: '⭐', label: '升级', href: '/upgrade' },
   ];
+
+  const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
+  const messageBoxRef = useRef(null);
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
+
+  const handleOpen = () => {
+    setIsMessageBoxOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsMessageBoxOpen(false);
+  };
+
+
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (messageBoxRef.current && !messageBoxRef.current.contains(event.target)) {
+        handleClose();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav className="main-nav">
@@ -36,15 +66,35 @@ export default function MainNavigation({ activeNav, setActiveNav }) {
       </div>
       <div className="bottom-section">
         {bottomNavItems.map((item) => (
-          <Link href={item.href} key={item.id}>
-            <a
-              className={`bottom-nav-item ${activeNav === item.id ? 'active' : ''}`}
-              onClick={() => setActiveNav(item.id)}
-            >
-              <span>{item.icon}</span>
-              <span>{item.label}</span>
-            </a>
-          </Link>
+          <div key={item.id}>
+            {item.id === 'messages' ? (
+              <a
+                className={`bottom-nav-item ${activeNav === item.id ? 'active' : ''}`}
+                onClick={handleOpen}
+              >
+                <span>{item.icon}</span>
+                <span>{item.label}</span>
+              </a>
+            ) : item.id === 'upgrade' ? (
+              <a
+                className={`bottom-nav-item ${activeNav === item.id ? 'active' : ''}`}
+                onClick={() => setIsUpgradeModalOpen(true)}
+              >
+                <span>{item.icon}</span>
+                <span>{item.label}</span>
+              </a>
+            ) : (
+              <Link href={item.href}>
+                <a
+                  className={`bottom-nav-item ${activeNav === item.id ? 'active' : ''}`}
+                  onClick={() => setActiveNav(item.id)}
+                >
+                  <span>{item.icon}</span>
+                  <span>{item.label}</span>
+                </a>
+              </Link>
+            )}
+          </div>
         ))}
         <div className="avatar cursor-pointer">
           <Image src="/avatar.png" alt="Avatar" width={40} height={40} style={{borderRadius: '10px'}}/>
@@ -91,6 +141,7 @@ export default function MainNavigation({ activeNav, setActiveNav }) {
           align-items: center;
           color: #333;
           text-decoration: none;
+          cursor: pointer;
         }
         .active {
           color: #007bff;
@@ -99,6 +150,25 @@ export default function MainNavigation({ activeNav, setActiveNav }) {
           cursor: pointer;
         }
       `}</style>
+      <MessageBox 
+        isOpen={isMessageBoxOpen} 
+        onClose={handleClose} 
+        ref={messageBoxRef}
+        style={{
+          position: 'fixed',
+          left: '110px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          height: `${isMessageBoxOpen ? '90vh' : '0'}`,
+          width: `${isMessageBoxOpen ? '30vw' : '0'}`,
+          transition: 'all 0.3s ease',
+          boxShadow: '-10px 0 20px -5px rgba(0,0,0,0.2), 0 0 10px rgba(0,0,0,0.1)',
+        }}
+      />
+      <UpgradeModal 
+        isOpen={isUpgradeModalOpen}
+        onRequestClose={() => setIsUpgradeModalOpen(false)}
+      />
     </nav>
   );
 }
