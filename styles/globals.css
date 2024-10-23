@@ -15,3 +15,7 @@ a {
   box-sizing: border-box;
 }
 
+.message-box.open {
+  width: 30vw;
+  height: 90vh;
+}

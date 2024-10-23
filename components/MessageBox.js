@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 
-const MessageBox = forwardRef(({ isOpen, onClose, style }, ref) => {
+const MessageBox = forwardRef(({ isOpen, onClose }, ref) => {
   if (!isOpen) return null;
 
   const messages = [
@@ -10,7 +10,7 @@ const MessageBox = forwardRef(({ isOpen, onClose, style }, ref) => {
   ];
 
   return (
-    <div className="message-box" style={style} ref={ref}>
+    <div className={`message-box ${isOpen ? 'open' : ''}`} ref={ref}>
       <button className="close-button" onClick={onClose}>×</button>
       <h3>消息</h3>
       <div className="message-list">
@@ -26,13 +26,21 @@ const MessageBox = forwardRef(({ isOpen, onClose, style }, ref) => {
       </div>
       <style jsx>{`
         .message-box {
+          position: fixed;
+          left: 110px;
+          bottom: 0;
+          width: 30vw;
+          height: 90vh;
           background-color: white;
           border-radius: 10px;
-          box-shadow: 0 0 10px rgba(0,0,0,0.1);
+          box-shadow: -10px 0 20px -5px rgba(0,0,0,0.2), 0 0 10px rgba(0,0,0,0.1);
           padding: 20px;
-          width: ${isOpen ? '30vw' : '0'};
-          transition: all 0.5s;
+          transform: translateY(100%);
+          transition: transform 0.3s ease-in-out;
           z-index: 1000;
+        }
+        .message-box.open {
+          transform: translateY(0);
         }
         .close-button {
           position: absolute;
