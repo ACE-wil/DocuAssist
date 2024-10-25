@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 
 const customStyles = {
@@ -8,20 +8,34 @@ const customStyles = {
     right: 'auto',
     bottom: 'auto',
     marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
+    transform: 'translate(-50%, -50%) scale(0.8)',
     width: '60%',
     maxWidth: '600px',
     padding: '30px',
     borderRadius: '10px',
+    opacity: 0,
+    transition: 'transform 0.3s ease-out, opacity 0.3s ease-out',
   },
   overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.75)'
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    transition: 'opacity 0.3s ease-out',
   }
 };
 
 Modal.setAppElement('#__next');
 
 const UpgradeModal = ({ isOpen, onRequestClose }) => {
+  const [modalIsOpen, setModalIsOpen] = useState(isOpen);
+
+  useEffect(() => {
+    setModalIsOpen(isOpen);
+  }, [isOpen]);
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setTimeout(onRequestClose, 300); // 等待动画结束后再关闭
+  };
+
   const plans = [
     { name: '专业版', price: '¥99/月', features: ['无限机器人', '高级分析', '优先支持'] },
     { name: '企业版', price: '¥299/月', features: ['定制化解决方案', '专属客户经理', '24/7支持'] },
@@ -29,10 +43,19 @@ const UpgradeModal = ({ isOpen, onRequestClose }) => {
 
   return (
     <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
+      isOpen={modalIsOpen}
+      onRequestClose={closeModal}
       style={customStyles}
       contentLabel="升级计划"
+      onAfterOpen={() => {
+        setTimeout(() => {
+          const content = document.querySelector('.ReactModal__Content');
+          if (content) {
+            content.style.opacity = 1;
+            content.style.transform = 'translate(-50%, -50%) scale(1)';
+          }
+        }, 0);
+      }}
     >
       <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>升级您的账户</h2>
       <div style={{ display: 'flex', justifyContent: 'space-around' }}>
@@ -65,7 +88,7 @@ const UpgradeModal = ({ isOpen, onRequestClose }) => {
           </div>
         ))}
       </div>
-      <button onClick={onRequestClose} style={{
+      <button onClick={closeModal} style={{
         position: 'absolute',
         top: '10px',
         right: '10px',

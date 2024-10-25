@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
 
 import UpgradeModal from './UpgradeModal';
 
 export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOpen, setIsMessageBoxOpen }) {
+  const avatar = useSelector((state) => state.avatar);
   
   const navItems = [
     { id: 'home', icon: '🏠', label: '主页', href: '/' },
@@ -29,7 +31,7 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
     <nav className="main-nav">
       <div className="top-section">
         <div className="logo">
-          <Image src="/logo.png" alt="Logo" width={40} height={40} style={{borderRadius: '10px'}}/>
+          <Image src={'/logo.png'} alt="User Avatar" width={40} height={40} style={{borderRadius: '50%'}}/>
         </div>
         <button className="add-button">+</button>
         {navItems.map((item) => (
@@ -78,7 +80,7 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
         ))}
         <Link href="/profile-settings">
           <div className="avatar cursor-pointer">
-            <Image src="/avatar.png" alt="Avatar" width={40} height={40} style={{borderRadius: '10px'}}/>
+            <Image src={avatar} alt="Avatar" width={40} height={40} style={{borderRadius: '10px'}}/>
           </div>
         </Link>
       </div>

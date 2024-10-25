@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAvatar } from '../store/avatarSlice';
 
 export default function ProfileSettings() {
+  const dispatch = useDispatch();
+  const avatar = useSelector((state) => state.avatar);
   const [name, setName] = useState('张三');
   const [email, setEmail] = useState('zhangsan@example.com');
   const [bio, setBio] = useState('我是一名热爱技术的开发者');
-  const [avatar, setAvatar] = useState('/avatar.png');
   const [preferredLanguage, setPreferredLanguage] = useState('中文');
   const [notificationSettings, setNotificationSettings] = useState({
     email: true,
@@ -19,14 +22,37 @@ export default function ProfileSettings() {
     console.log('保存个人信息', { name, email, bio, avatar, preferredLanguage, notificationSettings, theme });
   };
 
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        dispatch(setAvatar(reader.result));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="profile-settings">
       <div className="left-column">
         <h1>个人信息设置</h1>
         <form onSubmit={handleSubmit}>
           <div className="avatar-section">
-            <img src={avatar} alt="Avatar" className="current-avatar" />
-           </div>
+            <div className="avatar-container" onClick={() => document.getElementById('avatar-upload').click()}>
+              <img src={avatar} alt="Avatar" className="current-avatar" />
+              <div className="avatar-overlay">
+                <span>点击上传</span>
+              </div>
+            </div>
+            <input
+              type="file"
+              id="avatar-upload"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              style={{ display: 'none' }}
+            />
+          </div>
           <div className="form-group">
             <label htmlFor="name">姓名</label>
             <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} />
@@ -223,6 +249,28 @@ export default function ProfileSettings() {
         .additional-links a:hover {
           text-decoration: underline;
         }
+          .avatar-container {
+  position: relative;
+  cursor: pointer;
+}
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 90px;
+  height: 90px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-radius: 50%;
+}
+.avatar-container:hover .avatar-overlay {
+  opacity: 1;
+}
       `}</style>
     </div>
   );
