@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import UpgradeModal from './UpgradeModal';
+import CreateAppModal from './CreateAppModal';
 
 export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOpen, setIsMessageBoxOpen }) {
   const avatar = useSelector((state) => state.avatar);
@@ -16,6 +17,7 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
   ];
 
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
+  const [isCreateAppModalOpen, setIsCreateAppModalOpen] = useState(false);
 
   const handleToggle = () => {
     setIsMessageBoxOpen(!isMessageBoxOpen);
@@ -33,7 +35,7 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
         <div className="logo">
           <Image src={'/logo.png'} alt="User Avatar" width={40} height={40} style={{borderRadius: '50%'}}/>
         </div>
-        <button className="add-button">+</button>
+        <button className="add-button" onClick={() => setIsCreateAppModalOpen(true)}>+</button>
         {navItems.map((item) => (
           <Link href={item.href} key={item.id}>
             <a
@@ -238,6 +240,7 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
         isOpen={isUpgradeModalOpen}
         onRequestClose={() => setIsUpgradeModalOpen(false)}
       />
+      <CreateAppModal isOpen={isCreateAppModalOpen} onClose={() => setIsCreateAppModalOpen(false)} />
     </nav>
   );
 }
