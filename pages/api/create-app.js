@@ -1,24 +1,35 @@
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
-      // 直接转发 FormData
-      const response = await fetch('http://127.0.0.1:5000/api/create-app', {
-        method: 'POST',
-        body: req.body
+      const formData = new FormData();
+      
+      Object.entries(req.body).forEach(([key, value]) => {
+        formData.append(key, value);
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        res.status(201).json(data);
-      } else {
-        res.status(response.status).json({ message: 'Failed to create application' });
+      if (req.files) {
+        Object.entries(req.files).forEach(([key, file]) => {
+          formData.append(key, file);
+        });
       }
+
+      const response = await fetch('http://127.0.0.1:5000/api/create-app', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('请求失败');
+      }
+
+      const data = await response.json();
+      return res.status(201).json(data);
     } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ message: 'Internal server error' });
+      console.error('请求错误:', error);
+      return res.status(500).json({ error: error.message });
     }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
+  
+  res.setHeader('Allow', ['POST']);
+  res.status(405).end(`Method ${req.method} Not Allowed`);
 }
