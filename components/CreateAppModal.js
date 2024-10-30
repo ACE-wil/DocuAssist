@@ -7,7 +7,9 @@ const customStyles = {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    zIndex: 1000,
+    transition: 'opacity 0.3s ease-out',
   },
   content: {
     position: 'relative',
@@ -16,13 +18,17 @@ const customStyles = {
     right: 'auto',
     bottom: 'auto',
     width: '90%',
-    maxWidth: '800px',
+    maxWidth: '700px',
     padding: '1.5rem',
     borderRadius: '12px',
     backgroundColor: 'white',
     boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)',
     maxHeight: '90vh',
-    overflow: 'visible'
+    overflow: 'visible',
+    zIndex: 1001,
+    transform: 'scale(0.8)',
+    opacity: 0,
+    transition: 'transform 0.3s ease-out, opacity 0.3s ease-out',
   }
 };
 
@@ -150,6 +156,15 @@ export default function CreateAppModal({ isOpen, onClose }) {
         isOpen={isOpen} 
         onRequestClose={onClose}
         style={customStyles}
+        onAfterOpen={() => {
+          setTimeout(() => {
+            const content = document.querySelector('.ReactModal__Content');
+            if (content) {
+              content.style.opacity = 1;
+              content.style.transform = 'scale(1)';
+            }
+          }, 0);
+        }}
       >
         <div className="modal-header">
           <h2>创建新应用</h2>

@@ -39,10 +39,10 @@ export default function Layout({ children }) {
         .layout {
           display: flex;
           height: 100vh;
-          background-color: #f0f0f0;
+          background-color: #f8fafc;
         }
         .navigation-container {
-          min-width: 80px;
+          min-width: 280px;
           display: flex;
           background-color: white;
           border-radius: 20px;
@@ -57,6 +57,7 @@ export default function Layout({ children }) {
         }
         .navigation-container.collapsed {
           width: 80px;
+          min-width: 80px;
         }
         .content-container {
           flex-grow: 1;

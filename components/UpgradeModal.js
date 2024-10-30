@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 
 const customStyles = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    zIndex: 9999,
+    transition: 'opacity 0.3s ease-out'
+  },
   content: {
     top: '50%',
     left: '50%',
@@ -9,16 +14,15 @@ const customStyles = {
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%) scale(0.8)',
-    width: '60%',
-    maxWidth: '600px',
-    padding: '30px',
-    borderRadius: '10px',
+    width: '90%',
+    maxWidth: '700px',
+    padding: '1.5rem',
+    borderRadius: '12px',
+    backgroundColor: 'white',
+    boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)',
     opacity: 0,
-    transition: 'transform 0.3s ease-out, opacity 0.3s ease-out',
-  },
-  overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    transition: 'opacity 0.3s ease-out',
+    zIndex: 10000,
+    transition: 'transform 0.3s ease-out, opacity 0.3s ease-out'
   }
 };
 
