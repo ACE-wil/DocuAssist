@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
   FiFolder, FiFile, FiList, FiGrid, 
   FiChevronRight, FiArrowLeft, FiSearch,
-  FiFileText, FiImage, FiPlus, FiUpload, FiX, FiEdit2, FiTrash2
+  FiFileText, FiImage, FiPlus, FiUpload, FiX, FiEdit2, FiTrash2, FiLoader
 } from 'react-icons/fi';
 import Modal from 'react-modal';
 
@@ -61,6 +61,32 @@ export default function ProjectManagement() {
     item: null
   });
 
+  const [editingFile, setEditingFile] = useState(null);
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
+
+  const [toast, setToast] = useState({ show: false, message: '', type: '' });
+
+  useEffect(() => {
+    setModalIsOpen(isCreateFolderModalOpen);
+  }, [isCreateFolderModalOpen]);
+
+  useEffect(() => {
+    setDeleteModalIsOpen(deleteModal.isOpen);
+  }, [deleteModal.isOpen]);
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setTimeout(() => setIsCreateFolderModalOpen(false), 300);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModalIsOpen(false);
+    setTimeout(() => setDeleteModal({ isOpen: false, item: null }), 300);
+  };
+
   // 获取当前目录内容
   const getCurrentFolder = () => {
     let current = projects;
@@ -117,23 +143,28 @@ export default function ProjectManagement() {
   const handleCreateFolder = () => {
     if (!newFolderName.trim()) return;
     
-    const newFolder = {
-      id: `folder-${Date.now()}`,
-      name: newFolderName,
-      type: 'folder',
-      children: []
-    };
+    try {
+      const newFolder = {
+        id: `folder-${Date.now()}`,
+        name: newFolderName,
+        type: 'folder',
+        children: []
+      };
 
-    const updatedProjects = { ...projects };
-    let current = updatedProjects;
-    for (const id of currentPath) {
-      current = current.children.find(item => item.id === id);
+      const updatedProjects = { ...projects };
+      let current = updatedProjects;
+      for (const id of currentPath) {
+        current = current.children.find(item => item.id === id);
+      }
+      current.children.push(newFolder);
+      
+      setProjects(updatedProjects);
+      setNewFolderName('');
+      closeModal();
+      showToast('文件夹创建成功');
+    } catch (error) {
+      showToast('文件夹创建失败', 'error');
     }
-    current.children.push(newFolder);
-    
-    setProjects(updatedProjects);
-    setNewFolderName('');
-    setIsCreateFolderModalOpen(false);
   };
 
   const handleFileUpload = (e) => {
@@ -158,7 +189,11 @@ export default function ProjectManagement() {
   };
 
   const handleRename = (item) => {
-    const newName = prompt('请输入新名称:', item.name);
+    setEditingFile(item);
+    setContextMenu({ visible: false, x: 0, y: 0, item: null });
+  };
+
+  const handleRenameSubmit = (item, newName) => {
     if (newName && newName !== item.name) {
       const updatedProjects = { ...projects };
       let current = updatedProjects;
@@ -169,7 +204,7 @@ export default function ProjectManagement() {
       targetItem.name = newName;
       setProjects(updatedProjects);
     }
-    setContextMenu({ visible: false, x: 0, y: 0, item: null });
+    setEditingFile(null);
   };
 
   const handleDelete = (item) => {
@@ -181,15 +216,20 @@ export default function ProjectManagement() {
   };
 
   const confirmDelete = () => {
-    const item = deleteModal.item;
-    const updatedProjects = { ...projects };
-    let current = updatedProjects;
-    for (const id of currentPath) {
-      current = current.children.find(i => i.id === id);
+    try {
+      const item = deleteModal.item;
+      const updatedProjects = { ...projects };
+      let current = updatedProjects;
+      for (const id of currentPath) {
+        current = current.children.find(i => i.id === id);
+      }
+      current.children = current.children.filter(i => i.id !== item.id);
+      setProjects(updatedProjects);
+      closeDeleteModal();
+      showToast(`${item.type === 'folder' ? '文件夹' : '文件'}删除成功`);
+    } catch (error) {
+      showToast('删除失败', 'error');
     }
-    current.children = current.children.filter(i => i.id !== item.id);
-    setProjects(updatedProjects);
-    setDeleteModal({ isOpen: false, item: null });
   };
 
   useEffect(() => {
@@ -200,6 +240,17 @@ export default function ProjectManagement() {
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
+
+  const showToast = (message, type = 'success') => {
+    if (toast.show) {
+      // 如果已经有 toast 在显示，直接更新消息和类型
+      setToast(prev => ({ ...prev, message, type }));
+    } else {
+      // 如果没有 toast 在显示，显示新的 toast
+      setToast({ show: true, message, type });
+      setTimeout(() => setToast({ show: false, message: '', type: '' }), 2000);
+    }
+  };
 
   return (
     <div className="file-explorer">
@@ -290,7 +341,34 @@ export default function ProjectManagement() {
                 getFileIcon(item.name)
               }
             </div>
-            <div className="item-name">{item.name}</div>
+            <div className="item-name">
+              {editingFile?.id === item.id ? (
+                <input
+                  type="text"
+                  defaultValue={item.name}
+                  autoFocus
+                  onBlur={(e) => handleRenameSubmit(item, e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleRenameSubmit(item, e.target.value);
+                    } else if (e.key === 'Escape') {
+                      setEditingFile(null);
+                    }
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    width: '100%',
+                    padding: '4px 8px',
+                    border: '1px solid #1890ff',
+                    borderRadius: '4px',
+                    outline: 'none',
+                    fontSize: 'inherit'
+                  }}
+                />
+              ) : (
+                <span>{item.name}</span>
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -357,8 +435,8 @@ export default function ProjectManagement() {
       </Modal>
 
       <Modal
-        isOpen={isCreateFolderModalOpen}
-        onRequestClose={() => setIsCreateFolderModalOpen(false)}
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
         style={{
           overlay: {
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -375,14 +453,26 @@ export default function ProjectManagement() {
             width: '400px',
             padding: '20px',
             borderRadius: '8px',
-            background: 'white'
+            background: 'white',
+            opacity: 0,
+            transform: 'scale(0.8)',
+            transition: 'all 0.3s ease-in-out'
           }
+        }}
+        onAfterOpen={() => {
+          setTimeout(() => {
+            const content = document.querySelector('.ReactModal__Content');
+            if (content) {
+              content.style.opacity = 1;
+              content.style.transform = 'scale(1)';
+            }
+          }, 0);
         }}
       >
         <div className="modal-header">
           <h3>新建文件夹</h3>
           <button 
-            onClick={() => setIsCreateFolderModalOpen(false)}
+            onClick={closeModal}
             className="close-button"
           >
             ×
@@ -399,7 +489,7 @@ export default function ProjectManagement() {
         </div>
         <div className="modal-footer">
           <button 
-            onClick={() => setIsCreateFolderModalOpen(false)}
+            onClick={closeModal}
             className="cancel-button"
           >
             取消
@@ -502,8 +592,8 @@ export default function ProjectManagement() {
       )}
 
       <Modal
-        isOpen={deleteModal.isOpen}
-        onRequestClose={() => setDeleteModal({ isOpen: false, item: null })}
+        isOpen={deleteModalIsOpen}
+        onRequestClose={closeDeleteModal}
         style={{
           overlay: {
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -520,14 +610,26 @@ export default function ProjectManagement() {
             width: '400px',
             padding: '20px',
             borderRadius: '8px',
-            background: 'white'
+            background: 'white',
+            opacity: 0,
+            transform: 'scale(0.8)',
+            transition: 'all 0.3s ease-in-out'
           }
+        }}
+        onAfterOpen={() => {
+          setTimeout(() => {
+            const content = document.querySelector('.ReactModal__Content');
+            if (content) {
+              content.style.opacity = 1;
+              content.style.transform = 'scale(1)';
+            }
+          }, 0);
         }}
       >
         <div className="modal-header">
           <h3>确认删除</h3>
           <button 
-            onClick={() => setDeleteModal({ isOpen: false, item: null })}
+            onClick={closeDeleteModal}
             className="close-button"
           >
             <FiX size={20} />
@@ -543,7 +645,7 @@ export default function ProjectManagement() {
         </div>
         <div className="modal-footer">
           <button 
-            onClick={() => setDeleteModal({ isOpen: false, item: null })}
+            onClick={closeDeleteModal}
             className="cancel-button"
           >
             取消
@@ -556,6 +658,29 @@ export default function ProjectManagement() {
           </button>
         </div>
       </Modal>
+
+      {toast.show && (
+        <div 
+          className={`toast ${toast.type}`}
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            padding: '12px 24px',
+            borderRadius: '8px',
+            backgroundColor: toast.type === 'error' ? '#ff4d4f' : 
+                            toast.type === 'loading' ? '#1890ff' : '#52c41a',
+            color: 'white',
+            zIndex: 2000,
+            opacity: 1,
+            transition: 'opacity 0.3s ease-in-out'
+          }}
+        >
+          {toast.type === 'loading' && <FiLoader className="spinning" size={14} style={{ marginRight: '8px' }} />}
+          {toast.message}
+        </div>
+      )}
 
       <style jsx>{`
         .file-explorer {
@@ -651,6 +776,37 @@ export default function ProjectManagement() {
           background: white;
           transition: background-color 0.2s;
           height: fit-content;
+          overflow: hidden;
+        }
+
+        .item-name {
+          margin-top: 8px;
+          width: 100%;
+        }
+
+        .item-name span {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 150px;
+          margin: 0 auto;
+          word-break: break-all;
+          min-height: 40px;
+          line-height: 20px;
+        }
+
+        .item-name input {
+          width: calc(100% - 16px);
+          max-width: 150px;
+          padding: 4px 8px;
+          border: 1px solid #1890ff;
+          border-radius: 4px;
+          outline: none;
+          font-size: inherit;
+          margin: 0 auto;
+          min-height: 40px;
         }
 
         .item:hover {
