@@ -144,8 +144,8 @@ export default function MyBots() {
   return (
     <div className="my-bots-container">
       <div className="content-area">
-        {Object.entries(categories).map(([key, category]) => (
-          <div key={key} id={key} className="category-section">
+        {Object.entries(categories).map(([key, category], index) => (
+          <div key={key} id={key} className="category-section" style={{ marginTop: index === 0 ? '0' : '50px'}}>
             <h2 className="category-title">{category.title}</h2>
             <div className="models-grid">
               {category.models.map((model, index) => (
@@ -181,7 +181,7 @@ export default function MyBots() {
         .my-bots-container {
           padding: 1.5rem;
           max-width: 1200px;
-          margin: 0 auto;
+          margin: -30px auto 0 auto;
           display: flex;
           gap: 2rem;
         }

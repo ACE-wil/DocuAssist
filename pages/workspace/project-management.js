@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
   FiFolder, FiFile, FiList, FiGrid, 
   FiChevronRight, FiArrowLeft, FiSearch,
-  FiFileText, FiImage, FiPlus, FiUpload, FiX, FiEdit2, FiTrash2, FiLoader
+  FiFileText, FiImage, FiPlus, FiUpload, FiX, FiEdit2, FiTrash2, FiLoader, FiCheckCircle, FiXCircle
 } from 'react-icons/fi';
 import Modal from 'react-modal';
 
@@ -67,7 +67,18 @@ export default function ProjectManagement() {
 
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
-  const [toast, setToast] = useState({ show: false, message: '', type: '' });
+  const [notification, setNotification] = useState({
+    show: false,
+    message: '',
+    type: '', // 'success' 或 'error'
+  });
+
+  const [uploadStatus, setUploadStatus] = useState({
+    show: false,
+    progress: 0,
+    fileName: '',
+    status: '' // 'uploading', 'success', 'error'
+  });
 
   useEffect(() => {
     setModalIsOpen(isCreateFolderModalOpen);
@@ -161,9 +172,9 @@ export default function ProjectManagement() {
       setProjects(updatedProjects);
       setNewFolderName('');
       closeModal();
-      showToast('文件夹创建成功');
+      showNotification('文件夹创建成功');
     } catch (error) {
-      showToast('文件夹创建失败', 'error');
+      showNotification('文件夹创建失败', 'error');
     }
   };
 
@@ -171,21 +182,71 @@ export default function ProjectManagement() {
     const file = e.target.files[0];
     if (!file) return;
 
-    const newFile = {
-      id: `file-${Date.now()}`,
-      name: file.name,
-      type: 'file',
-      url: URL.createObjectURL(file)
-    };
+    // 显示上传状态
+    setUploadStatus({
+      show: true,
+      progress: 0,
+      fileName: file.name,
+      status: 'uploading'
+    });
 
-    const updatedProjects = { ...projects };
-    let current = updatedProjects;
-    for (const id of currentPath) {
-      current = current.children.find(item => item.id === id);
+    // 模拟上传进度
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 5;
+      setUploadStatus(prev => ({
+        ...prev,
+        progress
+      }));
+
+      if (progress >= 100) {
+        clearInterval(interval);
+        try {
+          const newFile = {
+            id: `file-${Date.now()}`,
+            name: file.name,
+            type: 'file',
+            url: URL.createObjectURL(file)
+          };
+
+          const updatedProjects = { ...projects };
+          let current = updatedProjects;
+          for (const id of currentPath) {
+            current = current.children.find(item => item.id === id);
+          }
+          current.children.push(newFile);
+          
+          setProjects(updatedProjects);
+          
+          // 显示上传成功
+          setUploadStatus(prev => ({
+            ...prev,
+            status: 'success'
+          }));
+
+          // 3秒后隐藏提示
+          setTimeout(() => {
+            setUploadStatus({
+              show: false,
+              progress: 0,
+              fileName: '',
+              status: ''
+            });
+          }, 3000);
+
+        } catch (error) {
+          setUploadStatus(prev => ({
+            ...prev,
+            status: 'error'
+          }));
+        }
+      }
+    }, 100);
+
+    // 重置 input
+    if (fileInput) {
+      fileInput.value = '';
     }
-    current.children.push(newFile);
-    
-    setProjects(updatedProjects);
   };
 
   const handleRename = (item) => {
@@ -226,9 +287,9 @@ export default function ProjectManagement() {
       current.children = current.children.filter(i => i.id !== item.id);
       setProjects(updatedProjects);
       closeDeleteModal();
-      showToast(`${item.type === 'folder' ? '文件夹' : '文件'}删除成功`);
+      showNotification(`${item.type === 'folder' ? '文件夹' : '文件'}删除成功`);
     } catch (error) {
-      showToast('删除失败', 'error');
+      showNotification('删除失败', 'error');
     }
   };
 
@@ -241,15 +302,19 @@ export default function ProjectManagement() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const showToast = (message, type = 'success') => {
-    if (toast.show) {
-      // 如果已经有 toast 在显示，直接更新消息和类型
-      setToast(prev => ({ ...prev, message, type }));
-    } else {
-      // 如果没有 toast 在显示，显示新的 toast
-      setToast({ show: true, message, type });
-      setTimeout(() => setToast({ show: false, message: '', type: '' }), 2000);
-    }
+  const showNotification = (message, type = 'success') => {
+    setNotification({
+      show: true,
+      message,
+      type
+    });
+    setTimeout(() => {
+      setNotification({
+        show: false,
+        message: '',
+        type: ''
+      });
+    }, 3000);
   };
 
   return (
@@ -659,26 +724,87 @@ export default function ProjectManagement() {
         </div>
       </Modal>
 
-      {toast.show && (
+      {notification.show && (
         <div 
-          className={`toast ${toast.type}`}
           style={{
             position: 'fixed',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            padding: '12px 24px',
+            background: notification.type === 'success' ? '#f6ffed' : '#fff2f0',
+            border: `1px solid ${notification.type === 'success' ? '#b7eb8f' : '#ffccc7'}`,
             borderRadius: '8px',
-            backgroundColor: toast.type === 'error' ? '#ff4d4f' : 
-                            toast.type === 'loading' ? '#1890ff' : '#52c41a',
-            color: 'white',
+            padding: '16px 32px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
             zIndex: 2000,
-            opacity: 1,
-            transition: 'opacity 0.3s ease-in-out'
+            animation: 'fadeInScale 0.3s ease-out'
           }}
         >
-          {toast.type === 'loading' && <FiLoader className="spinning" size={14} style={{ marginRight: '8px' }} />}
-          {toast.message}
+          {notification.type === 'success' ? (
+            <FiCheckCircle size={24} color="#52c41a" />
+          ) : (
+            <FiXCircle size={24} color="#ff4d4f" />
+          )}
+          <span style={{ color: '#333', fontSize: '16px' }}>{notification.message}</span>
+        </div>
+      )}
+
+      {uploadStatus.show && (
+        <div 
+          style={{
+            position: 'fixed',
+            bottom: '24px',
+            right: '24px',
+            background: '#fff',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            padding: '12px',
+            width: '280px',
+            zIndex: 2000,
+            animation: 'slideUp 0.3s ease-out'
+          }}
+        >
+          <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <FiFile size={16} color="#666" />
+              <span style={{ 
+                color: '#333', 
+                fontSize: '14px',
+                maxWidth: '180px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}>{uploadStatus.fileName}</span>
+            </div>
+            {uploadStatus.status === 'success' && <FiCheckCircle size={16} color="#1890ff" />}
+            {uploadStatus.status === 'error' && <FiXCircle size={16} color="#ff4d4f" />}
+          </div>
+          <div style={{ 
+            height: '4px', 
+            background: '#f0f0f0', 
+            borderRadius: '2px', 
+            overflow: 'hidden' 
+          }}>
+            <div style={{
+              height: '100%',
+              width: `${uploadStatus.progress}%`,
+              background: '#1890ff',
+              transition: 'width 0.3s ease-in-out'
+            }} />
+          </div>
+          <div style={{ 
+            marginTop: '6px', 
+            fontSize: '12px', 
+            color: uploadStatus.status === 'error' ? '#ff4d4f' : '#666',
+            textAlign: 'right'
+          }}>
+            {uploadStatus.status === 'uploading' && `${uploadStatus.progress}%`}
+            {uploadStatus.status === 'success' && '上传完成'}
+            {uploadStatus.status === 'error' && '上传失败'}
+          </div>
         </div>
       )}
 
@@ -992,6 +1118,50 @@ export default function ProjectManagement() {
           to {
             opacity: 1;
             transform: scale(1);
+          }
+        }
+
+        @keyframes slideIn {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+
+        @keyframes slideUp {
+          from {
+            transform: translateY(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+
+        @keyframes slideInRight {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+
+        @keyframes fadeInScale {
+          from {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.8);
+          }
+          to {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
           }
         }
       `}</style>
