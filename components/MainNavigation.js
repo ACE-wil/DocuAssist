@@ -106,10 +106,19 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
       </div>
       
 
-        <div className={`message-box-overlay ${isMessageBoxOpen ? 'open' : ''}`} onClick={() => setIsMessageBoxOpen(false)}>
-          <div className={`message-box ${isMessageBoxOpen ? 'open' : ''}`} onClick={(e) => e.stopPropagation()}>
+        <div className={`message-box-overlay ${isMessageBoxOpen ? 'open' : ''}`} 
+          onClick={() => setIsMessageBoxOpen(false)}
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+        >
+          <div className={`message-box ${isMessageBoxOpen ? 'open' : ''}`} 
+            onClick={(e) => e.stopPropagation()}
+            style={{ 
+              backgroundColor: theme.surface,
+              color: theme.text.primary 
+            }}
+          >
             <button className="close-button" onClick={handleToggle}>×</button>
-            <h3>消息</h3>
+            <h3 style={{ color: theme.text.primary }}>消息</h3>
             <div className="message-content">
               {[
                 { sender: '系统', icon: '🎉', time: '10:00 AM', body: '欢迎回来！今天是美好的一天，准备好大展身手了吗？' },
@@ -117,15 +126,15 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
                 { sender: '系统', icon: '🌟', time: '2:15 PM', body: '哇哦！你有一个新的激动人心的任务等待处理。快来看看是什么吧！' },
                 { sender: '小助手', icon: '🤖', time: '4:45 PM', body: '今日趣闻：你知道吗？程序员最喜欢的饮料是Java☕！' },
               ].map((message, index) => (
-                <div key={index} className="message-item">
+                <div key={index} className="message-item" style={{ borderBottom: `1px solid ${theme.border}` }}>
                   <div className="message-header">
-                    <span className="sender">
+                    <span className="sender" style={{ color: theme.text.primary }}>
                       <span className="icon">{message.icon}</span>
                       {message.sender}
                     </span>
-                    <span className="time">{message.time}</span>
+                    <span className="time" style={{ color: theme.text.tertiary }}>{message.time}</span>
                   </div>
-                  <div className="message-body">{message.body}</div>
+                  <div className="message-body" style={{ color: theme.text.secondary }}>{message.body}</div>
                 </div>
               ))}
             </div>
@@ -225,7 +234,8 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
           transition: background-color 0.3s ease;
         }
         .message-item:hover {
-          background-color: #f0f8ff;
+          background-color: ${theme.input.background};
+          cursor: pointer;
         }
         .message-header {
           display: flex;

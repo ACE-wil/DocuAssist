@@ -1,8 +1,11 @@
 import Link from 'next/link';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function HomePage() {
+  const { theme } = useTheme();
+  
   return (
-    <div className="home-page">
+    <div className="home-page" style={{ backgroundColor: theme.background }}>
       <div className="background-decorations">
         <div className="decoration-box box1"></div>
         <div className="decoration-box box2"></div>
@@ -11,19 +14,39 @@ export default function HomePage() {
       </div>
       
       <div className="content-wrapper">
-        <div className="top-banner cursor-pointer" style={{display:'flex',justifyContent:'center',flexDirection:'column'}}>
-        <div style={{position:'relative',color:'white',fontSize:'40px',fontWeight:'bold',textAlign:'left',marginTop:'-20px'}}>以自己的方式创建 AI 代理</div>
-        <div style={{position:'relative',color:'gray',fontSize:'20px',fontWeight:'bold',textAlign:'left'}}>新一代AI Agent构建平台，无需编码即可快速创建Agent并发布到各大平台。</div>
-          {/* 这里可以放置长方形圆边盒子的内容 */}
+        <div className="top-banner cursor-pointer" style={{
+          display: 'flex',
+          justifyContent: 'center',
+          flexDirection: 'column'
+        }}>
+          <div style={{
+            position: 'relative',
+            color: theme.text.primary,
+            fontSize: '40px',
+            fontWeight: 'bold',
+            textAlign: 'left',
+            marginTop: '-20px'
+          }}>以自己的方式创建 AI 代理</div>
+          <div style={{
+            position: 'relative',
+            color: theme.text.secondary,
+            fontSize: '20px',
+            fontWeight: 'bold',
+            textAlign: 'left'
+          }}>新一代AI Agent构建平台，无需编码即可快速创建Agent并发布到各大平台。</div>
         </div>
         
         <div className="tutorial-section">
-          <h2 style={{display: 'flex', flexDirection: 'row'}}>新手教程
+          <h2 style={{
+            display: 'flex', 
+            flexDirection: 'row',
+            color: theme.text.primary
+          }}>新手教程
             <Link href="/tutorial">
-            <a className="tutorial-link">
-              <span className="" style={{marginLeft:'3px'}}>🔗</span>
-            </a>
-          </Link>
+              <a className="tutorial-link">
+                <span style={{marginLeft:'3px'}}>🔗</span>
+              </a>
+            </Link>
           </h2>
           
         </div>
@@ -38,8 +61,8 @@ export default function HomePage() {
               <div className="feature-image cursor-pointer">
                 <img src={feature.img} alt={feature.title} />
                 <div className="feature-text">
-                  <h3>{feature.title}</h3>
-                  <p>{feature.description}</p>
+                  <h3 style={{ color: theme.text.primary }}>{feature.title}</h3>
+                  <p style={{ color: theme.text.secondary }}>{feature.description}</p>
                 </div>
               </div>
             </div>
@@ -49,7 +72,7 @@ export default function HomePage() {
         <div className="content-section">
           <div className="left-content">
             <div className="section-header">
-              <h2 className="section-title">
+              <h2 className="section-title" style={{ color: theme.text.primary }}>
                 关注
                 <Link href="/following">
                   <a className="header-link">
@@ -60,22 +83,24 @@ export default function HomePage() {
             </div>
             <div className="app-list">
               {[1, 2, 3].map((item) => (
-                <div key={item} className="app-card">
+                <div key={item} className="app-card" style={{ backgroundColor: theme.surface }}>
                   <div className="app-info">
                     <img src={`/bn-${item}.jpeg`} alt="应用图标" className="app-icon" />
                     <div className="app-details">
                       <div className="app-header">
                         <div className="app-title">
-                          <h3>AI助手应用{item}</h3>
-                          <span className="app-author">@作者{item}</span>
+                          <h3 style={{ color: theme.text.primary }}>AI助手应用{item}</h3>
+                          <span className="app-author" style={{ color: theme.text.secondary }}>@作者{item}</span>
                         </div>
                         <button className="follow-button">
                           <span className="follow-icon">+</span>
                           关注
                         </button>
                       </div>
-                      <p className="app-description">这是一个智能AI助手，可以帮助您完成各种任务，如翻译、写作、编程等。</p>
-                      <div className="app-stats">
+                      <p className="app-description" style={{ color: theme.text.secondary }}>
+                        这是一个智能AI助手，可以帮助您完成各种任务，如翻译、写作、编程等。
+                      </p>
+                      <div className="app-stats" style={{ color: theme.text.tertiary }}>
                         <span><i className="icon">👁️</i> 1.2k</span>
                         <span><i className="icon">💬</i> 234</span>
                         <span><i className="icon">⭐</i> 567</span>
@@ -89,7 +114,7 @@ export default function HomePage() {
 
           <div className="right-content">
             <div className="section-header">
-              <h2 className="section-title">
+              <h2 className="section-title" style={{ color: theme.text.primary }}>
                 推荐
                 <Link href="/recommended">
                   <a className="header-link">
@@ -100,18 +125,18 @@ export default function HomePage() {
             </div>
             <div className="recommended-grid">
               {[1, 2, 3, 4].map((item) => (
-                <div key={item} className="recommended-card">
+                <div key={item} className="recommended-card" style={{ backgroundColor: theme.surface }}>
                   <div className="card-image">
                     <img src={`/bn-${item}.jpeg`} alt="应用图标" />
                   </div>
                   <div className="card-content">
                     <div className="card-header">
-                      <h3>推荐应用{item}</h3>
+                      <h3 style={{ color: theme.text.primary }}>推荐应用{item}</h3>
                       <button className="mini-follow-button">
                         <span>+</span>
                       </button>
                     </div>
-                    <div className="card-stats">
+                    <div className="card-stats" style={{ color: theme.text.tertiary }}>
                       <span><i className="icon">👁️</i> 3.4k</span>
                       <span><i className="icon">⭐</i> 789</span>
                     </div>
