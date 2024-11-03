@@ -5,9 +5,11 @@ import { useSelector } from 'react-redux';
 
 import UpgradeModal from './UpgradeModal';
 import CreateAppModal from './CreateAppModal';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOpen, setIsMessageBoxOpen }) {
   const avatar = useSelector((state) => state.avatar);
+  const { theme, isDark, toggleTheme } = useTheme();
   
   const navItems = [
     { id: 'home', icon: '🏠', label: '主页', href: '/' },
@@ -30,12 +32,28 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
   ];
 
   return (
-    <nav className="main-nav">
+    <nav className="main-nav" style={{ 
+      backgroundColor: theme.surface,
+      color: theme.text.primary 
+    }}>
       <div className="top-section">
         <div className="logo">
-          <Image src={'/logo.png'} alt="User Avatar" width={40} height={40} style={{borderRadius: '50%'}}/>
+          <Image src={'/logo.png'} alt="Logo" width={40} height={40} />
         </div>
-        <button className="add-button" onClick={() => setIsCreateAppModalOpen(true)}>+</button>
+        <button 
+          onClick={toggleTheme}
+          className="theme-toggle"
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '20px',
+            padding: '8px',
+            marginBottom: '10px'
+          }}
+        >
+          {isDark ? '🌞' : '🌙'}
+        </button>
         {navItems.map((item) => (
           <Link href={item.href} key={item.id}>
             <a
@@ -153,12 +171,12 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
           display: flex;
           flex-direction: column;
           align-items: center;
-          color: #333;
+          color: ${isDark ? '#78767A' : theme.text.primary};
           text-decoration: none;
           cursor: pointer;
         }
         .active {
-          color: #007bff;
+          color: ${isDark ? '#e0e0e0' : theme.primary};
         }
         .cursor-pointer {
           cursor: pointer;

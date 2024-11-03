@@ -19,3 +19,14 @@ a {
   width: 30vw;
   height: 90vh;
 }
+
+.game-preview {
+  margin: 0;
+  text-align: center;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+.game-preview h1 {
+  margin-bottom: 20px;
+}

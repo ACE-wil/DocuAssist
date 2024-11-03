@@ -1,9 +1,17 @@
 import Link from 'next/link';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function Sidebar({ isOpen, setIsOpen }) {
+  const { theme, isDark } = useTheme();
+  
   return (
     <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
-      <button onClick={() => setIsOpen(!isOpen)}>
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          color: isDark ? '#e0e0e0' : '#333333'
+        }}
+      >
         {isOpen ? '<<' : '>>'}
       </button>
       <nav>
@@ -23,7 +31,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           top: 0;
           left: 0;
           height: 100vh;
-          background-color: #f0f0f0;
+          background-color: ${theme.surface};
           transition: width 0.3s;
           overflow: hidden;
         }
@@ -47,6 +55,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         }
         a {
           margin-bottom: 10px;
+          color: ${theme.text.primary};
         }
       `}</style>
     </div>

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useTheme } from '../contexts/ThemeContext';
 import MainNavigation from './MainNavigation';
 import SecondaryNavigation from './SecondaryNavigation';
 
 export default function Layout({ children }) {
+  const { theme, isDark } = useTheme();
   const [activeMainNav, setActiveMainNav] = useState('home');
   const [isExpanded, setIsExpanded] = useState(true);
   const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
@@ -28,7 +30,13 @@ export default function Layout({ children }) {
           setIsMessageBoxOpen={setIsMessageBoxOpen}
         />
         <SecondaryNavigation activeMainNav={activeMainNav} isExpanded={isExpanded} />
-        <button className="toggle-btn" onClick={() => setIsExpanded(!isExpanded)}>
+        <button 
+          className="toggle-btn" 
+          onClick={() => setIsExpanded(!isExpanded)}
+          style={{
+            color: isDark ? theme.text.secondary : theme.text.primary
+          }}
+        >
           {isExpanded ? '<<' : '>>'}
         </button>
       </div>
@@ -39,7 +47,7 @@ export default function Layout({ children }) {
         .layout {
           display: flex;
           height: 100vh;
-          background-color: #f8fafc;
+          background-color: ${theme.background};
         }
         .navigation-container {
           min-width: 280px;

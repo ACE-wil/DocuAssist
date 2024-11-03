@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 
 const navContents = {
   home: [
@@ -10,6 +11,8 @@ const navContents = {
   workspace: [
     { icon: '🤖', label: '我的机器人', href: '/workspace/my-bots' },
     { icon: '📁', label: '项目管理', href: '/workspace/project-management' },
+    { icon: '📝', label: '文档解析', href: '/workspace/document-parser' },
+    { icon: '🎮', label: '游戏预览', href: '/workspace/game-preview' },
   ],
   store: [
     { icon: '🔥', label: '热门应用', href: '/store/popular' },
@@ -48,6 +51,7 @@ const navContents = {
 
 export default function SecondaryNavigation({ activeMainNav, isExpanded }) {
   const router = useRouter();
+  const { theme, isDark } = useTheme();
   const [expandedSubItems, setExpandedSubItems] = useState({});
   const [expandedItems, setExpandedItems] = useState({});
 
@@ -95,11 +99,11 @@ export default function SecondaryNavigation({ activeMainNav, isExpanded }) {
     <nav className={`secondary-nav ${isExpanded ? 'expanded' : 'collapsed'}`}>
       {activeMainNav === 'home' ? (
         <>
-          <h3>最近编辑</h3>
-          <p style={{color: '#ccc'}}>暂无最近编辑的内容</p>
+          <h3 style={{ color: theme.text.primary }}>最近编辑</h3>
+          <p style={{ color: theme.text.tertiary }}>暂无最近编辑的内容</p>
           
-          <h3>收藏</h3>
-          <p style={{color: '#ccc'}}>暂无收藏的内容</p>
+          <h3 style={{ color: theme.text.primary }}>收藏</h3>
+          <p style={{ color: theme.text.tertiary }}>暂无收藏的内容</p>
         </>
       ) : (
         items.map((item, index) => (
@@ -144,7 +148,7 @@ export default function SecondaryNavigation({ activeMainNav, isExpanded }) {
       <style jsx>{`
         .secondary-nav {
           width: ${isExpanded ? '200px' : '0px'};
-          background-color: white;
+          background-color: ${theme.surface};
           padding: ${isExpanded ? '20px' : '0px'};
           display: flex;
           flex-direction: column;
@@ -155,7 +159,7 @@ export default function SecondaryNavigation({ activeMainNav, isExpanded }) {
           display: flex;
           align-items: center;
           padding: 10px;
-          color: #333;
+          color: ${theme.text.primary};
           text-decoration: none;
           border-radius: 10px;
           margin-bottom: 5px;
@@ -163,10 +167,10 @@ export default function SecondaryNavigation({ activeMainNav, isExpanded }) {
           white-space: nowrap;
         }
         .nav-item:hover {
-          background-color: #f0f0f0;
+          background-color: ${isDark ? '#2d2d2d' : '#f0f0f0'};
         }
         .nav-item.active {
-          background-color: #007bff;
+          background-color: ${theme.primary};
           color: white;
         }
         .icon {
@@ -186,11 +190,11 @@ export default function SecondaryNavigation({ activeMainNav, isExpanded }) {
           display: none;
         }
         .parent-active {
-          background-color: #e6f2ff;
+          background-color: ${isDark ? '#2d2d2d' : '#e6f2ff'};
           font-weight: bold;
         }
         .sub-item.active {
-          background-color: #007bff;
+          background-color: ${theme.primary};
           color: white;
         }
       `}</style>

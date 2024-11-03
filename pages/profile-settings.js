@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAvatar } from '../store/avatarSlice';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function ProfileSettings() {
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ export default function ProfileSettings() {
     sms: false
   });
   const [theme, setTheme] = useState('light');
+  const { theme: currentTheme, isDark, toggleTheme } = useTheme();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -70,7 +72,6 @@ export default function ProfileSettings() {
             <select id="language" value={preferredLanguage} onChange={(e) => setPreferredLanguage(e.target.value)}>
               <option value="中文">中文</option>
               <option value="English">English</option>
-              <option value="日本語">日本語</option>
             </select>
           </div>
           <button type="submit" className="save-button">保存更改</button>
@@ -106,11 +107,20 @@ export default function ProfileSettings() {
         <h2>界面设置</h2>
         <div className="form-group">
           <label htmlFor="theme">界面主题</label>
-          <select id="theme" value={theme} onChange={(e) => setTheme(e.target.value)}>
-            <option value="light">浅色</option>
-            <option value="dark">深色</option>
-            <option value="auto">跟随系统</option>
-          </select>
+          <div className="theme-switch">
+            <button 
+              className={`theme-button ${!isDark ? 'active' : ''}`} 
+              onClick={() => toggleTheme('light')}
+            >
+              🌞 浅色
+            </button>
+            <button 
+              className={`theme-button ${isDark ? 'active' : ''}`} 
+              onClick={() => toggleTheme('dark')}
+            >
+              🌙 深色
+            </button>
+          </div>
         </div>
         <h2>更多设置</h2>
         <ul className="additional-links">
@@ -126,126 +136,86 @@ export default function ProfileSettings() {
           display: flex;
           justify-content: space-between;
           position: relative;
-          top: 0px;
-          left: 0;
-          right: 0;
-          bottom: 0;
           padding: 20px;
-          background-color: #f5f5f5;
+          background-color: ${currentTheme.background};
           overflow-y: auto;
-          height: calc(100vh - 60px); // 假设导航栏高度为60px
+          height: calc(100vh - 60px);
         }
+        
         .left-column, .right-column {
           width: calc(50% - 20px);
-          background-color: white;
+          background-color: ${currentTheme.surface};
           border-radius: 12px;
           padding: 20px;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+          box-shadow: ${currentTheme.shadow};
           overflow-y: auto;
           height: 100%;
         }
-        h1 {
-          color: #333;
+        
+        h1, h2 {
+          color: ${currentTheme.text.primary};
           margin-bottom: 20px;
           font-weight: 600;
-          font-size: 24px; // 减小标题字体大小
         }
-        h2 {
-          color: #333;
-          margin-bottom: 15px;
-          font-weight: 600;
-          font-size: 20px; // 减小二级标题字体大小
-        }
-        .avatar-section {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          margin-bottom: 15px;
-        }
-        .current-avatar {
-          width: 90px; // 减小头像大小
-          height: 90px;
-          border-radius: 50%;
-          object-fit: cover;
-          margin-bottom: 10px;
-          border: 3px solid #f0f0f0;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+        
         .form-group {
           margin-bottom: 15px;
         }
+        
         label {
           display: block;
           margin-bottom: 5px;
-          color: #555;
+          color: ${currentTheme.text.secondary};
           font-weight: 500;
           font-size: 14px;
         }
+        
         input[type="text"],
         input[type="email"],
         textarea,
         select {
           width: 100%;
           padding: 8px;
-          border: 1px solid #ddd;
+          border: 1px solid ${currentTheme.border};
           border-radius: 4px;
           font-size: 14px;
+          background: ${currentTheme.input.background};
+          color: ${currentTheme.text.primary};
           transition: border-color 0.3s, box-shadow 0.3s;
         }
+        
         input[type="text"]:focus,
         input[type="email"]:focus,
         textarea:focus,
         select:focus {
-          border-color: #007bff;
-          box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+          border-color: ${currentTheme.input.focus};
+          box-shadow: 0 0 0 2px ${currentTheme.input.focus}25;
           outline: none;
         }
-        textarea {
-          height: 50px;
-          resize: vertical;
-        }
-        .checkbox-group {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-        .checkbox-group label {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          cursor: pointer;
-        }
+        
         .save-button {
           display: block;
           width: 100%;
           padding: 10px;
-          background-color: #007bff;
+          background-color: ${currentTheme.button.primary};
           color: white;
           border: none;
           border-radius: 6px;
           font-size: 16px;
           font-weight: 600;
           cursor: pointer;
-          transition: background-color 0.3s, transform 0.1s;
+          transition: background-color 0.3s;
         }
+        
         .save-button:hover {
-          background-color: #0056b3;
+          background-color: ${currentTheme.button.hover};
         }
-        .save-button:active {
-          transform: translateY(1px);
-        }
-        .additional-links {
-          list-style-type: none;
-          padding: 0;
-        }
-        .additional-links li {
-          margin-bottom: 10px;
-        }
+        
         .additional-links a {
-          color: #007bff;
+          color: ${currentTheme.primary};
           text-decoration: none;
-          font-weight: 500;
         }
+        
         .additional-links a:hover {
           text-decoration: underline;
         }
@@ -270,6 +240,66 @@ export default function ProfileSettings() {
 }
 .avatar-container:hover .avatar-overlay {
   opacity: 1;
+}
+.current-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.avatar-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.theme-switch {
+  display: flex;
+  gap: 10px;
+}
+
+.theme-button {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid ${currentTheme.border};
+  border-radius: 4px;
+  background: ${currentTheme.input.background};
+  color: ${currentTheme.text.primary};
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.theme-button.active {
+  background: ${currentTheme.primary};
+  color: white;
+  border-color: ${currentTheme.primary};
+}
+
+.theme-button:hover:not(.active) {
+  border-color: ${currentTheme.primary};
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: ${currentTheme.primary};
+  cursor: pointer;
 }
       `}</style>
     </div>
