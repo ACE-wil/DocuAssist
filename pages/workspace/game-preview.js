@@ -1,14 +1,95 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { Howl } from 'howler';
+import NPC from '../../components/NPC';
 
 export default function GamePreview() {
   const [scene, setScene] = useState(0);
   const { theme } = useTheme();
+  const [bgMusic, setBgMusic] = useState(null);
+
+  // 初始化背景音乐
+  useEffect(() => {
+    const music = new Howl({
+      src: ['/sounds/background-music.mp3'], // 需要添加背景音乐文件
+      loop: true,
+      volume: 0.5
+    });
+    setBgMusic(music);
+    music.play();
+
+    return () => {
+      music.stop();
+    };
+  }, []);
+
+  // 朗读文本
+  const speak = (text) => {
+    // 停止之前的朗读
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'zh-CN';
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.volume = 0.8;
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // 定义所有音效
+  const sounds = {
+    background: new Howl({
+      src: ['/sounds/background-music.mp3'],
+      loop: true,
+      volume: 0.3
+    }),
+    hover: new Howl({
+      src: ['/sounds/hover.mp3'],
+      volume: 0.4
+    }),
+    click: new Howl({
+      src: ['/sounds/click.mp3'],
+      volume: 0.6
+    }),
+    success: new Howl({
+      src: ['/sounds/success.mp3'],
+      volume: 0.7
+    }),
+    ambient: new Howl({
+      src: ['/sounds/ambient.mp3'],
+      loop: true,
+      volume: 0.2
+    })
+  };
+
+  const handleChoice = (nextScene) => {
+    // 播放点击音效
+    sounds.click.play();
+    
+    // 如果是最后一个场景，播放成功音效
+    if (nextScene === scenes.length - 1) {
+      sounds.success.play();
+    }
+
+    setScene(nextScene);
+    speak(scenes[nextScene].text);
+  };
+
+  // 鼠标悬停效果
+  const handleHover = () => {
+    sounds.hover.play();
+  };
+
+  // 当场景首次加载时朗读文本
+  useEffect(() => {
+    speak(scenes[scene].text);
+  }, []);
 
   const scenes = [
     {
       background: 'url(/path/to/scene1.jpg)',
-      character: '/path/to/character1.png',
+      character: '/luffy.gif',
       text: '欢迎来到我们的冒险游戏！你会选择哪条路？',
       choices: [
         { text: '左边的路', nextScene: 1 },
@@ -17,7 +98,7 @@ export default function GamePreview() {
     },
     {
       background: 'url(/path/to/scene2.jpg)',
-      character: '/path/to/character2.png',
+      character: '/luffy.gif',
       text: '你选择了左边的路，遇到了一个友好的村民。',
       choices: [
         { text: '继续前进', nextScene: 3 },
@@ -26,7 +107,7 @@ export default function GamePreview() {
     },
     {
       background: 'url(/path/to/scene3.jpg)',
-      character: '/path/to/character3.png',
+      character: '/luffy.gif',
       text: '你选择了右边的路，发现了一座神秘的城堡。',
       choices: [
         { text: '进入城堡', nextScene: 3 },
@@ -35,7 +116,7 @@ export default function GamePreview() {
     },
     {
       background: 'url(/path/to/scene4.jpg)',
-      character: '/path/to/character4.png',
+      character: '/luffy.gif',
       text: '你继续前进，发现了一个宝藏！',
       choices: [
         { text: '重新开始', nextScene: 0 }
@@ -43,23 +124,21 @@ export default function GamePreview() {
     }
   ];
 
-  const handleChoice = (nextScene) => {
-    setScene(nextScene);
-  };
-
   return (
     <div className="story-game" style={{ 
       backgroundImage: scenes[scene].background,
       backgroundColor: theme.background
     }}>
-      <div className="character">
-        <img src={scenes[scene].character} alt="Character" />
-      </div>
+      <NPC />
       <div className="text-box">
         <p>{scenes[scene].text}</p>
         <div className="choices">
           {scenes[scene].choices.map((choice, index) => (
-            <button key={index} onClick={() => handleChoice(choice.nextScene)}>
+            <button 
+              key={index} 
+              onClick={() => handleChoice(choice.nextScene)}
+              onMouseEnter={handleHover}
+            >
               {choice.text}
             </button>
           ))}
@@ -91,9 +170,10 @@ export default function GamePreview() {
         }
 
         .character img {
-          max-height: 40vh;
-          max-width: 100%;
+          max-height: 300px;
+          width: auto;
           object-fit: contain;
+          margin-bottom: 20px;
         }
 
         .text-box {
