@@ -140,7 +140,7 @@ export default function GamePreview() {
         .story-game {
           position: relative;
           width: 100%;
-          height: 100vh;
+          height: 94vh;
           overflow: hidden;
         }
 
