@@ -15,7 +15,7 @@ export default function GamePreview() {
     {
       npcDialog: "你好，旅行者。我是这个神秘世界的向导萨满。我注意到你似乎对这里很感兴趣？",
       npcAvatar: "/avatars/shaman.png",
-      backgroundVideo: "/videos/forest.mp4",
+      backgroundVideo: "/videos/2077.mp4",
       options: [
         { text: "是的，我想了解这个世界", nextScene: 1 },
         { text: "我只是在随便看看", nextScene: 2 }
@@ -86,7 +86,7 @@ export default function GamePreview() {
     if (nextScene >= scenes.length) {
       // 如果是最后一个场景,跳回开头
       setCurrentScene(0);
-      // 清空历史���录
+      // 清空历史记录
       setGameHistory([]);
     } else {
       // 否则正常切换到下一个场景
@@ -204,12 +204,12 @@ export default function GamePreview() {
           z-index: 1;
           width: 100%;
           height: 100%;
-          background: ${theme.dark ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)'};
+          background: transparent;
           display: flex;
           flex-direction: column;
           justify-content: flex-end;
           align-items: center;
-          padding: 20px;
+          padding: 60px;
         }
 
         .progress-bar {
@@ -228,18 +228,50 @@ export default function GamePreview() {
         }
 
         .dialog-box {
-          background: ${theme.dark ? 'rgba(88, 28, 135, 0.95)' : theme.surface};
-          color: ${theme.text.primary};
+          background: ${theme.dark ? 
+            'linear-gradient(135deg, rgba(18, 6, 38, 0.9), rgba(44, 10, 74, 0.9))' : 
+            'linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(230, 230, 250, 0.9))'
+          };
+          border: 2px solid ${theme.dark ? '#8a2be2' : '#4b0082'};
+          box-shadow: 
+            0 0 10px ${theme.dark ? '#8a2be2' : '#4b0082'},
+            0 0 20px ${theme.dark ? '#8a2be2' : '#4b0082'},
+            inset 0 0 15px ${theme.dark ? 'rgba(138, 43, 226, 0.5)' : 'rgba(75, 0, 130, 0.5)'};
+          border-radius: 15px;
           padding: 20px;
-          border-radius: 10px;
           margin-bottom: 20px;
           display: flex;
           align-items: flex-start;
           gap: 20px;
           width: 80%;
           max-width: 600px;
-          box-shadow: ${theme.shadow};
-          backdrop-filter: blur(8px);
+          backdrop-filter: blur(5px);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .dialog-box::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(
+            circle,
+            ${theme.dark ? 'rgba(138, 43, 226, 0.1)' : 'rgba(75, 0, 130, 0.1)'} 0%,
+            transparent 80%
+          );
+          animation: rotateGradient 10s linear infinite;
+        }
+
+        @keyframes rotateGradient {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
         }
 
         .npc-avatar {
@@ -247,23 +279,42 @@ export default function GamePreview() {
           height: 80px;
           border-radius: 50%;
           overflow: hidden;
-          border: 3px solid ${theme.dark ? 'rgba(139, 92, 246, 0.5)' : theme.border};
+          border: 3px solid ${theme.dark ? '#8a2be2' : '#4b0082'};
+          box-shadow: 
+            0 0 10px ${theme.dark ? '#8a2be2' : '#4b0082'},
+            0 0 20px ${theme.dark ? '#8a2be2' : '#4b0082'};
         }
 
         .npc-avatar img {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          filter: ${theme.dark ? 'brightness(1.2) contrast(1.1)' : 'none'};
         }
 
         .dialog-content {
           flex: 1;
+          z-index: 1;
         }
 
         .npc-name {
+          font-family: 'Orbitron', sans-serif;
           font-weight: bold;
+          font-size: 1.2em;
           margin-bottom: 8px;
-          color: ${theme.dark ? '#a78bfa' : theme.primary};
+          color: ${theme.dark ? '#ff00ff' : '#8a2be2'};
+          text-shadow: 
+            0 0 5px ${theme.dark ? '#ff00ff' : '#8a2be2'},
+            0 0 10px ${theme.dark ? '#ff00ff' : '#8a2be2'};
+        }
+
+        .dialog-content p {
+          font-family: 'Rajdhani', sans-serif;
+          line-height: 1.6;
+          color: ${theme.dark ? '#e0e0e0' : '#2d0a4e'};
+          text-shadow: 0 0 2px ${theme.dark ? 'rgba(224, 224, 224, 0.5)' : 'rgba(45, 10, 78, 0.5)'};
+          font-size: 1.1em;
+          letter-spacing: 0.5px;
         }
 
         .options-container {
@@ -276,23 +327,62 @@ export default function GamePreview() {
 
         button {
           padding: 1rem 1.5rem;
-          background: ${theme.dark ? 'rgba(88, 28, 135, 0.2)' : 'white'};
-          border: ${theme.dark ? '2px solid rgba(139, 92, 246, 0.3)' : `2px solid ${theme.border}`};
+          background: ${theme.dark ? 'rgba(88, 28, 135, 0.2)' : 'rgba(255, 255, 255, 0.8)'};
+          border: ${theme.dark ? '2px solid rgba(139, 92, 246, 0.3)' : `2px solid rgba(255, 255, 255, 0.3)`};
           border-radius: 8px;
-          color: black;
+          color: ${theme.dark ? '#fff' : '#000'};
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           font-size: 1rem;
+          position: relative;
+          overflow: hidden;
+          backdrop-filter: blur(5px);
+          text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
         }
 
         button:hover {
-          background: ${theme.dark ? 'rgba(139, 92, 246, 0.3)' : theme.button.primary};
-          border-color: ${theme.dark ? 'rgba(139, 92, 246, 0.6)' : theme.button.primary};
-          color: white;
+          background: ${theme.dark ? 
+            'linear-gradient(45deg, rgba(255, 0, 128, 0.3), rgba(0, 255, 255, 0.3))' : 
+            'linear-gradient(45deg, rgba(255, 0, 128, 0.2), rgba(0, 255, 255, 0.2))'
+          };
+          border-color: ${theme.dark ? 
+            'rgba(0, 255, 255, 0.6)' : 
+            'rgba(255, 0, 128, 0.6)'
+          };
+          color: ${theme.dark ? '#fff' : '#000'};
           transform: translateY(-2px);
-          box-shadow: ${theme.dark ? '0 4px 12px rgba(139, 92, 246, 0.2)' : theme.shadow};
+          box-shadow: 
+            0 0 20px rgba(0, 255, 255, 0.3),
+            0 0 30px rgba(255, 0, 128, 0.3);
+          text-shadow: 
+            0 0 8px rgba(255, 255, 255, 0.8),
+            0 0 12px rgba(0, 255, 255, 0.5);
         }
 
+        button:hover::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.1) 0%,
+            transparent 70%
+          );
+          animation: glowingEffect 2s infinite;
+        }
+
+        @keyframes glowingEffect {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+          
         .fullscreen-btn {
           position: absolute;
           top: 20px;
