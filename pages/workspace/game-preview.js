@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Howl } from 'howler';
+import { useDispatch } from 'react-redux';
+import { setNavigationVisibility } from '../../store/navigationSlice';
 
 export default function GamePreview() {
   const [currentScene, setCurrentScene] = useState(0);
   const [gameHistory, setGameHistory] = useState([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const { theme } = useTheme();
+  const dispatch = useDispatch();
 
   const scenes = [
     {
@@ -82,7 +86,7 @@ export default function GamePreview() {
     if (nextScene >= scenes.length) {
       // 如果是最后一个场景,跳回开头
       setCurrentScene(0);
-      // 清空历史记录
+      // 清空历史���录
       setGameHistory([]);
     } else {
       // 否则正常切换到下一个场景
@@ -95,8 +99,48 @@ export default function GamePreview() {
     sounds.hover.play();
   };
 
+  // 处理全屏切换
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      setIsFullscreen(true);
+      dispatch(setNavigationVisibility(false));
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+        setIsFullscreen(false);
+        dispatch(setNavigationVisibility(true));
+      }
+    }
+  };
+
+  // 监听 F11 键
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === 'F11') {
+        e.preventDefault();
+        toggleFullscreen();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
+      dispatch(setNavigationVisibility(true));
+    };
+  }, [dispatch]);
+
   return (
     <div className="story-game">
+      <button className="fullscreen-btn" onClick={toggleFullscreen}>
+        {isFullscreen ? '退出全屏' : '进入全屏'}
+      </button>
       <video 
         className="background-video"
         src={scenes[currentScene].backgroundVideo}
@@ -140,8 +184,9 @@ export default function GamePreview() {
         .story-game {
           position: relative;
           width: 100%;
-          height: 94vh;
+          height: ${isFullscreen ? '100vh' : '94vh'};
           overflow: hidden;
+          margin: ${isFullscreen ? '0' : 'inherit'};
         }
 
         .background-video {
@@ -246,6 +291,51 @@ export default function GamePreview() {
           color: white;
           transform: translateY(-2px);
           box-shadow: ${theme.dark ? '0 4px 12px rgba(139, 92, 246, 0.2)' : theme.shadow};
+        }
+
+        .fullscreen-btn {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          z-index: 100;
+          padding: 8px 16px;
+          background: ${theme.dark ? 'rgba(88, 28, 135, 0.8)' : 'rgba(255, 255, 255, 0.8)'};
+          border: none;
+          border-radius: 4px;
+          color: black;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          backdrop-filter: blur(4px);
+        }
+
+        .fullscreen-btn:hover {
+          transform: scale(1.05);
+          color: black;
+          background: ${theme.dark ? 'rgba(139, 92, 246, 0.8)' : 'rgba(255, 255, 255, 0.9)'};
+        }
+
+        /* 全屏时的样式调整 */
+        :global(html:fullscreen) .story-game {
+          height: 100vh;
+          width: 100vw;
+        }
+      `}</style>
+
+      <style jsx global>{`
+        body:fullscreen {
+          overflow: hidden;
+        }
+        
+        body:fullscreen nav,
+        body:fullscreen aside {
+          display: none !important;
+        }
+        
+        body:fullscreen .story-game {
+          width: 100vw !important;
+          height: 100vh !important;
+          margin: 0 !important;
+          padding: 0 !important;
         }
       `}</style>
     </div>

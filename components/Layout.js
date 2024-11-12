@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useTheme } from '../contexts/ThemeContext';
 import MainNavigation from './MainNavigation';
 import SecondaryNavigation from './SecondaryNavigation';
+import { useSelector } from 'react-redux';
 
 export default function Layout({ children }) {
   const { theme, isDark } = useTheme();
@@ -10,6 +11,7 @@ export default function Layout({ children }) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
   const router = useRouter();
+  const isNavigationVisible = useSelector((state) => state.navigation.isVisible);
 
   useEffect(() => {
     const path = router.pathname;
@@ -22,25 +24,27 @@ export default function Layout({ children }) {
 
   return (
     <div className="layout">
-      <div className={`navigation-container ${isExpanded ? 'expanded' : 'collapsed'}`}>
-        <MainNavigation 
-          activeNav={activeMainNav} 
-          setActiveNav={setActiveMainNav} 
-          isMessageBoxOpen={isMessageBoxOpen}
-          setIsMessageBoxOpen={setIsMessageBoxOpen}
-        />
-        <SecondaryNavigation activeMainNav={activeMainNav} isExpanded={isExpanded} />
-        <button 
-          className="toggle-btn" 
-          onClick={() => setIsExpanded(!isExpanded)}
-          style={{
-            color: isDark ? theme.text.secondary : theme.text.primary
-          }}
-        >
-          {isExpanded ? '<<' : '>>'}
-        </button>
-      </div>
-      <main className="content-container" onClick={() => setIsMessageBoxOpen(false)}>
+      {isNavigationVisible && (
+        <div className={`navigation-container ${isExpanded ? 'expanded' : 'collapsed'}`}>
+          <MainNavigation 
+            activeNav={activeMainNav} 
+            setActiveNav={setActiveMainNav} 
+            isMessageBoxOpen={isMessageBoxOpen}
+            setIsMessageBoxOpen={setIsMessageBoxOpen}
+          />
+          <SecondaryNavigation activeMainNav={activeMainNav} isExpanded={isExpanded} />
+          <button 
+            className="toggle-btn" 
+            onClick={() => setIsExpanded(!isExpanded)}
+            style={{
+              color: isDark ? theme.text.secondary : theme.text.primary
+            }}
+          >
+            {isExpanded ? '<<' : '>>'}
+          </button>
+        </div>
+      )}
+      <main className={`content-container ${!isNavigationVisible ? 'fullscreen' : ''}`}>
         {children}
       </main>
       <style jsx>{`
@@ -80,6 +84,10 @@ export default function Layout({ children }) {
           border: none;
           cursor: pointer;
           z-index: 10;
+        }
+        .content-container.fullscreen {
+          margin: 0;
+          padding: 0;
         }
       `}</style>
     </div>
