@@ -21,7 +21,7 @@ export default function HomePage() {
         }}>
           <div style={{
             position: 'relative',
-            color: theme.text.primary,
+            color: 'white',
             fontSize: '40px',
             fontWeight: 'bold',
             textAlign: 'left',
@@ -53,9 +53,9 @@ export default function HomePage() {
         
         <div className="feature-section">
           {[
-            { img: '/bn-1.jpeg', title: '什么是DocuAssist', description: '' },
-            { img: '/bn-2.jpeg', title: '快速启动', description: '' },
-            { img: '/bn-3.jpeg', title: '发行说明', description: '' },
+            { img: '/bn-1.jpeg', title: '什么是DocuAssist', description: '点击查看' },
+            { img: '/bn-2.jpeg', title: '快速启动', description: '点击查看' },
+            { img: '/bn-3.jpeg', title: '发行说明', description: '点击查看' },
           ].map((feature, index) => (
             <div key={index} className="feature-item">
               <div className="feature-image cursor-pointer">
@@ -244,6 +244,7 @@ export default function HomePage() {
           display: flex;
           justify-content: space-between;
           gap: 20px;
+          margin-top: 20px;
         }
         .feature-item {
           flex: 1;
