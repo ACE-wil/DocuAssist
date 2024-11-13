@@ -13,6 +13,7 @@ export default function GamePreview() {
 
   const scenes = [
     {
+      npcName: "萨满",
       npcDialog: "你好，旅行者。我是这个神秘世界的向导萨满。我注意到你似乎对这里很感兴趣？",
       npcAvatar: "/avatars/shaman.png",
       backgroundVideo: "/videos/2077.mp4",
@@ -22,8 +23,10 @@ export default function GamePreview() {
       ]
     },
     {
+      npcName: "艾莉",
       npcDialog: "欢迎来到魔法城市，我是城市守护者艾莉。这里东边是魔法学院，西边是商业区，南边是居民区。你想先去哪里？",
       npcAvatar: "/avatars/guardian.png",
+      backgroundVideo: "/videos/forest.mp4",
       options: [
         { text: "去魔法学院学习", nextScene: 3 },
         { text: "去商业区逛逛", nextScene: 4 },
@@ -31,16 +34,20 @@ export default function GamePreview() {
       ]
     },
     {
+      npcName: "马可",
       npcDialog: "我是流浪商人马可。这片土地确实危险重重，但也蕴藏着无尽的宝藏。需要我为你指路吗？",
       npcAvatar: "/avatars/merchant.png",
+      backgroundVideo: "/videos/market-street.mp4",
       options: [
         { text: "好的，请告诉我安全路线", nextScene: 6 },
         { text: "不用了，我喜欢冒险", nextScene: 7 }
       ]
     },
     {
+      npcName: "奥德里奇",
       npcDialog: "你好，我是魔法学院的首席法师奥德里奇。你对哪个魔法学科感兴趣？",
       npcAvatar: "/avatars/wizard.png",
+      backgroundVideo: "/videos/magic-academy.mp4",
       options: [
         { text: "元素魔法", nextScene: 8 },
         { text: "时空魔法", nextScene: 9 },
@@ -48,8 +55,10 @@ export default function GamePreview() {
       ]
     },
     {
+      npcName: "露娜",
       npcDialog: "我是商业区的珠宝匠人露娜。这里有许多稀有的魔法宝石，你想看看哪种？",
       npcAvatar: "/avatars/jeweler.png",
+      backgroundVideo: "/videos/jewelry-shop.mp4",
       options: [
         { text: "力量宝石", nextScene: 11 },
         { text: "智慧宝石", nextScene: 12 },
@@ -57,8 +66,10 @@ export default function GamePreview() {
       ]
     },
     {
+      npcName: "向导",
       npcDialog: "恭喜你完成了所有探索!",
       npcAvatar: "/avatars/guide.png",
+      backgroundVideo: "/videos/ending-scene.mp4",
       options: [
         { text: "重新开始冒险", nextScene: 0 },
         { text: "结束游戏", nextScene: 0 }
