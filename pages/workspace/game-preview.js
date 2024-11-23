@@ -9,6 +9,7 @@ export default function GamePreview() {
   const [gameHistory, setGameHistory] = useState([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [showCorrect, setCorrectError] = useState(false);
   const { theme } = useTheme();
   const dispatch = useDispatch();
 
@@ -166,7 +167,9 @@ export default function GamePreview() {
   };
 
   const handleChoice = (nextScene) => {
-    if (nextScene !== undefined) {
+    if (nextScene > 0) {
+      setCorrectError(true);
+      setTimeout(() => setCorrectError(false), 2000);
       setCurrentScene(nextScene);
       setGameHistory([...gameHistory, currentScene]);
     } else {
@@ -178,6 +181,11 @@ export default function GamePreview() {
   // 鼠标悬停效果
   const handleHover = () => {
     sounds.hover.play();
+  };
+
+  // 鼠标悬停效果
+  const handleClick = () => {
+    sounds.click.play();
   };
 
   // 处理全屏切换
@@ -220,6 +228,7 @@ export default function GamePreview() {
   return (
     <div className="story-game">
       {showError && <div className="error-message">很抱歉，你答错了</div>}
+      {showCorrect && <div className="correct-message">恭喜你，你答对了</div>}
       <button className="fullscreen-btn" onClick={toggleFullscreen}>
         {isFullscreen ? "退出全屏" : "进入全屏"}
       </button>
@@ -256,7 +265,9 @@ export default function GamePreview() {
           {scenes[currentScene].options.map((option, index) => (
             <button
               key={index}
-              onClick={() => handleChoice(option.nextScene)}
+              onClick={() => {
+                handleChoice(option.nextScene), handleClick();
+              }}
               onMouseEnter={handleHover}
             >
               {option.text}
@@ -506,6 +517,19 @@ export default function GamePreview() {
           left: 50%;
           transform: translate(-50%, -50%);
           background: rgba(255, 0, 0, 0.8);
+          color: white;
+          padding: 20px;
+          border-radius: 10px;
+          font-size: 1.5em;
+          animation: fadeInOut 2s;
+          z-index: 1000;
+        }
+        .correct-message {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: green;
           color: white;
           padding: 20px;
           border-radius: 10px;
