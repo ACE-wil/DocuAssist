@@ -172,6 +172,8 @@ export default function GamePreview() {
       setTimeout(() => setCorrectError(false), 2000);
       setCurrentScene(nextScene);
       setGameHistory([...gameHistory, currentScene]);
+    } else if (nextScene === 0) {
+      setCurrentScene(nextScene);
     } else {
       setShowError(true);
       setTimeout(() => setShowError(false), 2000);
