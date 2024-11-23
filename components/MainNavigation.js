@@ -1,21 +1,26 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import Link from "next/link";
+import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 
-import UpgradeModal from './UpgradeModal';
-import CreateAppModal from './CreateAppModal';
-import { useTheme } from '../contexts/ThemeContext';
+import UpgradeModal from "./UpgradeModal";
+import CreateAppModal from "./CreateAppModal";
+import { useTheme } from "../contexts/ThemeContext";
 
-export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOpen, setIsMessageBoxOpen }) {
+export default function MainNavigation({
+  activeNav,
+  setActiveNav,
+  isMessageBoxOpen,
+  setIsMessageBoxOpen,
+}) {
   const avatar = useSelector((state) => state.avatar);
   const { theme, isDark, toggleTheme } = useTheme();
-  
+
   const navItems = [
-    { id: 'home', icon: '🏠', label: '主页', href: '/' },
-    { id: 'workspace', icon: '💼', label: '工作空间', href: '/workspace' },
-    { id: 'store', icon: '🏪', label: '商店', href: '/store' },
-    { id: 'templates', icon: '📋', label: '模板', href: '/templates' },
+    { id: "home", icon: "🏠", label: "主页", href: "/" },
+    { id: "workspace", icon: "💼", label: "工作空间", href: "/workspace" },
+    { id: "store", icon: "🏪", label: "商店", href: "/store" },
+    { id: "templates", icon: "📋", label: "模板", href: "/templates" },
   ];
 
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
@@ -26,38 +31,41 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
   };
 
   const bottomNavItems = [
-    { id: 'docs', icon: '📄', label: '文档', href: '/docs/quick-start' },
-    { id: 'messages', icon: '💬', label: '消息' },
-    { id: 'upgrade', icon: '⭐', label: '升级', href: '/upgrade' },
+    { id: "docs", icon: "📄", label: "文档", href: "/docs/quick-start" },
+    { id: "messages", icon: "💬", label: "消息" },
+    { id: "upgrade", icon: "⭐", label: "升级", href: "/upgrade" },
   ];
 
   return (
-    <nav className="main-nav" style={{ 
-      backgroundColor: theme.surface,
-      color: theme.text.primary 
-    }}>
+    <nav
+      className="main-nav"
+      style={{
+        backgroundColor: theme.surface,
+        color: theme.text.primary,
+      }}
+    >
       <div className="top-section">
         <div className="logo">
-          <Image src={'/logo.png'} alt="Logo" width={40} height={40} />
+          <Image src={"/logo.png"} alt="Logo" width={40} height={40} />
         </div>
-        <button 
+        <button
           onClick={toggleTheme}
           className="theme-toggle"
           style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '20px',
-            padding: '8px',
-            marginBottom: '10px'
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "20px",
+            padding: "8px",
+            marginBottom: "10px",
           }}
         >
-          {isDark ? '🌞' : '🌙'}
+          {isDark ? "🌞" : "🌙"}
         </button>
         {navItems.map((item) => (
           <Link href={item.href} key={item.id}>
             <a
-              className={activeNav === item.id ? 'active' : ''}
+              className={activeNav === item.id ? "active" : ""}
               onClick={() => setActiveNav(item.id)}
             >
               <span>{item.icon}</span>
@@ -69,17 +77,21 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
       <div className="bottom-section">
         {bottomNavItems.map((item) => (
           <div key={item.id}>
-            {item.id === 'messages' ? (
+            {item.id === "messages" ? (
               <a
-                className={`bottom-nav-item ${activeNav === item.id ? 'active' : ''}`}
+                className={`bottom-nav-item ${
+                  activeNav === item.id ? "active" : ""
+                }`}
                 onClick={handleToggle}
               >
                 <span>{item.icon}</span>
                 <span>{item.label}</span>
               </a>
-            ) : item.id === 'upgrade' ? (
+            ) : item.id === "upgrade" ? (
               <a
-                className={`bottom-nav-item ${activeNav === item.id ? 'active' : ''}`}
+                className={`bottom-nav-item ${
+                  activeNav === item.id ? "active" : ""
+                }`}
                 onClick={() => setIsUpgradeModalOpen(true)}
               >
                 <span>{item.icon}</span>
@@ -88,7 +100,9 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
             ) : (
               <Link href={item.href}>
                 <a
-                  className={`bottom-nav-item ${activeNav === item.id ? 'active' : ''}`}
+                  className={`bottom-nav-item ${
+                    activeNav === item.id ? "active" : ""
+                  }`}
                   onClick={() => setActiveNav(item.id)}
                 >
                   <span>{item.icon}</span>
@@ -100,46 +114,89 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
         ))}
         <Link href="/profile-settings">
           <div className="avatar cursor-pointer">
-            <Image src={avatar} alt="Avatar" width={40} height={40} style={{borderRadius: '10px'}}/>
+            <Image
+              src={avatar}
+              alt="Avatar"
+              width={40}
+              height={40}
+              style={{ borderRadius: "10px" }}
+            />
           </div>
         </Link>
       </div>
-      
 
-        <div className={`message-box-overlay ${isMessageBoxOpen ? 'open' : ''}`} 
-          onClick={() => setIsMessageBoxOpen(false)}
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+      <div
+        className={`message-box-overlay ${isMessageBoxOpen ? "open" : ""}`}
+        onClick={() => setIsMessageBoxOpen(false)}
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      >
+        <div
+          className={`message-box ${isMessageBoxOpen ? "open" : ""}`}
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            backgroundColor: theme.surface,
+            color: theme.text.primary,
+          }}
         >
-          <div className={`message-box ${isMessageBoxOpen ? 'open' : ''}`} 
-            onClick={(e) => e.stopPropagation()}
-            style={{ 
-              backgroundColor: theme.surface,
-              color: theme.text.primary 
-            }}
-          >
-            <button className="close-button" onClick={handleToggle}>×</button>
-            <h3 style={{ color: theme.text.primary }}>消息</h3>
-            <div className="message-content">
-              {[
-                { sender: '系统', icon: '🎉', time: '10:00 AM', body: '欢迎回来！今天是美好的一天，准备好大展身手了吗？' },
-                { sender: '支持团队', icon: '🚀', time: '11:30 AM', body: '嘿！有什么我们可以帮到你的吗？别客气，我们随时待命！' },
-                { sender: '系统', icon: '🌟', time: '2:15 PM', body: '哇哦！你有一个新的激动人心的任务等待处理。快来看看是什么吧！' },
-                { sender: '小助手', icon: '🤖', time: '4:45 PM', body: '今日趣闻：你知道吗？程序员最喜欢的饮料是Java☕！' },
-              ].map((message, index) => (
-                <div key={index} className="message-item" style={{ borderBottom: `1px solid ${theme.border}` }}>
-                  <div className="message-header">
-                    <span className="sender" style={{ color: theme.text.primary }}>
-                      <span className="icon">{message.icon}</span>
-                      {message.sender}
-                    </span>
-                    <span className="time" style={{ color: theme.text.tertiary }}>{message.time}</span>
-                  </div>
-                  <div className="message-body" style={{ color: theme.text.secondary }}>{message.body}</div>
+          <button className="close-button" onClick={handleToggle}>
+            ×
+          </button>
+          <h3 style={{ color: theme.text.primary }}>消息</h3>
+          <div className="message-content">
+            {[
+              {
+                sender: "系统",
+                icon: "🎉",
+                time: "10:00 AM",
+                body: "欢迎回来！今天是美好的一天，准备好大展身手了吗？",
+              },
+              {
+                sender: "支持团队",
+                icon: "🚀",
+                time: "11:30 AM",
+                body: "嘿！有什么我们可以帮到你的吗？别客气，我们随时待命！",
+              },
+              {
+                sender: "系统",
+                icon: "🌟",
+                time: "2:15 PM",
+                body: "哇哦！你有一个新的激动人心的任务等待处理。快来看看是什么吧！",
+              },
+              {
+                sender: "小助手",
+                icon: "🤖",
+                time: "4:45 PM",
+                body: "今日趣闻：你知道吗？程序员最喜欢的饮料是Java☕！",
+              },
+            ].map((message, index) => (
+              <div
+                key={index}
+                className="message-item"
+                style={{ borderBottom: `1px solid ${theme.border}` }}
+              >
+                <div className="message-header">
+                  <span
+                    className="sender"
+                    style={{ color: theme.text.primary }}
+                  >
+                    <span className="icon">{message.icon}</span>
+                    {message.sender}
+                  </span>
+                  <span className="time" style={{ color: theme.text.tertiary }}>
+                    {message.time}
+                  </span>
                 </div>
-              ))}
-            </div>
+                <div
+                  className="message-body"
+                  style={{ color: theme.text.secondary }}
+                >
+                  {message.body}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+      </div>
 
       <style jsx>{`
         .main-nav {
@@ -164,7 +221,11 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
           margin-top: auto;
           padding-bottom: 60px;
         }
-        .logo, .add-button, a, .bottom-nav-item, .avatar {
+        .logo,
+        .add-button,
+        a,
+        .bottom-nav-item,
+        .avatar {
           margin-bottom: 20px;
         }
         .add-button {
@@ -176,34 +237,36 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
           font-size: 20px;
           cursor: pointer;
         }
-        a, .bottom-nav-item {
+        a,
+        .bottom-nav-item {
           display: flex;
           flex-direction: column;
           align-items: center;
-          color: ${isDark ? '#78767A' : theme.text.primary};
+          color: ${isDark ? "#78767A" : theme.text.primary};
           text-decoration: none;
           cursor: pointer;
         }
         .active {
-          color: ${isDark ? '#e0e0e0' : theme.primary};
+          color: ${isDark ? "#e0e0e0" : theme.primary};
         }
         .cursor-pointer {
           cursor: pointer;
         }
-        
-          .message-box {
-            position: fixed;
-            left: 110px;
-            bottom: 20px;
-            width: 30vw;
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: -5px 0 20px rgba(0,0,0,0.1), 0 5px 20px rgba(0,0,0,0.1);
-            padding: 20px;
-            transform: translateY(120%);
-            transition: transform 0.3s ease-in-out;
-            z-index: 1000;
-          }
+
+        .message-box {
+          position: fixed;
+          left: 110px;
+          bottom: 20px;
+          width: 30vw;
+          background-color: white;
+          border-radius: 15px;
+          box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1),
+            0 5px 20px rgba(0, 0, 0, 0.1);
+          padding: 20px;
+          transform: translateY(120%);
+          transition: transform 0.3s ease-in-out;
+          z-index: 1000;
+        }
         .message-box.open {
           transform: translateY(0);
         }
@@ -224,7 +287,7 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
           color: #999;
         }
         .message-content {
-          height:auto;
+          height: auto;
           overflow-y: auto;
         }
         .message-item {
@@ -263,12 +326,15 @@ export default function MainNavigation({ activeNav, setActiveNav, isMessageBoxOp
           line-height: 1.4;
         }
       `}</style>
-      
-      <UpgradeModal 
+
+      <UpgradeModal
         isOpen={isUpgradeModalOpen}
         onRequestClose={() => setIsUpgradeModalOpen(false)}
       />
-      <CreateAppModal isOpen={isCreateAppModalOpen} onClose={() => setIsCreateAppModalOpen(false)} />
+      <CreateAppModal
+        isOpen={isCreateAppModalOpen}
+        onClose={() => setIsCreateAppModalOpen(false)}
+      />
     </nav>
   );
 }

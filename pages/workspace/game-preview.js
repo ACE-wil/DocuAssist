@@ -1,107 +1,177 @@
-import { useState, useEffect } from 'react';
-import { useTheme } from '../../contexts/ThemeContext';
-import { Howl } from 'howler';
-import { useDispatch } from 'react-redux';
-import { setNavigationVisibility } from '../../store/navigationSlice';
+import { useState, useEffect } from "react";
+import { useTheme } from "../../contexts/ThemeContext";
+import { Howl } from "howler";
+import { useDispatch } from "react-redux";
+import { setNavigationVisibility } from "../../store/navigationSlice";
 
 export default function GamePreview() {
   const [currentScene, setCurrentScene] = useState(0);
   const [gameHistory, setGameHistory] = useState([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showError, setShowError] = useState(false);
   const { theme } = useTheme();
   const dispatch = useDispatch();
 
   const scenes = [
     {
-      npcName: "萨满",
-      npcDialog: "你好，旅行者。我是这个神秘世界的向导萨满。我注意到你似乎对这里很感兴趣？",
-      npcAvatar: "/avatars/shaman.png",
+      word: "access",
+      dialog:
+        "在《千与千寻》中，千寻意外地踏入了一个充满魔法和神秘的世界，她的心中充满了迷茫和恐惧。她必须找到那个隐秘的access，那是她重返温暖现实世界的唯一希望。",
+      options: [
+        { text: "接近", isCorrect: "false" },
+        { text: "通道", isCorrect: "false" },
+        { text: "入口", isCorrect: "true", nextScene: 1 },
+      ],
+      npcName: "宫崎骏",
+      npcAvatar: "/avatars/gongqijun.jpg",
       backgroundVideo: "/videos/2077.mp4",
-      options: [
-        { text: "是的，我想了解这个世界", nextScene: 1 },
-        { text: "我只是在随便看看", nextScene: 2 }
-      ]
     },
     {
-      npcName: "艾莉",
-      npcDialog: "欢迎来到魔法城市，我是城市守护者艾莉。这里东边是魔法学院，西边是商业区，南边是居民区。你想先去哪里？",
-      npcAvatar: "/avatars/guardian.png",
-      backgroundVideo: "/videos/forest.mp4",
+      word: "accessory",
+      dialog:
+        "电影中的无脸男，沉默而神秘，成为了千寻冒险途中的一个意外accessory。他在关键时刻伸出援手，虽然无声，却让千寻感受到了一丝温暖和依靠。",
       options: [
-        { text: "去魔法学院学习", nextScene: 3 },
-        { text: "去商业区逛逛", nextScene: 4 },
-        { text: "参观居民区", nextScene: 5 }
-      ]
+        { text: "装饰品", isCorrect: "false" },
+        { text: "配件", isCorrect: "false" },
+        { text: "助手", isCorrect: "true", nextScene: 2 },
+      ],
+      npcName: "宫崎骏",
+      npcAvatar: "/avatars/gongqijun.jpg",
+      backgroundVideo: "/videos/2077.mp4",
     },
     {
-      npcName: "马可",
-      npcDialog: "我是流浪商人马可。这片土地确实危险重重，但也蕴藏着无尽的宝藏。需要我为你指路吗？",
-      npcAvatar: "/avatars/merchant.png",
-      backgroundVideo: "/videos/market-street.mp4",
+      word: "accident",
+      dialog:
+        "千寻的父母因贪食变成了猪，这一突如其来的accident彻底颠覆了她的生活。在惊恐和无助中，她被迫踏上了寻找解救之法的旅程。",
       options: [
-        { text: "好的，请告诉我安全路线", nextScene: 6 },
-        { text: "不用了，我喜欢冒险", nextScene: 7 }
-      ]
+        { text: "灾难", isCorrect: "false" },
+        { text: "意外", isCorrect: "true", nextScene: 3 },
+        { text: "事故", isCorrect: "false" },
+      ],
+      npcName: "宫崎骏",
+      npcAvatar: "/avatars/gongqijun.jpg",
+      backgroundVideo: "/videos/2077.mp4",
     },
     {
-      npcName: "奥德里奇",
-      npcDialog: "你好，我是魔法学院的首席法师奥德里奇。你对哪个魔法学科感兴趣？",
-      npcAvatar: "/avatars/wizard.png",
-      backgroundVideo: "/videos/magic-academy.mp4",
+      word: "accidental",
+      dialog:
+        "在那个迷离的夜晚，千寻与白龙的相遇纯属accidental。然而，正是这次偶然的邂逅，点燃了他们之间深厚友谊的火花，照亮了彼此的心灵。",
       options: [
-        { text: "元素魔法", nextScene: 8 },
-        { text: "时空魔法", nextScene: 9 },
-        { text: "治疗魔法", nextScene: 10 }
-      ]
+        { text: "意外的", isCorrect: "false" },
+        { text: "无意的", isCorrect: "false" },
+        { text: "偶然的", isCorrect: "true", nextScene: 4 },
+      ],
+      npcName: "宫崎骏",
+      npcAvatar: "/avatars/gongqijun.jpg",
+      backgroundVideo: "/videos/2077.mp4",
     },
     {
-      npcName: "露娜",
-      npcDialog: "我是商业区的珠宝匠人露娜。这里有许多稀有的魔法宝石，你想看看哪种？",
-      npcAvatar: "/avatars/jeweler.png",
-      backgroundVideo: "/videos/jewelry-shop.mp4",
+      word: "accommodate",
+      dialog:
+        "油屋的汤婆婆拥有神奇的力量，她能够accommodate形形色色的神灵和妖怪。她的慷慨与威严并存，让每一个踏入油屋的生灵都感到敬畏。",
       options: [
-        { text: "力量宝石", nextScene: 11 },
-        { text: "智慧宝石", nextScene: 12 },
-        { text: "生命宝石", nextScene: 13 }
-      ]
+        { text: "容纳", isCorrect: "true", nextScene: 5 },
+        { text: "适应", isCorrect: "false" },
+        { text: "供应", isCorrect: "false" },
+      ],
+      npcName: "宫崎骏",
+      npcAvatar: "/avatars/gongqijun.jpg",
+      backgroundVideo: "/videos/2077.mp4",
     },
     {
-      npcName: "向导",
-      npcDialog: "恭喜你完成了所有探索!",
-      npcAvatar: "/avatars/guide.png",
-      backgroundVideo: "/videos/ending-scene.mp4",
+      word: "accommodation",
+      dialog:
+        "在油屋的角落里，千寻找到了一个简陋却温馨的accommodation。这里虽小，却承载了她在这个陌生世界中的所有希望和梦想。",
       options: [
-        { text: "重新开始冒险", nextScene: 0 },
-        { text: "结束游戏", nextScene: 0 }
-      ]
-    }
+        { text: "设备", isCorrect: "false" },
+        { text: "安排", isCorrect: "false" },
+        { text: "住处", isCorrect: "true", nextScene: 6 },
+      ],
+      npcName: "宫崎骏",
+      npcAvatar: "/avatars/gongqijun.jpg",
+      backgroundVideo: "/videos/2077.mp4",
+    },
+    {
+      word: "accompany",
+      dialog:
+        "每当千寻面临困境时，白龙总是默默地accompany在她身边。他的守护如同温暖的阳光，驱散了她心中的阴霾，让她勇敢前行。",
+      options: [
+        { text: "陪伴", isCorrect: "true", nextScene: 7 },
+        { text: "陪同", isCorrect: "false" },
+        { text: "跟随", isCorrect: "false" },
+      ],
+      npcName: "宫崎骏",
+      npcAvatar: "/avatars/gongqijun.jpg",
+      backgroundVideo: "/videos/2077.mp4",
+    },
+    {
+      word: "accomplish",
+      dialog:
+        "经历了无数次的挑战和磨难，千寻终于accomplish了她看似不可能的任务。她的坚持和勇气不仅解救了父母，也让她成长为一个更加坚强的人。",
+      options: [
+        { text: "实现", isCorrect: "false" },
+        { text: "达到", isCorrect: "false" },
+        { text: "完成", isCorrect: "true", nextScene: 8 },
+      ],
+      npcName: "宫崎骏",
+      npcAvatar: "/avatars/gongqijun.jpg",
+      backgroundVideo: "/videos/2077.mp4",
+    },
+    {
+      word: "accord",
+      dialog:
+        "千寻的纯真与勇敢，与白龙的忠诚与智慧形成了完美的accord。他们心心相印，共同面对困难，谱写了一曲动人的友谊乐章。",
+      options: [
+        { text: "一致", isCorrect: "false" },
+        { text: "协议", isCorrect: "false" },
+        { text: "和谐", isCorrect: "true", nextScene: 9 },
+      ],
+      npcName: "宫崎骏",
+      npcAvatar: "/avatars/gongqijun.jpg",
+      backgroundVideo: "/videos/2077.mp4",
+    },
+    {
+      word: "accordance",
+      dialog:
+        "在油屋这个充满规则和秩序的世界里，千寻必须小心翼翼地保持与汤婆婆意愿的accordance。每一次的服从与抗争，都是她对自我价值的坚持与探索。",
+      options: [
+        { text: "协调", isCorrect: "false" },
+        { text: "符合", isCorrect: "true", nextScene: 10 },
+        { text: "一致", isCorrect: "false" },
+      ],
+      npcName: "宫崎骏",
+      npcAvatar: "/avatars/gongqijun.jpg",
+      backgroundVideo: "/videos/2077.mp4",
+    },
+    {
+      word: "none",
+      dialog: "恭喜你完成了游戏的所有关卡，点击重玩游戏，重新开始游戏",
+      options: [{ text: "重玩游戏", isCorrect: "true", nextScene: 0 }],
+      npcName: "宫崎骏",
+      npcAvatar: "/avatars/gongqijun.jpg",
+      backgroundVideo: "/videos/2077.mp4",
+    },
   ];
 
   // 定义所有音效
   const sounds = {
     hover: new Howl({
-      src: ['/sounds/hover.mp3'],
-      volume: 0.4
+      src: ["/sounds/悬停.mp3"],
+      volume: 1,
     }),
     click: new Howl({
-      src: ['/sounds/click.mp3'],
-      volume: 0.6
-    })
+      src: ["/sounds/点击.mp3"],
+      volume: 0.6,
+    }),
   };
 
   const handleChoice = (nextScene) => {
-    sounds.click.play();
-    setGameHistory([...gameHistory, currentScene]);
-    
-    // 检查是否是最后一个场景
-    if (nextScene >= scenes.length) {
-      // 如果是最后一个场景,跳回开头
-      setCurrentScene(0);
-      // 清空历史记录
-      setGameHistory([]);
-    } else {
-      // 否则正常切换到下一个场景
+    if (nextScene !== undefined) {
       setCurrentScene(nextScene);
+      setGameHistory([...gameHistory, currentScene]);
+    } else {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 2000);
     }
   };
 
@@ -128,14 +198,14 @@ export default function GamePreview() {
   // 监听 F11 键
   useEffect(() => {
     const handleKeyPress = (e) => {
-      if (e.key === 'F11') {
+      if (e.key === "F11") {
         e.preventDefault();
         toggleFullscreen();
       }
     };
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
   }, []);
 
   useEffect(() => {
@@ -149,10 +219,11 @@ export default function GamePreview() {
 
   return (
     <div className="story-game">
+      {showError && <div className="error-message">很抱歉，你答错了</div>}
       <button className="fullscreen-btn" onClick={toggleFullscreen}>
-        {isFullscreen ? '退出全屏' : '进入全屏'}
+        {isFullscreen ? "退出全屏" : "进入全屏"}
       </button>
-      <video 
+      <video
         className="background-video"
         src={scenes[currentScene].backgroundVideo}
         autoPlay
@@ -160,12 +231,15 @@ export default function GamePreview() {
         loop
         playsInline
       />
-      
+
       <div className="content-overlay">
         <div className="progress-bar">
-          <div className="progress" style={{
-            width: `${(currentScene / (scenes.length - 1)) * 100}%`
-          }} />
+          <div
+            className="progress"
+            style={{
+              width: `${(currentScene / (scenes.length - 1)) * 100}%`,
+            }}
+          />
         </div>
 
         <div className="dialog-box">
@@ -174,7 +248,7 @@ export default function GamePreview() {
           </div>
           <div className="dialog-content">
             <div className="npc-name">{scenes[currentScene].npcName}</div>
-            <p>{scenes[currentScene].npcDialog}</p>
+            <p>{scenes[currentScene].dialog}</p>
           </div>
         </div>
 
@@ -195,9 +269,9 @@ export default function GamePreview() {
         .story-game {
           position: relative;
           width: 100%;
-          height: ${isFullscreen ? '100vh' : '94vh'};
+          height: ${isFullscreen ? "100vh" : "94vh"};
           overflow: hidden;
-          margin: ${isFullscreen ? '0' : 'inherit'};
+          margin: ${isFullscreen ? "0" : "inherit"};
         }
 
         .background-video {
@@ -226,7 +300,7 @@ export default function GamePreview() {
         .progress-bar {
           width: 100%;
           height: 4px;
-          background: ${theme.dark ? 'rgba(255, 255, 255, 0.1)' : '#edf2f7'};
+          background: ${theme.dark ? "rgba(255, 255, 255, 0.1)" : "#edf2f7"};
           border-radius: 2px;
           margin-bottom: 2rem;
         }
@@ -239,15 +313,16 @@ export default function GamePreview() {
         }
 
         .dialog-box {
-          background: ${theme.dark ? 
-            'linear-gradient(135deg, rgba(18, 6, 38, 0.9), rgba(44, 10, 74, 0.9))' : 
-            'linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(230, 230, 250, 0.9))'
-          };
-          border: 2px solid ${theme.dark ? '#8a2be2' : '#4b0082'};
-          box-shadow: 
-            0 0 10px ${theme.dark ? '#8a2be2' : '#4b0082'},
-            0 0 20px ${theme.dark ? '#8a2be2' : '#4b0082'},
-            inset 0 0 15px ${theme.dark ? 'rgba(138, 43, 226, 0.5)' : 'rgba(75, 0, 130, 0.5)'};
+          background: ${theme.dark
+            ? "linear-gradient(135deg, rgba(18, 6, 38, 0.9), rgba(44, 10, 74, 0.9))"
+            : "linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(230, 230, 250, 0.9))"};
+          border: 2px solid ${theme.dark ? "#8a2be2" : "#4b0082"};
+          box-shadow: 0 0 10px ${theme.dark ? "#8a2be2" : "#4b0082"},
+            0 0 20px ${theme.dark ? "#8a2be2" : "#4b0082"},
+            inset 0 0 15px
+              ${theme.dark
+                ? "rgba(138, 43, 226, 0.5)"
+                : "rgba(75, 0, 130, 0.5)"};
           border-radius: 15px;
           padding: 20px;
           margin-bottom: 20px;
@@ -262,7 +337,7 @@ export default function GamePreview() {
         }
 
         .dialog-box::before {
-          content: '';
+          content: "";
           position: absolute;
           top: -50%;
           left: -50%;
@@ -270,7 +345,8 @@ export default function GamePreview() {
           height: 200%;
           background: radial-gradient(
             circle,
-            ${theme.dark ? 'rgba(138, 43, 226, 0.1)' : 'rgba(75, 0, 130, 0.1)'} 0%,
+            ${theme.dark ? "rgba(138, 43, 226, 0.1)" : "rgba(75, 0, 130, 0.1)"}
+              0%,
             transparent 80%
           );
           animation: rotateGradient 10s linear infinite;
@@ -290,17 +366,16 @@ export default function GamePreview() {
           height: 80px;
           border-radius: 50%;
           overflow: hidden;
-          border: 3px solid ${theme.dark ? '#8a2be2' : '#4b0082'};
-          box-shadow: 
-            0 0 10px ${theme.dark ? '#8a2be2' : '#4b0082'},
-            0 0 20px ${theme.dark ? '#8a2be2' : '#4b0082'};
+          border: 3px solid ${theme.dark ? "#8a2be2" : "#4b0082"};
+          box-shadow: 0 0 10px ${theme.dark ? "#8a2be2" : "#4b0082"},
+            0 0 20px ${theme.dark ? "#8a2be2" : "#4b0082"};
         }
 
         .npc-avatar img {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          filter: ${theme.dark ? 'brightness(1.2) contrast(1.1)' : 'none'};
+          filter: ${theme.dark ? "brightness(1.2) contrast(1.1)" : "none"};
         }
 
         .dialog-content {
@@ -309,21 +384,21 @@ export default function GamePreview() {
         }
 
         .npc-name {
-          font-family: 'Orbitron', sans-serif;
+          font-family: "Orbitron", sans-serif;
           font-weight: bold;
           font-size: 1.2em;
           margin-bottom: 8px;
-          color: ${theme.dark ? '#ff00ff' : '#8a2be2'};
-          text-shadow: 
-            0 0 5px ${theme.dark ? '#ff00ff' : '#8a2be2'},
-            0 0 10px ${theme.dark ? '#ff00ff' : '#8a2be2'};
+          color: ${theme.dark ? "#ff00ff" : "#8a2be2"};
+          text-shadow: 0 0 5px ${theme.dark ? "#ff00ff" : "#8a2be2"},
+            0 0 10px ${theme.dark ? "#ff00ff" : "#8a2be2"};
         }
 
         .dialog-content p {
-          font-family: 'Rajdhani', sans-serif;
+          font-family: "Rajdhani", sans-serif;
           line-height: 1.6;
-          color: ${theme.dark ? '#e0e0e0' : '#2d0a4e'};
-          text-shadow: 0 0 2px ${theme.dark ? 'rgba(224, 224, 224, 0.5)' : 'rgba(45, 10, 78, 0.5)'};
+          color: ${theme.dark ? "#e0e0e0" : "#2d0a4e"};
+          text-shadow: 0 0 2px
+            ${theme.dark ? "rgba(224, 224, 224, 0.5)" : "rgba(45, 10, 78, 0.5)"};
           font-size: 1.1em;
           letter-spacing: 0.5px;
         }
@@ -338,10 +413,14 @@ export default function GamePreview() {
 
         button {
           padding: 1rem 1.5rem;
-          background: ${theme.dark ? 'rgba(88, 28, 135, 0.2)' : 'rgba(255, 255, 255, 0.8)'};
-          border: ${theme.dark ? '2px solid rgba(139, 92, 246, 0.3)' : `2px solid rgba(255, 255, 255, 0.3)`};
+          background: ${theme.dark
+            ? "rgba(88, 28, 135, 0.2)"
+            : "rgba(255, 255, 255, 0.8)"};
+          border: ${theme.dark
+            ? "2px solid rgba(139, 92, 246, 0.3)"
+            : `2px solid rgba(255, 255, 255, 0.3)`};
           border-radius: 8px;
-          color: ${theme.dark ? '#fff' : '#000'};
+          color: ${theme.dark ? "#fff" : "#000"};
           cursor: pointer;
           transition: all 0.3s ease;
           font-size: 1rem;
@@ -352,26 +431,22 @@ export default function GamePreview() {
         }
 
         button:hover {
-          background: ${theme.dark ? 
-            'linear-gradient(45deg, rgba(255, 0, 128, 0.3), rgba(0, 255, 255, 0.3))' : 
-            'linear-gradient(45deg, rgba(255, 0, 128, 0.2), rgba(0, 255, 255, 0.2))'
-          };
-          border-color: ${theme.dark ? 
-            'rgba(0, 255, 255, 0.6)' : 
-            'rgba(255, 0, 128, 0.6)'
-          };
-          color: ${theme.dark ? '#fff' : '#000'};
+          background: ${theme.dark
+            ? "linear-gradient(45deg, rgba(255, 0, 128, 0.3), rgba(0, 255, 255, 0.3))"
+            : "linear-gradient(45deg, rgba(255, 0, 128, 0.2), rgba(0, 255, 255, 0.2))"};
+          border-color: ${theme.dark
+            ? "rgba(0, 255, 255, 0.6)"
+            : "rgba(255, 0, 128, 0.6)"};
+          color: ${theme.dark ? "#fff" : "#000"};
           transform: translateY(-2px);
-          box-shadow: 
-            0 0 20px rgba(0, 255, 255, 0.3),
+          box-shadow: 0 0 20px rgba(0, 255, 255, 0.3),
             0 0 30px rgba(255, 0, 128, 0.3);
-          text-shadow: 
-            0 0 8px rgba(255, 255, 255, 0.8),
+          text-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
             0 0 12px rgba(0, 255, 255, 0.5);
         }
 
         button:hover::before {
-          content: '';
+          content: "";
           position: absolute;
           top: -50%;
           left: -50%;
@@ -393,14 +468,16 @@ export default function GamePreview() {
             transform: rotate(360deg);
           }
         }
-          
+
         .fullscreen-btn {
           position: absolute;
           top: 20px;
           right: 20px;
           z-index: 100;
           padding: 8px 16px;
-          background: ${theme.dark ? 'rgba(88, 28, 135, 0.8)' : 'rgba(255, 255, 255, 0.8)'};
+          background: ${theme.dark
+            ? "rgba(88, 28, 135, 0.8)"
+            : "rgba(255, 255, 255, 0.8)"};
           border: none;
           border-radius: 4px;
           color: black;
@@ -412,7 +489,9 @@ export default function GamePreview() {
         .fullscreen-btn:hover {
           transform: scale(1.05);
           color: black;
-          background: ${theme.dark ? 'rgba(139, 92, 246, 0.8)' : 'rgba(255, 255, 255, 0.9)'};
+          background: ${theme.dark
+            ? "rgba(139, 92, 246, 0.8)"
+            : "rgba(255, 255, 255, 0.9)"};
         }
 
         /* 全屏时的样式调整 */
@@ -420,18 +499,42 @@ export default function GamePreview() {
           height: 100vh;
           width: 100vw;
         }
+
+        .error-message {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: rgba(255, 0, 0, 0.8);
+          color: white;
+          padding: 20px;
+          border-radius: 10px;
+          font-size: 1.5em;
+          animation: fadeInOut 2s;
+          z-index: 1000;
+        }
+
+        @keyframes fadeInOut {
+          0%,
+          100% {
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+          }
+        }
       `}</style>
 
       <style jsx global>{`
         body:fullscreen {
           overflow: hidden;
         }
-        
+
         body:fullscreen nav,
         body:fullscreen aside {
           display: none !important;
         }
-        
+
         body:fullscreen .story-game {
           width: 100vw !important;
           height: 100vh !important;
