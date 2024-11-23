@@ -9,6 +9,7 @@ export default function GamePreview() {
   const [gameHistory, setGameHistory] = useState([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [bgMusic, setBgMusic] = useState(null);
   const [showCorrect, setCorrectError] = useState(false);
   const { theme } = useTheme();
   const dispatch = useDispatch();
@@ -157,14 +158,35 @@ export default function GamePreview() {
   // 定义所有音效
   const sounds = {
     hover: new Howl({
-      src: ["/sounds/悬停.mp3"],
+      src: ["/sounds/悬停.FLAC"],
       volume: 1,
     }),
     click: new Howl({
       src: ["/sounds/点击.mp3"],
       volume: 0.6,
     }),
+    correct: new Howl({
+      src: ["/sounds/正确.FLAC"],
+      volume: 0.6,
+    }),
+    error: new Howl({
+      src: ["/sounds/错误.FLAC"],
+      volume: 0.6,
+    }),
   };
+
+  useEffect(() => {
+    const music = new Howl({
+      src: ["/music/qianyqx.flac"], // 需要添加背景音乐文件
+      loop: true,
+      volume: 0.2,
+    });
+    setBgMusic(music);
+    music.play();
+    return () => {
+      music.stop();
+    };
+  }, []);
 
   const handleChoice = (nextScene) => {
     if (nextScene > 0) {
@@ -186,8 +208,16 @@ export default function GamePreview() {
   };
 
   // 鼠标悬停效果
-  const handleClick = () => {
+  const handleClick = (selectedOption) => {
     sounds.click.play();
+
+    if (selectedOption.isCorrect === "true") {
+      sounds.correct.play();
+      console.log("right");
+    } else {
+      console.log("error");
+      sounds.error.play();
+    }
   };
 
   // 处理全屏切换
@@ -268,7 +298,7 @@ export default function GamePreview() {
             <button
               key={index}
               onClick={() => {
-                handleChoice(option.nextScene), handleClick();
+                handleChoice(option.nextScene), handleClick(option);
               }}
               onMouseEnter={handleHover}
             >
