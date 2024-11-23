@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "../../contexts/ThemeContext";
-import { Howl } from "howler";
+import { Howl, Howler } from "howler";
 import { useDispatch } from "react-redux";
 import { setNavigationVisibility } from "../../store/navigationSlice";
 
@@ -11,6 +11,9 @@ export default function GamePreview() {
   const [showError, setShowError] = useState(false);
   const [bgMusic, setBgMusic] = useState(null);
   const [showCorrect, setCorrectError] = useState(false);
+  const [correctMessage, setCorrectMessage] = useState("恭喜你，你答对了🎉🎉");
+  const [errorMessage, setErrorMessage] = useState("没关系，再试一次！😊");
+  const [isMuted, setIsMuted] = useState(false);
   const { theme } = useTheme();
   const dispatch = useDispatch();
 
@@ -26,7 +29,7 @@ export default function GamePreview() {
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/2077.mp4",
+      backgroundVideo: "/videos/qianyuqianxun.mp4",
     },
     {
       word: "accessory",
@@ -39,7 +42,7 @@ export default function GamePreview() {
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/2077.mp4",
+      backgroundVideo: "/videos/qianyuqianxun.mp4",
     },
     {
       word: "accident",
@@ -70,7 +73,7 @@ export default function GamePreview() {
     {
       word: "accommodate",
       dialog:
-        "油屋的汤婆婆拥有神奇的力量，她能够accommodate形形色色的神灵和妖怪。她的慷慨与威严并存，让每一个踏入油屋的生灵都感到敬畏。",
+        "油屋的汤婆婆拥有神奇的力量，她能够accommodate形形色色的神灵和妖怪。她的慷慨与威严并存，让每一个踏入油屋的生灵都感到畏。",
       options: [
         { text: "容纳", isCorrect: "true", nextScene: 5 },
         { text: "适应", isCorrect: "false" },
@@ -155,19 +158,41 @@ export default function GamePreview() {
     },
   ];
 
+  const congratulatoryMessages = [
+    "太棒了！你真是个天才！🎉",
+    "恭喜你，答对了！继续保持！💪",
+    "你做得非常好！继续加油！🌟",
+    "完美！你的努力没有白费！👏",
+    "你简直是个小天才！再来一题？😉",
+    "哇哦，你的智商爆表了！😎",
+    "你的智慧和勇气让我感动！❤️",
+    "你真是太厉害了，继续前进吧！🌈",
+  ];
+
+  const comfortMessages = [
+    "没关系，再试一次！😊",
+    "错误是成功之母，加油！💪",
+    "别灰心，你已经很棒了！🌟",
+    "继续努力，你会成功的！👏",
+    "每一次错误都是进步的机会！😉",
+    "相信自己，你能做到的！😎",
+    "失败乃成功之母，继续加油！❤️",
+    "再接再厉，你会更好！🌈",
+  ];
+
   // 定义所有音效
   const sounds = {
     hover: new Howl({
       src: ["/sounds/悬停.FLAC"],
-      volume: 1,
+      volume: 0.4,
     }),
     click: new Howl({
       src: ["/sounds/点击.mp3"],
       volume: 0.6,
     }),
-    correct: new Howl({
+    success: new Howl({
       src: ["/sounds/正确.FLAC"],
-      volume: 0.6,
+      volume: 0.7,
     }),
     error: new Howl({
       src: ["/sounds/错误.FLAC"],
@@ -212,11 +237,19 @@ export default function GamePreview() {
     sounds.click.play();
 
     if (selectedOption.isCorrect === "true") {
-      sounds.correct.play();
+      sounds.success.play();
+      const randomMessage =
+        congratulatoryMessages[
+          Math.floor(Math.random() * congratulatoryMessages.length)
+        ];
+      setCorrectMessage(randomMessage);
       console.log("right");
     } else {
       console.log("error");
       sounds.error.play();
+      const randomMessage =
+        comfortMessages[Math.floor(Math.random() * comfortMessages.length)];
+      setErrorMessage(randomMessage);
     }
   };
 
@@ -257,12 +290,21 @@ export default function GamePreview() {
     };
   }, [dispatch]);
 
+  const toggleMute = () => {
+    const newMuteState = !isMuted;
+    setIsMuted(newMuteState);
+    Howler.mute(newMuteState); // 静音或取消静音所有音频
+  };
+
   return (
     <div className="story-game">
-      {showError && <div className="error-message">很抱歉，你答错了</div>}
-      {showCorrect && <div className="correct-message">恭喜你，你答对了</div>}
+      {showError && <div className="error-message">{errorMessage}</div>}
+      {showCorrect && <div className="correct-message">{correctMessage}</div>}
       <button className="fullscreen-btn" onClick={toggleFullscreen}>
         {isFullscreen ? "退出全屏" : "进入全屏"}
+      </button>
+      <button className="mute-btn" onClick={toggleMute}>
+        {isMuted ? "🔇" : "🔊"}
       </button>
       <video
         className="background-video"
@@ -377,6 +419,7 @@ export default function GamePreview() {
           backdrop-filter: blur(5px);
           position: relative;
           overflow: hidden;
+          opacity: 0.8;
         }
 
         .dialog-box::before {
@@ -578,6 +621,30 @@ export default function GamePreview() {
           50% {
             opacity: 1;
           }
+        }
+
+        .mute-btn {
+          position: absolute;
+          bottom: 20px;
+          right: 20px;
+          z-index: 100;
+          padding: 8px;
+          background: ${theme.dark
+            ? "rgba(88, 28, 135, 0.8)"
+            : "rgba(255, 255, 255, 0.8)"};
+          border: none;
+          border-radius: 50%;
+          color: black;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          backdrop-filter: blur(4px);
+        }
+
+        .mute-btn:hover {
+          transform: scale(1.1);
+          background: ${theme.dark
+            ? "rgba(139, 92, 246, 0.8)"
+            : "rgba(255, 255, 255, 0.9)"};
         }
       `}</style>
 
