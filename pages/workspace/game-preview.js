@@ -202,7 +202,7 @@ export default function GamePreview() {
 
   useEffect(() => {
     const music = new Howl({
-      src: ["/music/qianyqx.flac"], // 需要添加背景音乐文件
+      src: ["/music/那一天的河川.flac"], // 需要添加背景音乐文件
       loop: true,
       volume: 0.2,
     });
