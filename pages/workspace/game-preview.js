@@ -152,7 +152,7 @@ export default function GamePreview() {
     },
     {
       word: "none",
-      dialog: "恭喜你完成了游戏的所有关卡，点击重玩游戏，重新开始游戏",
+      dialog: "恭喜你完成了游戏的所有关卡，点击重玩游戏，重开始游戏",
       options: [{ text: "重玩游戏", isCorrect: "true", nextScene: 0 }],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
@@ -332,8 +332,21 @@ export default function GamePreview() {
     };
   }
 
+  const toggleImmersiveMode = () => {
+    setIsImmersive(!isImmersive);
+  };
+
   return (
     <div className="story-game">
+      <label className="immersive-switch">
+        <input
+          type="checkbox"
+          checked={isImmersive}
+          onChange={toggleImmersiveMode}
+        />
+        <span className="slider"></span>
+        {isImmersive ? "沉浸式" : "普通模式"}
+      </label>
       {showError && <div className="error-message">{errorMessage}</div>}
       {showCorrect && <div className="correct-message">{correctMessage}</div>}
       <button className="fullscreen-btn" onClick={toggleFullscreen}>
@@ -372,17 +385,18 @@ export default function GamePreview() {
         volume={videoVolume}
       />
 
-      <div className="content-overlay">
-        <div className="progress-bar">
-          <div
-            className="progress"
-            style={{
-              width: `${(currentScene / (scenes.length - 1)) * 100}%`,
-              backgroundColor: theme.button.primary,
-            }}
-          />
-        </div>
-
+      <div className={`content-overlay ${isImmersive ? "immersive" : ""}`}>
+        {!isImmersive && (
+          <div className="progress-bar">
+            <div
+              className="progress"
+              style={{
+                width: `${(currentScene / (scenes.length - 1)) * 100}%`,
+                backgroundColor: theme.button.primary,
+              }}
+            />
+          </div>
+        )}
         <div className="dialog-box">
           <div className="npc-avatar">
             <img src={scenes[currentScene].npcAvatar} alt="NPC" />
@@ -392,8 +406,7 @@ export default function GamePreview() {
             <p>{scenes[currentScene].dialog}</p>
           </div>
         </div>
-
-        <div className="options-container">
+        <div className={`options-container ${isImmersive ? "immersive" : ""}`}>
           {scenes[currentScene].options.map((option, index) => (
             <button
               key={index}
@@ -726,6 +739,78 @@ export default function GamePreview() {
           left: -160px; /* 确保进度条在音乐图标左边 */
           width: 150px;
           display: block;
+        }
+
+        .immersive-switch {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          z-index: 100;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+        }
+
+        .immersive-switch input {
+          display: none;
+        }
+
+        .slider {
+          width: 40px;
+          height: 20px;
+          background-color: ${theme.dark ? "#ccc" : "#ddd"};
+          border-radius: 20px;
+          position: relative;
+          transition: background-color 0.2s;
+          margin-right: 10px;
+        }
+
+        .slider::before {
+          content: "";
+          position: absolute;
+          width: 18px;
+          height: 18px;
+          background-color: white;
+          border-radius: 50%;
+          top: 1px;
+          left: 1px;
+          transition: transform 0.2s;
+        }
+
+        input:checked + .slider {
+          background-color: ${theme.button.primary};
+        }
+
+        input:checked + .slider::before {
+          transform: translateX(20px);
+        }
+
+        .content-overlay.immersive {
+          justify-content: flex-end;
+          align-items: flex-start;
+          padding-bottom: 20px;
+          padding-left: 20px;
+        }
+
+        .dialog-box {
+          width: ${isImmersive ? "60%" : "80%"};
+          max-width: ${isImmersive ? "400px" : "600px"};
+          margin-bottom: ${isImmersive ? "40px" : "20px"};
+        }
+
+        .options-container.immersive {
+          flex-direction: row;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          justify-content: flex-start;
+          margin-bottom: 20px;
+        }
+
+        .options-container.immersive button {
+          flex: 1 1 20%;
+          max-width: 22%;
+          padding: 0.5rem 1rem;
+          font-size: 1rem;
         }
       `}</style>
 
