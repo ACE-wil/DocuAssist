@@ -9,11 +9,13 @@ export default function GamePreview() {
   const [gameHistory, setGameHistory] = useState([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [bgMusic, setBgMusic] = useState(null);
-  const [showCorrect, setCorrectError] = useState(false);
+  const [showCorrect, setShowCorrect] = useState(false);
   const [correctMessage, setCorrectMessage] = useState("恭喜你，你答对了🎉🎉");
   const [errorMessage, setErrorMessage] = useState("没关系，再试一次！😊");
   const [isMuted, setIsMuted] = useState(false);
+  const [videoVolume, setVideoVolume] = useState(0.5);
+  const [showVolumeControl, setShowVolumeControl] = useState(false);
+  const [isImmersive, setIsImmersive] = useState(false);
   const { theme } = useTheme();
   const dispatch = useDispatch();
 
@@ -21,24 +23,24 @@ export default function GamePreview() {
     {
       word: "access",
       dialog:
-        "在《千与千寻》中，千寻意外地踏入了一个充满魔法和神秘的世界，她的心中充满了迷茫和恐惧。她必须找到那个隐秘的access，那是她重返温暖现实世界的唯一希望。",
+        "在《绿皮书》中，托尼站在那辆老旧的轿车旁，心中充满了对未知的忐忑与期待。他知道，找到进入黑人音乐家唐·雪利南方巡演的世界的access，不仅是开启一段工作的钥匙，更是踏入一个全新人生篇章的门槛。",
       options: [
-        { text: "接近", isCorrect: "false" },
-        { text: "通道", isCorrect: "false" },
+        { text: "接近", isCorrect: "false", nextScene: -1 },
         { text: "入口", isCorrect: "true", nextScene: 1 },
+        { text: "通道", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/qianyuqianxun.mp4",
+      backgroundVideo: "/videos/lvpishu_1.mp4",
     },
     {
       word: "accessory",
       dialog:
-        "电影中的无脸男，沉默而神秘，成为了千寻冒险途中的一个意外accessory。他在关键时刻伸出援手，虽然无声，却让千寻感受到了一丝温暖和依靠。",
+        "托尼的车，那辆泛着金属光泽的绿皮书座驾，不仅仅是他们旅途中的accessory，更是风雨同舟的伙伴。在每一个黎明与黄昏，它载着两人穿越偏见与隔阂，见证了一段超越种族与阶层的深厚友谊。",
       options: [
-        { text: "装饰品", isCorrect: "false" },
-        { text: "配件", isCorrect: "false" },
-        { text: "助手", isCorrect: "true", nextScene: 2 },
+        { text: "从犯", isCorrect: "false", nextScene: -1 },
+        { text: "附件", isCorrect: "true", nextScene: 2 },
+        { text: "同谋", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
@@ -47,106 +49,106 @@ export default function GamePreview() {
     {
       word: "accident",
       dialog:
-        "千寻的父母因贪食变成了猪，这一突如其来的accident彻底颠覆了她的生活。在惊恐和无助中，她被迫踏上了寻找解救之法的旅程。",
+        "一场突如其来的accident让托尼和唐·雪利被迫停留在荒凉的公路边。在等待救援的漫长时间里，他们从最初的尴尬沉默到后来的坦诚交谈，这次意外，像命运的安排，悄然拉近了两颗原本疏离的心。",
       options: [
-        { text: "灾难", isCorrect: "false" },
-        { text: "意外", isCorrect: "true", nextScene: 3 },
-        { text: "事故", isCorrect: "false" },
+        { text: "意外", isCorrect: "false", nextScene: -1 },
+        { text: "事故", isCorrect: "true", nextScene: 3 },
+        { text: "偶发事件", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/2077.mp4",
+      backgroundVideo: "/videos/qianyuqianxun.mp4",
     },
     {
       word: "accidental",
       dialog:
-        "在那个迷离的夜晚，千寻与白龙的相遇纯属accidental。然而，正是这次偶然的邂逅，点燃了他们之间深厚友谊的火花，照亮了彼此的心灵。",
+        "他们的相遇，初看是那样accidental，仿佛只是人生旅途中的一次偶然交汇。然而，随着故事的展开，他们发现这段旅程早已在命运的蓝图上绘就，每一次微笑、每一次争执，都是不可或缺的篇章。",
       options: [
-        { text: "意外的", isCorrect: "false" },
-        { text: "无意的", isCorrect: "false" },
+        { text: "意外的", isCorrect: "false", nextScene: -1 },
+        { text: "非本质的", isCorrect: "false", nextScene: -1 },
         { text: "偶然的", isCorrect: "true", nextScene: 4 },
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/2077.mp4",
+      backgroundVideo: "/videos/qianyuqianxun.mp4",
     },
     {
       word: "accommodate",
       dialog:
-        "油屋的汤婆婆拥有神奇的力量，她能够accommodate形形色色的神灵和妖怪。她的慷慨与威严并存，让每一个踏入油屋的生灵都感到畏。",
+        "面对南方根深蒂固的种族歧视，唐·雪利以优雅而坚韧的姿态努力accommodate。他既要在音乐会上展现无与伦比的才华，又要在现实中委曲求全，这份坚持与妥协，是对尊严与梦想的双重捍卫。",
       options: [
-        { text: "容纳", isCorrect: "true", nextScene: 5 },
-        { text: "适应", isCorrect: "false" },
-        { text: "供应", isCorrect: "false" },
+        { text: "供应", isCorrect: "false", nextScene: -1 },
+        { text: "适应", isCorrect: "true", nextScene: 5 },
+        { text: "容纳", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/2077.mp4",
+      backgroundVideo: "/videos/qianyuqianxun.mp4",
     },
     {
       word: "accommodation",
       dialog:
-        "在油屋的角落里，千寻找到了一个简陋却温馨的accommodation。这里虽小，却承载了她在这个陌生世界中的所有希望和梦想。",
+        "夜幕降临，托尼和唐·雪利却因肤色问题屡屡被拒之门外，找不到一处愿意接纳他们的accommodation。在那些寒冷的夜晚，他们蜷缩在车内，彼此的陪伴成了对抗世间冷漠的唯一温暖。",
       options: [
-        { text: "设备", isCorrect: "false" },
-        { text: "安排", isCorrect: "false" },
-        { text: "住处", isCorrect: "true", nextScene: 6 },
+        { text: "预定铺位", isCorrect: "false", nextScene: -1 },
+        { text: "住所", isCorrect: "true", nextScene: 6 },
+        { text: "招待设备", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/2077.mp4",
+      backgroundVideo: "/videos/qianyuqianxun.mp4",
     },
     {
       word: "accompany",
       dialog:
-        "每当千寻面临困境时，白龙总是默默地accompany在她身边。他的守护如同温暖的阳光，驱散了她心中的阴霾，让她勇敢前行。",
+        "托尼不仅仅是唐·雪利的司机和保镖，更是他在这段艰难旅程中的忠实伙伴。他们一起面对风雨，一起笑对困厄，accompany的意义，早已超越了职责，升华成了无言的默契与深情。",
       options: [
         { text: "陪伴", isCorrect: "true", nextScene: 7 },
-        { text: "陪同", isCorrect: "false" },
-        { text: "跟随", isCorrect: "false" },
+        { text: "陪同", isCorrect: "false", nextScene: -1 },
+        { text: "伴随", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/2077.mp4",
+      backgroundVideo: "/videos/qianyuqianxun.mp4",
     },
     {
       word: "accomplish",
       dialog:
-        "经历了无数次的挑战和磨难，千寻终于accomplish了她看似不可能的任务。她的坚持和勇气不仅解救了父母，也让她成长为一个更加坚强的人。",
+        "随着巡演的圆满结束，唐·雪利不仅accomplish了音乐上的辉煌成就，更在心灵深处完成了自我救赎与成长。他的每一次演奏，都在用音符打破偏见，用旋律呼唤平等。",
       options: [
-        { text: "实现", isCorrect: "false" },
-        { text: "达到", isCorrect: "false" },
+        { text: "达到", isCorrect: "false", nextScene: -1 },
+        { text: "实现", isCorrect: "false", nextScene: -1 },
         { text: "完成", isCorrect: "true", nextScene: 8 },
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/2077.mp4",
+      backgroundVideo: "/videos/qianyuqianxun.mp4",
     },
     {
       word: "accord",
       dialog:
-        "千寻的纯真与勇敢，与白龙的忠诚与智慧形成了完美的accord。他们心心相印，共同面对困难，谱写了一曲动人的友谊乐章。",
+        "当冬日的阳光洒在纽约的街道上，托尼和唐·雪利在彼此的目光中找到了深深的accord。他们以平等的尊重和理解，超越了曾经的隔阂，成为了彼此生命中不可或缺的朋友。",
       options: [
-        { text: "一致", isCorrect: "false" },
-        { text: "协议", isCorrect: "false" },
         { text: "和谐", isCorrect: "true", nextScene: 9 },
+        { text: "给予", isCorrect: "false", nextScene: -1 },
+        { text: "一致", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/2077.mp4",
+      backgroundVideo: "/videos/qianyuqianxun.mp4",
     },
     {
       word: "accordance",
       dialog:
-        "在油屋这个充满规则和秩序的世界里，千寻必须小心翼翼地保持与汤婆婆意愿的accordance。每一次的服从与抗争，都是她对自我价值的坚持与探索。",
+        "他们的友谊，如同精心谱写的乐章，在相互理解和accordance的和弦中奏响。这份情谊，超越了肤色与阶层的界限，成为了人性光辉中最动人的篇章。",
       options: [
-        { text: "协调", isCorrect: "false" },
-        { text: "符合", isCorrect: "true", nextScene: 10 },
-        { text: "一致", isCorrect: "false" },
+        { text: "授予", isCorrect: "false", nextScene: -1 },
+        { text: "和谐", isCorrect: "false", nextScene: -1 },
+        { text: "一致", isCorrect: "true", nextScene: 10 },
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/2077.mp4",
+      backgroundVideo: "/videos/qianyuqianxun.mp4",
     },
     {
       word: "none",
@@ -154,7 +156,7 @@ export default function GamePreview() {
       options: [{ text: "重玩游戏", isCorrect: "true", nextScene: 0 }],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/2077.mp4",
+      backgroundVideo: "/videos/qianyuqianxun.mp4",
     },
   ];
 
@@ -180,7 +182,7 @@ export default function GamePreview() {
     "再接再厉，你会更好！🌈",
   ];
 
-  // 定义所有音效
+  // 定义所音效
   const sounds = {
     hover: new Howl({
       src: ["/sounds/悬停.FLAC"],
@@ -192,7 +194,7 @@ export default function GamePreview() {
     }),
     success: new Howl({
       src: ["/sounds/正确.FLAC"],
-      volume: 0.7,
+      volume: 0.6,
     }),
     error: new Howl({
       src: ["/sounds/错误.FLAC"],
@@ -201,22 +203,22 @@ export default function GamePreview() {
   };
 
   useEffect(() => {
-    const music = new Howl({
-      src: ["/music/那一天的河川.flac"], // 需要添加背景音乐文件
-      loop: true,
-      volume: 0.2,
-    });
-    setBgMusic(music);
-    music.play();
+    // const music = new Howl({
+    //   src: ["/music/lvpishu.FLAC"], // 需要添加背景音乐文件
+    //   loop: true,
+    //   volume: 0.2,
+    // });
+    // setBgMusic(music);
+    // music.play();
     return () => {
-      music.stop();
+      // music.stop();
     };
   }, []);
 
   const handleChoice = (nextScene) => {
     if (nextScene > 0) {
-      setCorrectError(true);
-      setTimeout(() => setCorrectError(false), 2000);
+      setShowCorrect(true);
+      setTimeout(() => setShowCorrect(false), 2000);
       setCurrentScene(nextScene);
       setGameHistory([...gameHistory, currentScene]);
     } else if (nextScene === 0) {
@@ -232,7 +234,7 @@ export default function GamePreview() {
     sounds.hover.play();
   };
 
-  // 鼠标悬停效果
+  // 选择选项效果
   const handleClick = (selectedOption) => {
     sounds.click.play();
 
@@ -290,11 +292,45 @@ export default function GamePreview() {
     };
   }, [dispatch]);
 
+  const handleVolumeChange = (e) => {
+    const volume = parseFloat(e.target.value);
+    setVideoVolume(volume);
+    const videoElement = document.querySelector(".background-video");
+    if (videoElement) {
+      videoElement.volume = volume;
+    }
+  };
+
+  const handleMouseEnter = () => {
+    setShowVolumeControl(true);
+    setTimeout(() => setShowVolumeControl(false), 4000); // 显示3秒
+  };
+
   const toggleMute = () => {
     const newMuteState = !isMuted;
     setIsMuted(newMuteState);
     Howler.mute(newMuteState); // 静音或取消静音所有音频
   };
+
+  // 自定义节流函数
+  function throttle(func, limit) {
+    let lastFunc;
+    let lastRan;
+    return function (...args) {
+      if (!lastRan) {
+        func.apply(this, args);
+        lastRan = Date.now();
+      } else {
+        clearTimeout(lastFunc);
+        lastFunc = setTimeout(() => {
+          if (Date.now() - lastRan >= limit) {
+            func.apply(this, args);
+            lastRan = Date.now();
+          }
+        }, limit - (Date.now() - lastRan));
+      }
+    };
+  }
 
   return (
     <div className="story-game">
@@ -303,16 +339,37 @@ export default function GamePreview() {
       <button className="fullscreen-btn" onClick={toggleFullscreen}>
         {isFullscreen ? "退出全屏" : "进入全屏"}
       </button>
-      <button className="mute-btn" onClick={toggleMute}>
+      <button
+        className="mute-btn"
+        onClick={toggleMute}
+        title={isMuted ? "恢复音效声音" : "音效静音"}
+      >
         {isMuted ? "🔇" : "🔊"}
       </button>
+      <div
+        className="video-volume-control"
+        onMouseEnter={throttle(handleMouseEnter, 3000)}
+      >
+        🎵
+        {showVolumeControl && (
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.1"
+            value={videoVolume}
+            onChange={handleVolumeChange}
+          />
+        )}
+      </div>
       <video
         className="background-video"
         src={scenes[currentScene].backgroundVideo}
         autoPlay
-        muted
+        // muted={isMuted}
         loop
         playsInline
+        volume={videoVolume}
       />
 
       <div className="content-overlay">
@@ -321,6 +378,7 @@ export default function GamePreview() {
             className="progress"
             style={{
               width: `${(currentScene / (scenes.length - 1)) * 100}%`,
+              backgroundColor: theme.button.primary,
             }}
           />
         </div>
@@ -379,7 +437,7 @@ export default function GamePreview() {
           flex-direction: column;
           justify-content: flex-end;
           align-items: center;
-          padding: 60px;
+          padding-bottom: 120px;
         }
 
         .progress-bar {
@@ -392,7 +450,7 @@ export default function GamePreview() {
 
         .progress {
           height: 100%;
-          background: ${theme.button.primary};
+          background: ${theme.dark ? "rgba(255, 255, 255, 0.1)" : "#edf2f7"};
           border-radius: 2px;
           transition: width 0.3s ease;
         }
@@ -645,6 +703,29 @@ export default function GamePreview() {
           background: ${theme.dark
             ? "rgba(139, 92, 246, 0.8)"
             : "rgba(255, 255, 255, 0.9)"};
+        }
+
+        .video-volume-control {
+          position: absolute;
+          bottom: 100px;
+          right: 20px;
+          z-index: 100;
+          cursor: pointer;
+          background: ${theme.dark
+            ? "rgba(88, 28, 135, 0.8)"
+            : "rgba(255, 255, 255, 0.8)"};
+          border-radius: 50%;
+          padding: 8px;
+          transition: all 0.2s ease;
+          backdrop-filter: blur(4px);
+        }
+
+        input[type="range"] {
+          position: absolute;
+          top: 10px;
+          left: -160px; /* 确保进度条在音乐图标左边 */
+          width: 150px;
+          display: block;
         }
       `}</style>
 
