@@ -1,9 +1,9 @@
-import Link from 'next/link';
-import { useTheme } from '../contexts/ThemeContext';
+import Link from "next/link";
+import { useTheme } from "../contexts/ThemeContext";
 
 export default function HomePage() {
   const { theme } = useTheme();
-  
+
   return (
     <div className="home-page" style={{ backgroundColor: theme.background }}>
       <div className="background-decorations">
@@ -12,67 +12,91 @@ export default function HomePage() {
         <div className="decoration-box box3"></div>
         <div className="decoration-box box4"></div>
       </div>
-      
+
       <div className="content-wrapper">
-        <div className="top-banner cursor-pointer" style={{
-          display: 'flex',
-          justifyContent: 'center',
-          flexDirection: 'column'
-        }}>
-          <div style={{
-            position: 'relative',
-            color: 'white',
-            fontSize: '40px',
-            fontWeight: 'bold',
-            textAlign: 'left',
-            marginTop: '-20px'
-          }}>以自己的方式创建 AI 代理</div>
-          <div style={{
-            position: 'relative',
-            color: theme.text.secondary,
-            fontSize: '20px',
-            fontWeight: 'bold',
-            textAlign: 'left'
-          }}>新一代AI Agent构建平台，无需编码即可快速创建Agent并发布到各大平台。</div>
+        <div
+          className="top-banner cursor-pointer"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              color: "white",
+              fontSize: "40px",
+              fontWeight: "bold",
+              textAlign: "left",
+              marginTop: "-20px",
+            }}
+          >
+            以自己的方式创建 AI 代理
+          </div>
+          <div
+            style={{
+              position: "relative",
+              color: theme.text.secondary,
+              fontSize: "20px",
+              fontWeight: "bold",
+              textAlign: "left",
+            }}
+          >
+            新一代AI Agent构建平台，无需编码即可快速创建Agent并发布到各大平台。
+          </div>
         </div>
-        
+
         <div className="tutorial-section">
-          <h2 style={{
-            display: 'flex', 
-            flexDirection: 'row',
-            color: theme.text.primary
-          }}>新手教程
+          <h2
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              color: theme.text.primary,
+            }}
+          >
+            新手教程
             <Link href="/tutorial">
               <a className="tutorial-link">
-                <span style={{marginLeft:'3px'}}>🔗</span>
+                <span style={{ marginLeft: "3px" }}>🔗</span>
               </a>
             </Link>
           </h2>
-          
         </div>
-        
+
         <div className="feature-section">
           {[
-            { img: '/bn-1.jpeg', title: '什么是DocuAssist', description: '点击查看' },
-            { img: '/bn-2.jpeg', title: '快速启动', description: '点击查看' },
-            { img: '/bn-3.jpeg', title: '发行说明', description: '点击查看' },
+            {
+              img: "/bn-1.jpeg",
+              title: "什么是DocuAssist",
+              description: "点击查看",
+            },
+            { img: "/bn-2.jpeg", title: "快速启动", description: "点击查看" },
+            { img: "/bn-3.jpeg", title: "发行说明", description: "点击查看" },
           ].map((feature, index) => (
             <div key={index} className="feature-item">
               <div className="feature-image cursor-pointer">
                 <img src={feature.img} alt={feature.title} />
                 <div className="feature-text">
-                  <h3 style={{ color: theme.text.primary }}>{feature.title}</h3>
-                  <p style={{ color: theme.text.secondary }}>{feature.description}</p>
+                  <h3 style={{ color: theme.text.indexTitleColor }}>
+                    {feature.title}
+                  </h3>
+                  <p style={{ color: theme.text.indexTipColor }}>
+                    {feature.description}
+                  </p>
                 </div>
               </div>
             </div>
           ))}
         </div>
-        
+
         <div className="content-section">
           <div className="left-content">
             <div className="section-header">
-              <h2 className="section-title" style={{ color: theme.text.primary }}>
+              <h2
+                className="section-title"
+                style={{ color: theme.text.primary }}
+              >
                 关注
                 <Link href="/following">
                   <a className="header-link">
@@ -83,27 +107,54 @@ export default function HomePage() {
             </div>
             <div className="app-list">
               {[1, 2, 3].map((item) => (
-                <div key={item} className="app-card" style={{ backgroundColor: theme.surface }}>
+                <div
+                  key={item}
+                  className="app-card"
+                  style={{ backgroundColor: theme.surface }}
+                >
                   <div className="app-info">
-                    <img src={`/bn-${item}.jpeg`} alt="应用图标" className="app-icon" />
+                    <img
+                      src={`/bn-${item}.jpeg`}
+                      alt="应用图标"
+                      className="app-icon"
+                    />
                     <div className="app-details">
                       <div className="app-header">
                         <div className="app-title">
-                          <h3 style={{ color: theme.text.primary }}>AI助手应用{item}</h3>
-                          <span className="app-author" style={{ color: theme.text.secondary }}>@作者{item}</span>
+                          <h3 style={{ color: theme.text.primary }}>
+                            AI助手应用{item}
+                          </h3>
+                          <span
+                            className="app-author"
+                            style={{ color: theme.text.secondary }}
+                          >
+                            @作者{item}
+                          </span>
                         </div>
                         <button className="follow-button">
                           <span className="follow-icon">+</span>
                           关注
                         </button>
                       </div>
-                      <p className="app-description" style={{ color: theme.text.secondary }}>
+                      <p
+                        className="app-description"
+                        style={{ color: theme.text.secondary }}
+                      >
                         这是一个智能AI助手，可以帮助您完成各种任务，如翻译、写作、编程等。
                       </p>
-                      <div className="app-stats" style={{ color: theme.text.tertiary }}>
-                        <span><i className="icon">👁️</i> 1.2k</span>
-                        <span><i className="icon">💬</i> 234</span>
-                        <span><i className="icon">⭐</i> 567</span>
+                      <div
+                        className="app-stats"
+                        style={{ color: theme.text.tertiary }}
+                      >
+                        <span>
+                          <i className="icon">👁️</i> 1.2k
+                        </span>
+                        <span>
+                          <i className="icon">💬</i> 234
+                        </span>
+                        <span>
+                          <i className="icon">⭐</i> 567
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -114,7 +165,10 @@ export default function HomePage() {
 
           <div className="right-content">
             <div className="section-header">
-              <h2 className="section-title" style={{ color: theme.text.primary }}>
+              <h2
+                className="section-title"
+                style={{ color: theme.text.primary }}
+              >
                 推荐
                 <Link href="/recommended">
                   <a className="header-link">
@@ -125,20 +179,33 @@ export default function HomePage() {
             </div>
             <div className="recommended-grid">
               {[1, 2, 3, 4].map((item) => (
-                <div key={item} className="recommended-card" style={{ backgroundColor: theme.surface }}>
+                <div
+                  key={item}
+                  className="recommended-card"
+                  style={{ backgroundColor: theme.surface }}
+                >
                   <div className="card-image">
                     <img src={`/bn-${item}.jpeg`} alt="应用图标" />
                   </div>
                   <div className="card-content">
                     <div className="card-header">
-                      <h3 style={{ color: theme.text.primary }}>推荐应用{item}</h3>
+                      <h3 style={{ color: theme.text.primary }}>
+                        推荐应用{item}
+                      </h3>
                       <button className="mini-follow-button">
                         <span>+</span>
                       </button>
                     </div>
-                    <div className="card-stats" style={{ color: theme.text.tertiary }}>
-                      <span><i className="icon">👁️</i> 3.4k</span>
-                      <span><i className="icon">⭐</i> 789</span>
+                    <div
+                      className="card-stats"
+                      style={{ color: theme.text.tertiary }}
+                    >
+                      <span>
+                        <i className="icon">👁️</i> 3.4k
+                      </span>
+                      <span>
+                        <i className="icon">⭐</i> 789
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -147,7 +214,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      
+
       <style jsx>{`
         .home-page {
           position: relative;
@@ -211,12 +278,12 @@ export default function HomePage() {
         }
 
         .top-banner {
-          background-image: url('/banner.jpeg');
+          background-image: url("/banner.jpeg");
           background-size: cover;
           height: 30vh;
           background-position: center;
           border-radius: 15px;
-          padding:20px 40px;
+          padding: 20px 40px;
           text-align: center;
         }
         .cursor-pointer {
@@ -274,7 +341,10 @@ export default function HomePage() {
           left: 0;
           padding: 20px;
           color: white;
-          background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%);
+          background: linear-gradient(
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.8) 100%
+          );
           border-radius: 10px;
         }
         .feature-text h3 {
@@ -282,7 +352,6 @@ export default function HomePage() {
         .feature-text p {
           margin: 0;
           font-size: 14px;
-         
         }
         .content-section {
           display: grid;
@@ -325,13 +394,13 @@ export default function HomePage() {
           border-radius: 12px;
           padding: 16px;
           margin-bottom: 16px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
           transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .app-card:hover {
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .app-info {
@@ -432,13 +501,13 @@ export default function HomePage() {
           border: 1px solid rgba(255, 255, 255, 0.2);
           border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
           transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .recommended-card:hover {
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .card-image {
