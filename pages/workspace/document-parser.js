@@ -8,6 +8,8 @@ import ReactFlow, {
   applyEdgeChanges,
 } from "reactflow";
 import ReactMarkdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import "reactflow/dist/style.css";
 import axios from "axios";
 
@@ -119,7 +121,7 @@ function DocumentParser() {
               index++;
             } else {
               clearInterval(interval);
-              setShowCursor(false); // 完成后隐藏光标
+              setShowCursor(false);
             }
           }, 50); // 每100毫秒显示一个字
         })
@@ -160,13 +162,36 @@ function DocumentParser() {
                     height: "100%",
                     overflowY: "auto",
                     overflowX: "hidden",
-                    fontSize: "14px", // 字体大小
-                    whiteSpace: "pre-wrap", // 自动换行
-                    textAlign: "left", // 左对齐
-                    padding: "10px", // 添加内边距
+                    fontSize: "14px",
+                    whiteSpace: "normal",
+                    textAlign: "left",
+                    padding: "5px",
+                    margin: "0",
                   }}
                 >
-                  {node.data.label}
+                  <ReactMarkdown
+                    components={{
+                      code({ node, inline, className, children, ...props }) {
+                        const match = /language-(\w+)/.exec(className || "");
+                        return !inline && match ? (
+                          <SyntaxHighlighter
+                            style={vscDarkPlus}
+                            language={match[1]}
+                            PreTag="div"
+                            {...props}
+                          >
+                            {String(children).replace(/\n$/, "")}
+                          </SyntaxHighlighter>
+                        ) : (
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        );
+                      },
+                    }}
+                  >
+                    {node.data.label}
+                  </ReactMarkdown>
                 </div>
               ),
             },
@@ -225,7 +250,29 @@ function DocumentParser() {
                   position: "relative",
                 }}
               >
-                <ReactMarkdown>{message.text}</ReactMarkdown>
+                <ReactMarkdown
+                  components={{
+                    code({ node, inline, className, children, ...props }) {
+                      const match = /language-(\w+)/.exec(className || "");
+                      return !inline && match ? (
+                        <SyntaxHighlighter
+                          style={vscDarkPlus}
+                          language={match[1]}
+                          PreTag="div"
+                          {...props}
+                        >
+                          {String(children).replace(/\n$/, "")}
+                        </SyntaxHighlighter>
+                      ) : (
+                        <code className={className} {...props}>
+                          {children}
+                        </code>
+                      );
+                    },
+                  }}
+                >
+                  {message.text}
+                </ReactMarkdown>
                 {message.sender === "bot" && showCursor && (
                   <span
                     className="cursor"
