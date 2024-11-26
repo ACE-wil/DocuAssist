@@ -200,11 +200,7 @@ function DocumentParser() {
               }}
             >
               <img
-                src={
-                  message.sender === "bot"
-                    ? "/path/to/bot-avatar.png"
-                    : "/path/to/user-avatar.png"
-                }
+                src={message.sender === "bot" ? "/logo.png" : "/avatar.png"}
                 alt="avatar"
                 style={{
                   width: "40px",
