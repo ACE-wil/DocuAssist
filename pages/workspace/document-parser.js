@@ -80,7 +80,7 @@ function DocumentParser() {
             },
             style: {
               width: "auto",
-              maxWidth: "280px",
+              maxWidth: "320px",
               height: "auto",
             }, // 设置宽度和高度
           };
