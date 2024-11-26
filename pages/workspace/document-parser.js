@@ -8,10 +8,14 @@ import ReactFlow, {
   applyEdgeChanges,
 } from "reactflow";
 import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+// import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+// import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import "reactflow/dist/style.css";
 import axios from "axios";
+const { Prism } = require("react-syntax-highlighter");
+const {
+  vscDarkPlus,
+} = require("react-syntax-highlighter/dist/cjs/styles/prism");
 
 const initialNodes = [
   {
@@ -36,7 +40,7 @@ function DocumentParser() {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [lastNodeId, setLastNodeId] = useState("1"); // 记录上一个节点的 ID
-  const [showCursor, setShowCursor] = useState(false); // 控制光标显示
+  // const [showCursor, setShowCursor] = useState(false); // 控制光标显示
 
   const onNodesChange = (changes) =>
     setNodes((nds) => applyNodeChanges(changes, nds));
@@ -76,7 +80,7 @@ function DocumentParser() {
             },
             style: {
               width: "auto",
-              maxWidth: "240px",
+              maxWidth: "280px",
               height: "auto",
             }, // 设置宽度和高度
           };
@@ -94,17 +98,19 @@ function DocumentParser() {
           setLastNodeId(newNodeId);
 
           // 逐字显示文本
-          setShowCursor(true); // 开始显示光标
           let index = 0;
           const interval = setInterval(() => {
             if (index < fullText.length) {
+              const char = fullText[index] || ""; // 确保 char 是有效字符
+
               setMessages((prevMessages) =>
                 prevMessages.map((msg) =>
                   msg.id === botMessage.id
-                    ? { ...msg, text: msg.text + fullText[index] }
+                    ? { ...msg, text: msg.text + char }
                     : msg
                 )
               );
+
               setNodes((prevNodes) =>
                 prevNodes.map((node) =>
                   node.id === newNodeId
@@ -112,18 +118,19 @@ function DocumentParser() {
                         ...node,
                         data: {
                           ...node.data,
-                          label: (node.data.label || "") + fullText[index],
+                          label: (node.data.label || "") + char,
                         },
                       }
                     : node
                 )
               );
+
               index++;
             } else {
               clearInterval(interval);
-              setShowCursor(false);
+              // setShowCursor(false);
             }
-          }, 50); // 每100毫秒显示一个字
+          }, 50); // 每50毫秒显示一个字
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -285,7 +292,7 @@ function DocumentParser() {
                 >
                   {message.text}
                 </ReactMarkdown>
-                {message.sender === "bot" && showCursor && (
+                {/* {message.sender === "bot" && showCursor && (
                   <span
                     className="cursor"
                     style={{
@@ -297,7 +304,7 @@ function DocumentParser() {
                       animation: "blink 1s step-end infinite",
                     }}
                   ></span>
-                )}
+                )} */}
               </div>
             </div>
           ))}
