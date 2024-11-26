@@ -175,7 +175,13 @@ function DocumentParser() {
                         const match = /language-(\w+)/.exec(className || "");
                         return !inline && match ? (
                           <SyntaxHighlighter
-                            style={vscDarkPlus}
+                            style={{
+                              ...vscDarkPlus,
+                              'pre[class*="language-"]': {
+                                ...vscDarkPlus['pre[class*="language-"]'],
+                                borderRadius: "8px", // 设置圆角
+                              },
+                            }}
                             language={match[1]}
                             PreTag="div"
                             {...props}
@@ -256,7 +262,13 @@ function DocumentParser() {
                       const match = /language-(\w+)/.exec(className || "");
                       return !inline && match ? (
                         <SyntaxHighlighter
-                          style={vscDarkPlus}
+                          style={{
+                            ...vscDarkPlus,
+                            'pre[class*="language-"]': {
+                              ...vscDarkPlus['pre[class*="language-"]'],
+                              borderRadius: "8px", // 设置圆角
+                            },
+                          }}
                           language={match[1]}
                           PreTag="div"
                           {...props}
