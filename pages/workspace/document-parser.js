@@ -12,7 +12,7 @@ import ReactMarkdown from "react-markdown";
 // import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import "reactflow/dist/style.css";
 import axios from "axios";
-const { Prism } = require("react-syntax-highlighter");
+const { Prism: SyntaxHighlighter } = require("react-syntax-highlighter");
 const {
   vscDarkPlus,
 } = require("react-syntax-highlighter/dist/cjs/styles/prism");
