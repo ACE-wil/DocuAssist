@@ -44,6 +44,7 @@ function DocumentParser() {
   const [isUploading, setIsUploading] = useState(false);
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -169,7 +170,53 @@ function DocumentParser() {
         fontFamily: "Arial, sans-serif",
       }}
     >
-      <div style={{ flex: 2, borderRight: "1px solid #ddd", padding: "10px" }}>
+      <div
+        style={{
+          flex: isFullScreen ? 1 : 2,
+          borderRight: "1px solid #ddd",
+          padding: "10px",
+          transition: "flex 0.3s ease",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: "20px",
+            right: isFullScreen ? "20px" : "52%",
+            zIndex: 999,
+            transition: "right 0.3s ease",
+          }}
+        >
+          <button
+            onClick={() => setIsFullScreen(!isFullScreen)}
+            style={{
+              padding: "8px 16px",
+              backgroundColor: "#4a5568",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+              transition: "background-color 0.2s ease",
+            }}
+          >
+            {isFullScreen ? (
+              <>
+                <span>退出全屏</span>
+                <span style={{ fontSize: "16px" }}>⇲</span>
+              </>
+            ) : (
+              <>
+                <span>全屏</span>
+                <span style={{ fontSize: "16px" }}>⇱</span>
+              </>
+            )}
+          </button>
+        </div>
+
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -184,264 +231,271 @@ function DocumentParser() {
           <Background />
         </ReactFlow>
       </div>
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          padding: "20px",
-          backgroundColor: "#fff",
-          borderRadius: "12px",
-          margin: "10px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-        }}
-      >
+      {!isFullScreen && (
         <div
           style={{
             flex: 1,
-            overflow: "auto",
-            marginBottom: "10px",
-            padding: "10px",
-          }}
-        >
-          {chatHistory.map((message, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                alignItems: "flex-start",
-                marginBottom: "20px",
-                flexDirection: message.role === "user" ? "row-reverse" : "row",
-              }}
-            >
-              <img
-                src={message.role === "assistant" ? "/logo.png" : "/avatar.png"}
-                alt="avatar"
-                style={{
-                  width: "36px",
-                  height: "36px",
-                  borderRadius: "50%",
-                  margin: message.role === "user" ? "0 0 0 12px" : "0 12px 0 0",
-                  border: "2px solid #fff",
-                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                }}
-              />
-              <div
-                style={{
-                  backgroundColor:
-                    message.role === "assistant"
-                      ? "rgba(247, 247, 248, 0.9)"
-                      : "rgba(25, 195, 125, 0.1)",
-                  padding: "12px 16px",
-                  borderRadius: "12px",
-                  height: "auto",
-                  maxWidth: "80%",
-                  maxHeight: "300px",
-                  overflow: "auto",
-                  position: "relative",
-                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
-                }}
-              >
-                <ReactMarkdown
-                  components={{
-                    code({ node, inline, className, children, ...props }) {
-                      const match = /language-(\w+)/.exec(className || "");
-                      return !inline && match ? (
-                        <SyntaxHighlighter
-                          style={{
-                            ...vscDarkPlus,
-                            'pre[class*="language-"]': {
-                              ...vscDarkPlus['pre[class*="language-"]'],
-                              borderRadius: "8px",
-                              margin: "10px 0",
-                            },
-                          }}
-                          language={match[1]}
-                          PreTag="div"
-                          {...props}
-                        >
-                          {String(children).replace(/\n$/, "")}
-                        </SyntaxHighlighter>
-                      ) : (
-                        <code
-                          className={className}
-                          style={{
-                            backgroundColor: "rgba(0, 0, 0, 0.05)",
-                            padding: "2px 6px",
-                            borderRadius: "4px",
-                          }}
-                          {...props}
-                        >
-                          {children}
-                        </code>
-                      );
-                    },
-                  }}
-                >
-                  {message.content}
-                </ReactMarkdown>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div
-          style={{
             display: "flex",
-            alignItems: "center",
-            padding: "12px",
-            backgroundColor: "rgba(247, 247, 248, 0.9)",
+            flexDirection: "column",
+            padding: "20px",
+            backgroundColor: "#fff",
             borderRadius: "12px",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
+            margin: "10px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            transition: "all 0.3s ease",
           }}
         >
-          {!isUploading && !uploadedFileName && (
-            <label
-              htmlFor="file-upload"
-              style={{
-                cursor: "pointer",
-                transition: "transform 0.2s ease",
-                padding: "8px",
-                borderRadius: "8px",
-                "&:hover": {
-                  backgroundColor: "rgba(0, 0, 0, 0.05)",
-                  transform: "scale(1.1)",
-                },
-              }}
-            >
-              <img
-                src="/icons/file.png"
-                alt="Upload"
-                style={{
-                  width: "24px",
-                  height: "24px",
-                  opacity: 0.6,
-                  transition: "opacity 0.2s ease",
-                }}
-              />
-            </label>
-          )}
-          <input
-            id="file-upload"
-            type="file"
-            onChange={handleFileUpload}
-            style={{ display: "none" }}
-          />
-          {isUploading && (
-            <div style={{ marginRight: "12px" }}>
-              <div style={{ fontSize: "12px", marginBottom: "4px" }}>
-                上传中: {isUploading ? "100%" : "0%"}
-              </div>
+          <div
+            style={{
+              flex: 1,
+              overflow: "auto",
+              marginBottom: "10px",
+              padding: "10px",
+            }}
+          >
+            {chatHistory.map((message, index) => (
               <div
+                key={index}
                 style={{
-                  width: "100px",
-                  height: "4px",
-                  backgroundColor: "rgba(0, 0, 0, 0.1)",
-                  borderRadius: "2px",
-                  overflow: "hidden",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  marginBottom: "20px",
+                  flexDirection:
+                    message.role === "user" ? "row-reverse" : "row",
                 }}
               >
-                <div
+                <img
+                  src={
+                    message.role === "assistant" ? "/logo.png" : "/avatar.png"
+                  }
+                  alt="avatar"
                   style={{
-                    width: `${isUploading ? "100%" : "0%"}`,
-                    height: "100%",
-                    backgroundColor: "#19c37d",
-                    transition: "width 0.3s ease",
+                    width: "36px",
+                    height: "36px",
+                    borderRadius: "50%",
+                    margin:
+                      message.role === "user" ? "0 0 0 12px" : "0 12px 0 0",
+                    border: "2px solid #fff",
+                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                   }}
                 />
+                <div
+                  style={{
+                    backgroundColor:
+                      message.role === "assistant"
+                        ? "rgba(247, 247, 248, 0.9)"
+                        : "rgba(25, 195, 125, 0.1)",
+                    padding: "12px 16px",
+                    borderRadius: "12px",
+                    height: "auto",
+                    maxWidth: "80%",
+                    maxHeight: "300px",
+                    overflow: "auto",
+                    position: "relative",
+                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
+                  }}
+                >
+                  <ReactMarkdown
+                    components={{
+                      code({ node, inline, className, children, ...props }) {
+                        const match = /language-(\w+)/.exec(className || "");
+                        return !inline && match ? (
+                          <SyntaxHighlighter
+                            style={{
+                              ...vscDarkPlus,
+                              'pre[class*="language-"]': {
+                                ...vscDarkPlus['pre[class*="language-"]'],
+                                borderRadius: "8px",
+                                margin: "10px 0",
+                              },
+                            }}
+                            language={match[1]}
+                            PreTag="div"
+                            {...props}
+                          >
+                            {String(children).replace(/\n$/, "")}
+                          </SyntaxHighlighter>
+                        ) : (
+                          <code
+                            className={className}
+                            style={{
+                              backgroundColor: "rgba(0, 0, 0, 0.05)",
+                              padding: "2px 6px",
+                              borderRadius: "4px",
+                            }}
+                            {...props}
+                          >
+                            {children}
+                          </code>
+                        );
+                      },
+                    }}
+                  >
+                    {message.content}
+                  </ReactMarkdown>
+                </div>
               </div>
-            </div>
-          )}
-          {uploadedFileName && !isUploading && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                padding: "4px 8px",
-                backgroundColor: "rgba(25, 195, 125, 0.1)",
-                borderRadius: "6px",
-                marginRight: "12px",
-                fontSize: "12px",
-              }}
-            >
-              <img
-                src="/icons/file.png"
-                alt="File"
-                style={{ width: "16px", height: "16px", marginRight: "6px" }}
-              />
-              <span style={{ marginRight: "6px" }}>{uploadedFileName}</span>
-              <button
-                onClick={() => {
-                  setUploadedFileName("");
-                  setIsUploading(false);
-                }}
+            ))}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              padding: "12px",
+              backgroundColor: "rgba(247, 247, 248, 0.9)",
+              borderRadius: "12px",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
+            }}
+          >
+            {!isUploading && !uploadedFileName && (
+              <label
+                htmlFor="file-upload"
                 style={{
-                  background: "none",
-                  border: "none",
-                  padding: "0 4px",
                   cursor: "pointer",
-                  fontSize: "14px",
-                  color: "#666",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  transition: "transform 0.2s ease",
+                  padding: "8px",
+                  borderRadius: "8px",
                   "&:hover": {
-                    color: "#ff4d4f",
+                    backgroundColor: "rgba(0, 0, 0, 0.05)",
+                    transform: "scale(1.1)",
                   },
                 }}
               >
-                ✕
-              </button>
-            </div>
-          )}
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="输入你的消息..."
-            style={{
-              flex: 1,
-              padding: "12px 16px",
-              borderRadius: "8px",
-              border: "1px solid rgba(0, 0, 0, 0.1)",
-              marginRight: "12px",
-              fontSize: "14px",
-              transition: "border-color 0.3s ease, box-shadow 0.3s ease",
-              outline: "none",
-              backgroundColor: "#fff",
-              "&:focus": {
-                borderColor: "#19c37d",
-                boxShadow: "0 0 0 2px rgba(25, 195, 125, 0.2)",
-              },
-            }}
-          />
-          <button
-            onClick={handleSendMessage}
-            style={{
-              padding: "10px",
-              borderRadius: "8px",
-              backgroundColor: "#19c37d",
-              color: "#fff",
-              border: "none",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "20px",
-              transition: "all 0.2s ease",
-              "&:hover": {
-                backgroundColor: "#15a367",
-                transform: "scale(1.05)",
-              },
-              "&:active": {
-                transform: "scale(0.95)",
-              },
-            }}
-          >
-            ⮞
-          </button>
+                <img
+                  src="/icons/file.png"
+                  alt="Upload"
+                  style={{
+                    width: "24px",
+                    height: "24px",
+                    opacity: 0.6,
+                    transition: "opacity 0.2s ease",
+                  }}
+                />
+              </label>
+            )}
+            <input
+              id="file-upload"
+              type="file"
+              onChange={handleFileUpload}
+              style={{ display: "none" }}
+            />
+            {isUploading && (
+              <div style={{ marginRight: "12px" }}>
+                <div style={{ fontSize: "12px", marginBottom: "4px" }}>
+                  上传中: {isUploading ? "100%" : "0%"}
+                </div>
+                <div
+                  style={{
+                    width: "100px",
+                    height: "4px",
+                    backgroundColor: "rgba(0, 0, 0, 0.1)",
+                    borderRadius: "2px",
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${isUploading ? "100%" : "0%"}`,
+                      height: "100%",
+                      backgroundColor: "#19c37d",
+                      transition: "width 0.3s ease",
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+            {uploadedFileName && !isUploading && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "4px 8px",
+                  backgroundColor: "rgba(25, 195, 125, 0.1)",
+                  borderRadius: "6px",
+                  marginRight: "12px",
+                  fontSize: "12px",
+                }}
+              >
+                <img
+                  src="/icons/file.png"
+                  alt="File"
+                  style={{ width: "16px", height: "16px", marginRight: "6px" }}
+                />
+                <span style={{ marginRight: "6px" }}>{uploadedFileName}</span>
+                <button
+                  onClick={() => {
+                    setUploadedFileName("");
+                    setIsUploading(false);
+                  }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    padding: "0 4px",
+                    cursor: "pointer",
+                    fontSize: "14px",
+                    color: "#666",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    "&:hover": {
+                      color: "#ff4d4f",
+                    },
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="输入你的消息..."
+              style={{
+                flex: 1,
+                padding: "12px 16px",
+                borderRadius: "8px",
+                border: "1px solid rgba(0, 0, 0, 0.1)",
+                marginRight: "12px",
+                fontSize: "14px",
+                transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+                outline: "none",
+                backgroundColor: "#fff",
+                "&:focus": {
+                  borderColor: "#19c37d",
+                  boxShadow: "0 0 0 2px rgba(25, 195, 125, 0.2)",
+                },
+              }}
+            />
+            <button
+              onClick={handleSendMessage}
+              style={{
+                padding: "10px",
+                borderRadius: "8px",
+                backgroundColor: "#19c37d",
+                color: "#fff",
+                border: "none",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "20px",
+                transition: "all 0.2s ease",
+                "&:hover": {
+                  backgroundColor: "#15a367",
+                  transform: "scale(1.05)",
+                },
+                "&:active": {
+                  transform: "scale(0.95)",
+                },
+              }}
+            >
+              ⮞
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
