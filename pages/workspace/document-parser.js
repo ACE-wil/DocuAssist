@@ -7,6 +7,7 @@ import ReactFlow, {
   applyNodeChanges,
   applyEdgeChanges,
 } from "reactflow";
+import ReactMarkdown from "react-markdown";
 import "reactflow/dist/style.css";
 import axios from "axios";
 
@@ -33,6 +34,7 @@ function DocumentParser() {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [lastNodeId, setLastNodeId] = useState("1"); // 记录上一个节点的 ID
+  const [showCursor, setShowCursor] = useState(false); // 控制光标显示
 
   const onNodesChange = (changes) =>
     setNodes((nds) => applyNodeChanges(changes, nds));
@@ -52,7 +54,7 @@ function DocumentParser() {
           message: inputValue, // 发送用户输入作为请求体
         })
         .then((response) => {
-          const fullText = response.data.response; // 确保访问正确的响应字段
+          const fullText = response.data.response || ""; // 确保 fullText 是字符串
           const botMessage = {
             id: Date.now() + 1,
             text: "",
@@ -90,6 +92,7 @@ function DocumentParser() {
           setLastNodeId(newNodeId);
 
           // 逐字显示文本
+          setShowCursor(true); // 开始显示光标
           let index = 0;
           const interval = setInterval(() => {
             if (index < fullText.length) {
@@ -107,7 +110,7 @@ function DocumentParser() {
                         ...node,
                         data: {
                           ...node.data,
-                          label: node.data.label + fullText[index],
+                          label: (node.data.label || "") + fullText[index],
                         },
                       }
                     : node
@@ -116,8 +119,9 @@ function DocumentParser() {
               index++;
             } else {
               clearInterval(interval);
+              setShowCursor(false); // 完成后隐藏光标
             }
-          }, 100); // 每100毫秒显示一个字
+          }, 50); // 每100毫秒显示一个字
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -158,6 +162,8 @@ function DocumentParser() {
                     overflowX: "hidden",
                     fontSize: "14px", // 字体大小
                     whiteSpace: "pre-wrap", // 自动换行
+                    textAlign: "left", // 左对齐
+                    padding: "10px", // 添加内边距
                   }}
                 >
                   {node.data.label}
@@ -215,12 +221,12 @@ function DocumentParser() {
                     message.sender === "bot" ? "#e0e0e0" : "#cfe9ff",
                   padding: "10px",
                   borderRadius: "10px",
-                  maxWidth: "70%",
+                  maxWidth: "80%",
                   position: "relative",
                 }}
               >
-                {message.text}
-                {message.sender === "bot" && (
+                <ReactMarkdown>{message.text}</ReactMarkdown>
+                {message.sender === "bot" && showCursor && (
                   <span
                     className="cursor"
                     style={{
