@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ReactFlow, {
   addEdge,
   MiniMap,
@@ -33,172 +33,137 @@ const initialNodes = [
 const initialEdges = [];
 
 function DocumentParser() {
-  const [nodes, setNodes] = useState(initialNodes);
-  const [edges, setEdges] = useState(initialEdges);
-  const [messages, setMessages] = useState([
-    { id: 1, text: "你好！有什么我可以帮助你的吗？", sender: "bot" },
+  const [chatHistory, setChatHistory] = useState([
+    {
+      role: "assistant",
+      content: "你好！我是你的文档助手，请上传文件或直接开始对话。",
+    },
   ]);
   const [inputValue, setInputValue] = useState("");
-  const [lastNodeId, setLastNodeId] = useState("1");
   const [uploadedFileName, setUploadedFileName] = useState("");
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
 
-  const onNodesChange = (changes) =>
-    setNodes((nds) => applyNodeChanges(changes, nds));
-  const onEdgesChange = (changes) =>
-    setEdges((eds) => applyEdgeChanges(changes, eds));
-  const onConnect = (params) => setEdges((eds) => addEdge(params, eds));
+  const onNodesChange = useCallback(
+    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    [setNodes]
+  );
 
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
+  const onEdgesChange = useCallback(
+    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    [setEdges]
+  );
 
-    // 添加用户消息到对话
-    const userMessage = {
-      id: Date.now(),
-      text: inputValue,
-      sender: "user",
-    };
-    setMessages((prevMessages) => [...prevMessages, userMessage]);
+  const onConnect = useCallback(
+    (connection) => setEdges((eds) => addEdge(connection, eds)),
+    [setEdges]
+  );
 
-    // 准备发送的数据
-    if (uploadedFileName) {
-      // 如果有文件，使用 FormData
-      const formData = new FormData();
-      formData.append("file", document.getElementById("file-upload").files[0]);
+  useEffect(() => {
+    const newNodes = chatHistory.map((message, index) => ({
+      id: index.toString(),
+      type: "default",
+      data: { label: message.content },
+      position: { x: 0, y: index * 100 }, // 垂直排列节点
+      style: {
+        width: "auto",
+        maxWidth: "320px",
+        maxHeight: "300px",
+        height: "auto",
+        overflow: "scroll",
+        backgroundColor: message.role === "assistant" ? "#f0f0f0" : "#e6f7ff",
+      },
+    }));
 
-      axios
-        .post("http://localhost:5000/api/upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            setUploadProgress(percentCompleted);
-          },
-        })
-        .then((response) => {
-          const botMessage = {
-            id: Date.now() + 1,
-            text: response.data.parsedContent,
-            sender: "bot",
-          };
-          setMessages((prevMessages) => [...prevMessages, botMessage]);
-          setInputValue("");
-          setIsUploading(false);
-          setUploadProgress(0);
-        })
-        .catch((error) => {
-          console.error("Error uploading file:", error);
-          setIsUploading(false);
-          setUploadProgress(0);
-          alert("文件上传失败，请重试");
-        });
-    } else {
-      // 如果没有文件，使用普通的聊天接口
-      axios
-        .post("http://localhost:5000/api/chat", { message: inputValue })
-        .then((response) => {
-          const botMessage = {
-            id: Date.now() + 1,
-            text: response.data.response,
-            sender: "bot",
-          };
-          setMessages((prevMessages) => [...prevMessages, botMessage]);
-          setInputValue("");
-        })
-        .catch((error) => {
-          console.error("Error sending message:", error);
-          alert("发送消息失败，请重试");
-        });
-    }
-  };
+    const newEdges = chatHistory.slice(1).map((_, index) => ({
+      id: `e${index}-${index + 1}`,
+      source: index.toString(),
+      target: (index + 1).toString(),
+      type: "smoothstep",
+      style: {
+        width: "auto",
+        maxWidth: "320px",
+        maxHeight: "300px",
+        height: "auto",
+        overflow: "auto",
+      },
+    }));
 
-  const handleNodeLabelChange = (id, newLabel) => {
-    setNodes((nds) =>
-      nds.map((node) =>
-        node.id === id
-          ? { ...node, data: { ...node.data, label: newLabel } }
-          : node
-      )
-    );
-  };
+    setNodes(newNodes);
+    setEdges(newEdges);
+  }, [chatHistory]);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setUploadedFileName(file.name); // 设置上传的文件名
-      setIsUploading(true); // 开始上传
+      setUploadedFileName(file.name);
+      setIsUploading(true);
+
       const formData = new FormData();
       formData.append("file", file);
 
-      axios
-        .post("http://localhost:5000/api/upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            setUploadProgress(percentCompleted);
-          },
-        })
-        .then((response) => {
-          const parsedContent = response.data.parsedContent || "";
-          const botMessage = {
-            id: Date.now() + 1,
-            text: parsedContent,
-            sender: "bot",
+      // 使用 api/upload 接口上传并解析文件
+      fetch("http://localhost:5000/api/upload", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // 将文件解析结果添加到对话历史
+          const userMessage = {
+            role: "user",
+            content: `上传文件：${file.name}`,
           };
-          setMessages((prevMessages) => [...prevMessages, botMessage]);
-
-          // Add a new node for the parsed content
-          const lastNode = nodes.find((node) => node.id === lastNodeId);
-          const newNodeId = `${Date.now()}`;
-          const newNode = {
-            id: newNodeId,
-            data: { label: parsedContent },
-            position: {
-              x: lastNode.position.x,
-              y: lastNode.position.y + 100,
-            },
-            style: {
-              width: "auto",
-              maxWidth: "320px",
-              maxHeight: "300px",
-              height: "auto",
-              overflow: "scroll",
-            },
+          const assistantMessage = {
+            role: "assistant",
+            content: data.parsedContent,
           };
-          setNodes((prevNodes) => [...prevNodes, newNode]);
-
-          const newEdge = {
-            id: `e${lastNodeId}-${newNodeId}`,
-            source: lastNodeId,
-            target: newNodeId,
-          };
-          setEdges((prevEdges) => [...prevEdges, newEdge]);
-
-          setLastNodeId(newNodeId);
-          setIsUploading(false); // 上传完成
-          setUploadProgress(0); // 重置进度
+          setChatHistory((prev) => [...prev, userMessage, assistantMessage]);
+          setIsUploading(false);
+          setUploadedFileName(""); // 清除文件状态，准备开始聊天
         })
         .catch((error) => {
-          console.error("Error uploading file:", error);
+          console.error("Error:", error);
           setIsUploading(false);
-          setUploadProgress(0);
-          // 可以添加错误提示
-          alert("文件上传失败，请重试");
+          alert("上传失败，请重试");
         });
     }
   };
 
-  const handleClearFile = () => {
-    setUploadedFileName("");
-    setUploadProgress(0);
+  const handleSendMessage = () => {
+    if (!inputValue.trim()) return;
+
+    const userMessage = {
+      role: "user",
+      content: inputValue,
+    };
+    setChatHistory((prev) => [...prev, userMessage]);
+
+    // 发送消息和完整的对话历史到后端
+    fetch("http://localhost:5000/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: inputValue,
+        messages: chatHistory, // 发送完整的对话历史
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const assistantMessage = {
+          role: "assistant",
+          content: data.response,
+        };
+        setChatHistory((prev) => [...prev, assistantMessage]);
+        setInputValue("");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("发送失败，请重试");
+      });
   };
 
   return (
@@ -211,57 +176,7 @@ function DocumentParser() {
     >
       <div style={{ flex: 2, borderRight: "1px solid #ddd", padding: "10px" }}>
         <ReactFlow
-          nodes={nodes.map((node) => ({
-            ...node,
-            data: {
-              ...node.data,
-              label: (
-                <div
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    overflowY: "auto",
-                    overflowX: "hidden",
-                    fontSize: "14px",
-                    whiteSpace: "normal",
-                    textAlign: "left",
-                    padding: "5px",
-                    margin: "0",
-                  }}
-                >
-                  <ReactMarkdown
-                    components={{
-                      code({ node, inline, className, children, ...props }) {
-                        const match = /language-(\w+)/.exec(className || "");
-                        return !inline && match ? (
-                          <SyntaxHighlighter
-                            style={{
-                              ...vscDarkPlus,
-                              'pre[class*="language-"]': {
-                                ...vscDarkPlus['pre[class*="language-"]'],
-                                borderRadius: "8px",
-                              },
-                            }}
-                            language={match[1]}
-                            PreTag="div"
-                            {...props}
-                          >
-                            {String(children).replace(/\n$/, "")}
-                          </SyntaxHighlighter>
-                        ) : (
-                          <code className={className} {...props}>
-                            {children}
-                          </code>
-                        );
-                      },
-                    }}
-                  >
-                    {node.data.label}
-                  </ReactMarkdown>
-                </div>
-              ),
-            },
-          }))}
+          nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
@@ -289,31 +204,29 @@ function DocumentParser() {
         <div
           style={{
             flex: 1,
-            overflowY: "auto",
+            overflow: "auto",
             marginBottom: "10px",
             padding: "10px",
           }}
         >
-          {messages.map((message) => (
+          {chatHistory.map((message, index) => (
             <div
-              key={message.id}
+              key={index}
               style={{
                 display: "flex",
                 alignItems: "flex-start",
                 marginBottom: "20px",
-                flexDirection:
-                  message.sender === "user" ? "row-reverse" : "row",
+                flexDirection: message.role === "user" ? "row-reverse" : "row",
               }}
             >
               <img
-                src={message.sender === "bot" ? "/logo.png" : "/avatar.png"}
+                src={message.role === "assistant" ? "/logo.png" : "/avatar.png"}
                 alt="avatar"
                 style={{
                   width: "36px",
                   height: "36px",
                   borderRadius: "50%",
-                  margin:
-                    message.sender === "user" ? "0 0 0 12px" : "0 12px 0 0",
+                  margin: message.role === "user" ? "0 0 0 12px" : "0 12px 0 0",
                   border: "2px solid #fff",
                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                 }}
@@ -321,14 +234,15 @@ function DocumentParser() {
               <div
                 style={{
                   backgroundColor:
-                    message.sender === "bot"
+                    message.role === "assistant"
                       ? "rgba(247, 247, 248, 0.9)"
                       : "rgba(25, 195, 125, 0.1)",
                   padding: "12px 16px",
                   borderRadius: "12px",
+                  height: "auto",
                   maxWidth: "80%",
                   maxHeight: "300px",
-                  overflowY: "scroll",
+                  overflow: "auto",
                   position: "relative",
                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
                 }}
@@ -369,7 +283,7 @@ function DocumentParser() {
                     },
                   }}
                 >
-                  {message.text}
+                  {message.content}
                 </ReactMarkdown>
               </div>
             </div>
@@ -421,7 +335,7 @@ function DocumentParser() {
           {isUploading && (
             <div style={{ marginRight: "12px" }}>
               <div style={{ fontSize: "12px", marginBottom: "4px" }}>
-                上传中: {uploadProgress}%
+                上传中: {isUploading ? "100%" : "0%"}
               </div>
               <div
                 style={{
@@ -434,7 +348,7 @@ function DocumentParser() {
               >
                 <div
                   style={{
-                    width: `${uploadProgress}%`,
+                    width: `${isUploading ? "100%" : "0%"}`,
                     height: "100%",
                     backgroundColor: "#19c37d",
                     transition: "width 0.3s ease",
@@ -462,7 +376,10 @@ function DocumentParser() {
               />
               <span style={{ marginRight: "6px" }}>{uploadedFileName}</span>
               <button
-                onClick={handleClearFile}
+                onClick={() => {
+                  setUploadedFileName("");
+                  setIsUploading(false);
+                }}
                 style={{
                   background: "none",
                   border: "none",
