@@ -26,7 +26,7 @@ const initialNodes = [
     style: {
       width: "auto",
       height: "auto",
-    }, // 初始宽度和高度
+    },
   },
 ];
 
@@ -65,13 +65,11 @@ function DocumentParser() {
       id: index.toString(),
       type: "default",
       data: { label: message.content },
-      position: { x: 0, y: index * 100 }, // 垂直排列节点
+      position: { x: 0, y: index * 100 },
       style: {
         width: "auto",
-        maxWidth: "320px",
         maxHeight: "300px",
-        height: "auto",
-        overflow: "scroll",
+        overflow: "hidden",
         backgroundColor: message.role === "assistant" ? "#f0f0f0" : "#e6f7ff",
       },
     }));
@@ -83,10 +81,7 @@ function DocumentParser() {
       type: "smoothstep",
       style: {
         width: "auto",
-        maxWidth: "320px",
         maxHeight: "300px",
-        height: "auto",
-        overflow: "auto",
       },
     }));
 
