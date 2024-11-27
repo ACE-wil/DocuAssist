@@ -359,6 +359,20 @@ function DocumentParser() {
     setContextMenu({ visible: false, x: 0, y: 0 });
   }, [nodes, contextMenu]);
 
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (contextMenu.visible) {
+        setContextMenu({ visible: false, x: 0, y: 0 });
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [contextMenu]);
+
   return (
     <ReactFlowProvider>
       <div
