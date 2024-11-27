@@ -266,12 +266,11 @@ function DocumentParser() {
       id: (nodes.length + 1).toString(),
       type: "custom",
       data: { label: "新节点" },
-      position: { x: contextMenu.x - 50, y: contextMenu.y - 50 },
+      position: { x: contextMenu.x - 200, y: contextMenu.y },
       style: {
         width: "auto",
         minWidth: "200px",
         maxWidth: "400px",
-        padding: "10px",
         backgroundColor: "#e6f7ff",
         borderRadius: "12px",
       },
