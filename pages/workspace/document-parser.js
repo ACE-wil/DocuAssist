@@ -6,12 +6,15 @@ import ReactFlow, {
   Background,
   applyNodeChanges,
   applyEdgeChanges,
+  ReactFlowProvider,
 } from "reactflow";
 import ReactMarkdown from "react-markdown";
 // import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 // import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import "reactflow/dist/style.css";
 import axios from "axios";
+import CustomNode from "./CustomNode"; // 引入自定义节点组件
+import CustomEdge from "./CustomEdge"; // 引入自定义连接线组件
 const { Prism: SyntaxHighlighter } = require("react-syntax-highlighter");
 const {
   vscDarkPlus,
@@ -20,17 +23,25 @@ const {
 const initialNodes = [
   {
     id: "1",
-    type: "input",
+    type: "custom",
     data: { label: "你好！有什么我可以帮助你的吗？" },
     position: { x: 0, y: 50 },
-    style: {
-      width: "auto",
-      height: "auto",
-    },
   },
+  // 添加更多节点
 ];
 
-const initialEdges = [];
+const initialEdges = [
+  { id: "e1-2", source: "1", target: "2", type: "custom" },
+  // 添加更多连接线
+];
+
+const nodeTypes = {
+  custom: CustomNode,
+};
+
+const edgeTypes = {
+  custom: CustomEdge,
+};
 
 function DocumentParser() {
   const [chatHistory, setChatHistory] = useState([
@@ -61,74 +72,27 @@ function DocumentParser() {
   );
 
   const onConnect = useCallback(
-    (connection) => setEdges((eds) => addEdge(connection, eds)),
+    (connection) =>
+      setEdges((eds) => addEdge({ ...connection, type: "custom" }, eds)),
     [setEdges]
   );
 
   useEffect(() => {
     const newNodes = chatHistory.map((message, index) => ({
       id: index.toString(),
-      type: "default",
-      data: {
-        label: (
-          <div
-            style={{
-              padding: "6px",
-              borderRadius: "8px",
-              backgroundColor: "transparent",
-              width: "auto",
-              height: "auto",
-              maxHeight: "300px",
-              maxWidth: "300px",
-              overflow: "overlay",
-              fontSize: "16px",
-            }}
-          >
-            <ReactMarkdown
-              components={{
-                code({ node, inline, className, children, ...props }) {
-                  const match = /language-(\w+)/.exec(className || "");
-                  return !inline && match ? (
-                    <SyntaxHighlighter
-                      style={vscDarkPlus}
-                      language={match[1]}
-                      PreTag="div"
-                      {...props}
-                    >
-                      {String(children).replace(/\n$/, "")}
-                    </SyntaxHighlighter>
-                  ) : (
-                    <code className={className} {...props}>
-                      {children}
-                    </code>
-                  );
-                },
-              }}
-            >
-              {message.content}
-            </ReactMarkdown>
-          </div>
-        ),
-      },
+      type: "custom", // 使用自定义节点类型
+      data: { label: message.content },
       position: { x: 0, y: index * 150 },
-      style: {
-        width: "auto",
-        minWidth: "200px",
-        maxWidth: "400px",
-        padding: "10px",
-        backgroundColor: message.role === "assistant" ? "#f0f0f0" : "#e6f7ff",
-        borderRadius: "12px",
-      },
     }));
 
     const newEdges = chatHistory.slice(1).map((_, index) => ({
       id: `e${index}-${index + 1}`,
       source: index.toString(),
       target: (index + 1).toString(),
-      type: "smoothstep",
+      type: "custom", // 使用自定义连接线类型
       style: {
-        width: "auto",
-        maxHeight: "300px",
+        stroke: "#4a90e2",
+        strokeWidth: 2,
       },
     }));
 
@@ -240,492 +204,504 @@ function DocumentParser() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        height: "95vh",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
+    <ReactFlowProvider>
       <div
         style={{
-          flex: isFullScreen ? 1 : 2,
-          borderRight: "1px solid #ddd",
-          padding: "10px",
-          transition: "flex 0.3s ease",
+          display: "flex",
+          height: "95vh",
+          fontFamily: "Arial, sans-serif",
         }}
       >
         <div
           style={{
-            position: "absolute",
-            top: "20px",
-            right: isFullScreen ? "20px" : "52%",
-            zIndex: 999,
-            transition: "right 0.3s ease",
-          }}
-        >
-          <button
-            onClick={() => setIsFullScreen(!isFullScreen)}
-            style={{
-              padding: "8px 16px",
-              backgroundColor: "#4a5568",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-              transition: "background-color 0.2s ease",
-            }}
-          >
-            {isFullScreen ? (
-              <>
-                <span>退出全屏</span>
-                <span style={{ fontSize: "16px" }}>⇲</span>
-              </>
-            ) : (
-              <>
-                <span>全屏</span>
-                <span style={{ fontSize: "16px" }}>⇱</span>
-              </>
-            )}
-          </button>
-        </div>
-
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          fitView
-          style={{
-            background: "#f0f0f0",
-            borderRadius: "8px",
-          }}
-        >
-          <MiniMap />
-          <Controls />
-          <Background />
-        </ReactFlow>
-      </div>
-      {!isFullScreen && (
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            padding: "20px",
-            backgroundColor: "#fff",
-            borderRadius: "12px",
-            margin: "10px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            transition: "all 0.3s ease",
+            flex: isFullScreen ? 1 : 2,
+            borderRight: "1px solid #ddd",
+            padding: "10px",
+            transition: "flex 0.3s ease",
           }}
         >
           <div
             style={{
-              flex: 1,
-              overflow: "auto",
-              marginBottom: "10px",
-              padding: "10px",
+              position: "absolute",
+              top: "20px",
+              right: isFullScreen ? "20px" : "52%",
+              zIndex: 999,
+              transition: "right 0.3s ease",
             }}
           >
-            {chatHistory.map((message, index) => (
-              <div
-                key={index}
+            <button
+              onClick={() => setIsFullScreen(!isFullScreen)}
+              style={{
+                padding: "8px 16px",
+                backgroundColor: "#4a5568",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                transition: "background-color 0.2s ease",
+              }}
+            >
+              {isFullScreen ? (
+                <>
+                  <span>退出全屏</span>
+                  <span style={{ fontSize: "16px" }}>⇲</span>
+                </>
+              ) : (
+                <>
+                  <span>全屏</span>
+                  <span style={{ fontSize: "16px" }}>⇱</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            fitView
+            style={{ width: "100%", height: "100%" }}
+          >
+            <MiniMap />
+            <Controls />
+            <Background />
+          </ReactFlow>
+        </div>
+        {!isFullScreen && (
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              padding: "20px",
+              backgroundColor: "#fff",
+              borderRadius: "12px",
+              margin: "10px",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              transition: "all 0.3s ease",
+            }}
+          >
+            <div
+              style={{
+                flex: 1,
+                overflow: "auto",
+                marginBottom: "10px",
+                padding: "10px",
+              }}
+            >
+              {chatHistory.map((message, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    marginBottom: "20px",
+                    flexDirection:
+                      message.role === "user" ? "row-reverse" : "row",
+                  }}
+                >
+                  <img
+                    src={
+                      message.role === "assistant" ? "/logo.png" : "/avatar.png"
+                    }
+                    alt="avatar"
+                    style={{
+                      width: "36px",
+                      height: "36px",
+                      borderRadius: "50%",
+                      margin:
+                        message.role === "user" ? "0 0 0 12px" : "0 12px 0 0",
+                      border: "2px solid #fff",
+                      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "relative",
+                      backgroundColor:
+                        message.role === "assistant"
+                          ? "rgba(247, 247, 248, 0.9)"
+                          : "rgba(25, 195, 125, 0.1)",
+                      padding: "12px 16px 16px 16px",
+                      borderRadius: "12px",
+                      maxWidth: "80%",
+                      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
+                      maxHeight: "300px",
+                      overflow: "overlay",
+                    }}
+                  >
+                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                    {message.role === "assistant" && (
+                      <div
+                        style={{
+                          marginTop: "12px",
+                          display: "flex",
+                          gap: "8px",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <button
+                          onClick={() => {
+                            navigator.clipboard
+                              .writeText(message.content)
+                              .then(() => {
+                                setCopySuccess(index);
+                                setTimeout(() => {
+                                  setCopySuccess(null);
+                                }, 1500);
+                              })
+                              .catch((err) => {
+                                console.error("复制失败:", err);
+                                alert("复制失败，请重试");
+                              });
+                          }}
+                          onMouseEnter={() => setHoveredButton(`copy-${index}`)}
+                          onMouseLeave={() => setHoveredButton(null)}
+                          style={{
+                            padding: "4px 8px",
+                            backgroundColor:
+                              hoveredButton === `copy-${index}` ||
+                              copySuccess === index
+                                ? "#e6f7ff"
+                                : "#f0f0f0",
+                            border: `1px solid ${
+                              hoveredButton === `copy-${index}` ||
+                              copySuccess === index
+                                ? "#91d5ff"
+                                : "#ddd"
+                            }`,
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            fontSize: "12px",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            color:
+                              hoveredButton === `copy-${index}`
+                                ? "#1890ff"
+                                : "#8a8a8a",
+                            position: "relative",
+                            transition: "all 0.2s ease",
+                            transform:
+                              copySuccess === index
+                                ? "scale(1.05)"
+                                : "scale(1)",
+                          }}
+                        >
+                          <img
+                            src={
+                              hoveredButton === `copy-${index}` ||
+                              copySuccess === index
+                                ? "/icons/copy-o.png"
+                                : "/icons/copy.png"
+                            }
+                            alt="copy"
+                            style={{
+                              width: "14px",
+                              height: "14px",
+                              opacity:
+                                hoveredButton === `copy-${index}` ? 0.8 : 0.6,
+                              transition: "all 0.2s ease",
+                              transform:
+                                copySuccess === index
+                                  ? "rotate(360deg)"
+                                  : "rotate(0)",
+                            }}
+                          />
+                          {copySuccess === index ? "✨ 已复制 ✨" : "复制"}
+                        </button>
+                        <button
+                          onClick={() => {
+                            // 重试逻辑保持不变
+                            const previousMessages = chatHistory.slice(
+                              0,
+                              index
+                            );
+                            setChatHistory(previousMessages);
+                            if (
+                              index > 0 &&
+                              chatHistory[index - 1].role === "user"
+                            ) {
+                              fetch("http://localhost:5000/api/chat", {
+                                method: "POST",
+                                headers: {
+                                  "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                  message: chatHistory[index - 1].content,
+                                  messages: previousMessages,
+                                }),
+                              })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                  const assistantMessage = {
+                                    role: "assistant",
+                                    content: data.response,
+                                  };
+                                  setChatHistory((prev) => [
+                                    ...prev,
+                                    assistantMessage,
+                                  ]);
+                                })
+                                .catch((error) => {
+                                  console.error("Error:", error);
+                                  alert("重试失败，请重试");
+                                });
+                            }
+                          }}
+                          onMouseEnter={() =>
+                            setHoveredButton(`retry-${index}`)
+                          }
+                          onMouseLeave={() => setHoveredButton(null)}
+                          style={{
+                            padding: "4px 8px",
+                            backgroundColor:
+                              hoveredButton === `retry-${index}`
+                                ? "#e6f7ff"
+                                : "#f0f0f0",
+                            border: `1px solid ${
+                              hoveredButton === `retry-${index}`
+                                ? "#91d5ff"
+                                : "#ddd"
+                            }`,
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            fontSize: "12px",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            color:
+                              hoveredButton === `retry-${index}`
+                                ? "#1890ff"
+                                : "#8a8a8a",
+                            transition: "all 0.2s ease",
+                          }}
+                        >
+                          <img
+                            src={
+                              hoveredButton === `retry-${index}`
+                                ? "/icons/retry-o.png"
+                                : "/icons/retry.png"
+                            }
+                            alt="retry"
+                            style={{
+                              width: "14px",
+                              height: "14px",
+                              opacity:
+                                hoveredButton === `retry-${index}` ? 0.8 : 0.6,
+                              transition: "all 0.2s ease",
+                            }}
+                          />
+                          重试
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                padding: "12px",
+                backgroundColor: "rgba(247, 247, 248, 0.9)",
+                borderRadius: "12px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
+              }}
+            >
+              {!isUploading && !uploadedFileName && (
+                <label
+                  htmlFor="file-upload"
+                  style={{
+                    cursor: "pointer",
+                    transition: "transform 0.2s ease",
+                    padding: "8px",
+                    borderRadius: "8px",
+                    "&:hover": {
+                      backgroundColor: "rgba(0, 0, 0, 0.05)",
+                      transform: "scale(1.1)",
+                    },
+                  }}
+                >
+                  <img
+                    src="/icons/file.png"
+                    alt="Upload"
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      opacity: 0.6,
+                      transition: "opacity 0.2s ease",
+                    }}
+                  />
+                </label>
+              )}
+              <input
+                id="file-upload"
+                type="file"
+                onChange={handleFileUpload}
+                style={{ display: "none" }}
+              />
+              {isUploading && (
+                <div style={{ marginRight: "12px" }}>
+                  <div style={{ fontSize: "12px", marginBottom: "4px" }}>
+                    上传中: {isUploading ? "100%" : "0%"}
+                  </div>
+                  <div
+                    style={{
+                      width: "100px",
+                      height: "4px",
+                      backgroundColor: "rgba(0, 0, 0, 0.1)",
+                      borderRadius: "2px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: `${isUploading ? "100%" : "0%"}`,
+                        height: "100%",
+                        backgroundColor: "#19c37d",
+                        transition: "width 0.3s ease",
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+              {uploadedFileName && !isUploading && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "4px 8px",
+                    backgroundColor: "rgba(25, 195, 125, 0.1)",
+                    borderRadius: "6px",
+                    marginRight: "12px",
+                    fontSize: "12px",
+                  }}
+                >
+                  <img
+                    src="/icons/file.png"
+                    alt="File"
+                    style={{
+                      width: "16px",
+                      height: "16px",
+                      marginRight: "6px",
+                    }}
+                  />
+                  <span style={{ marginRight: "6px" }}>{uploadedFileName}</span>
+                  <button
+                    onClick={() => {
+                      setUploadedFileName("");
+                      setIsUploading(false);
+                    }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      padding: "0 4px",
+                      cursor: "pointer",
+                      fontSize: "14px",
+                      color: "#666",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      "&:hover": {
+                        color: "#ff4d4f",
+                      },
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+              <button
+                onClick={startListening}
                 style={{
+                  padding: "8px",
+                  marginRight: "12px",
+                  backgroundColor: isListening ? "#19c37d" : "transparent",
+                  border: "none",
+                  borderRadius: "50%",
+                  cursor: "pointer",
                   display: "flex",
-                  alignItems: "flex-start",
-                  marginBottom: "20px",
-                  flexDirection:
-                    message.role === "user" ? "row-reverse" : "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.2s ease",
                 }}
               >
                 <img
                   src={
-                    message.role === "assistant" ? "/logo.png" : "/avatar.png"
+                    isListening
+                      ? "/icons/microphone-listen.png"
+                      : "/icons/microphone.png"
                   }
-                  alt="avatar"
-                  style={{
-                    width: "36px",
-                    height: "36px",
-                    borderRadius: "50%",
-                    margin:
-                      message.role === "user" ? "0 0 0 12px" : "0 12px 0 0",
-                    border: "2px solid #fff",
-                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                  }}
-                />
-                <div
-                  style={{
-                    position: "relative",
-                    backgroundColor:
-                      message.role === "assistant"
-                        ? "rgba(247, 247, 248, 0.9)"
-                        : "rgba(25, 195, 125, 0.1)",
-                    padding: "12px 16px 16px 16px",
-                    borderRadius: "12px",
-                    maxWidth: "80%",
-                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
-                    maxHeight: "300px",
-                    overflow: "overlay",
-                  }}
-                >
-                  <ReactMarkdown>{message.content}</ReactMarkdown>
-                  {message.role === "assistant" && (
-                    <div
-                      style={{
-                        marginTop: "12px",
-                        display: "flex",
-                        gap: "8px",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      <button
-                        onClick={() => {
-                          navigator.clipboard
-                            .writeText(message.content)
-                            .then(() => {
-                              setCopySuccess(index);
-                              setTimeout(() => {
-                                setCopySuccess(null);
-                              }, 1500);
-                            })
-                            .catch((err) => {
-                              console.error("复制失败:", err);
-                              alert("复制失败，请重试");
-                            });
-                        }}
-                        onMouseEnter={() => setHoveredButton(`copy-${index}`)}
-                        onMouseLeave={() => setHoveredButton(null)}
-                        style={{
-                          padding: "4px 8px",
-                          backgroundColor:
-                            hoveredButton === `copy-${index}` ||
-                            copySuccess === index
-                              ? "#e6f7ff"
-                              : "#f0f0f0",
-                          border: `1px solid ${
-                            hoveredButton === `copy-${index}` ||
-                            copySuccess === index
-                              ? "#91d5ff"
-                              : "#ddd"
-                          }`,
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          fontSize: "12px",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "4px",
-                          color:
-                            hoveredButton === `copy-${index}`
-                              ? "#1890ff"
-                              : "#8a8a8a",
-                          position: "relative",
-                          transition: "all 0.2s ease",
-                          transform:
-                            copySuccess === index ? "scale(1.05)" : "scale(1)",
-                        }}
-                      >
-                        <img
-                          src={
-                            hoveredButton === `copy-${index}` ||
-                            copySuccess === index
-                              ? "/icons/copy-o.png"
-                              : "/icons/copy.png"
-                          }
-                          alt="copy"
-                          style={{
-                            width: "14px",
-                            height: "14px",
-                            opacity:
-                              hoveredButton === `copy-${index}` ? 0.8 : 0.6,
-                            transition: "all 0.2s ease",
-                            transform:
-                              copySuccess === index
-                                ? "rotate(360deg)"
-                                : "rotate(0)",
-                          }}
-                        />
-                        {copySuccess === index ? "✨ 已复制 ✨" : "复制"}
-                      </button>
-                      <button
-                        onClick={() => {
-                          // 重试逻辑保持不变
-                          const previousMessages = chatHistory.slice(0, index);
-                          setChatHistory(previousMessages);
-                          if (
-                            index > 0 &&
-                            chatHistory[index - 1].role === "user"
-                          ) {
-                            fetch("http://localhost:5000/api/chat", {
-                              method: "POST",
-                              headers: {
-                                "Content-Type": "application/json",
-                              },
-                              body: JSON.stringify({
-                                message: chatHistory[index - 1].content,
-                                messages: previousMessages,
-                              }),
-                            })
-                              .then((response) => response.json())
-                              .then((data) => {
-                                const assistantMessage = {
-                                  role: "assistant",
-                                  content: data.response,
-                                };
-                                setChatHistory((prev) => [
-                                  ...prev,
-                                  assistantMessage,
-                                ]);
-                              })
-                              .catch((error) => {
-                                console.error("Error:", error);
-                                alert("重试失败，请重试");
-                              });
-                          }
-                        }}
-                        onMouseEnter={() => setHoveredButton(`retry-${index}`)}
-                        onMouseLeave={() => setHoveredButton(null)}
-                        style={{
-                          padding: "4px 8px",
-                          backgroundColor:
-                            hoveredButton === `retry-${index}`
-                              ? "#e6f7ff"
-                              : "#f0f0f0",
-                          border: `1px solid ${
-                            hoveredButton === `retry-${index}`
-                              ? "#91d5ff"
-                              : "#ddd"
-                          }`,
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          fontSize: "12px",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "4px",
-                          color:
-                            hoveredButton === `retry-${index}`
-                              ? "#1890ff"
-                              : "#8a8a8a",
-                          transition: "all 0.2s ease",
-                        }}
-                      >
-                        <img
-                          src={
-                            hoveredButton === `retry-${index}`
-                              ? "/icons/retry-o.png"
-                              : "/icons/retry.png"
-                          }
-                          alt="retry"
-                          style={{
-                            width: "14px",
-                            height: "14px",
-                            opacity:
-                              hoveredButton === `retry-${index}` ? 0.8 : 0.6,
-                            transition: "all 0.2s ease",
-                          }}
-                        />
-                        重试
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              padding: "12px",
-              backgroundColor: "rgba(247, 247, 248, 0.9)",
-              borderRadius: "12px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
-            }}
-          >
-            {!isUploading && !uploadedFileName && (
-              <label
-                htmlFor="file-upload"
-                style={{
-                  cursor: "pointer",
-                  transition: "transform 0.2s ease",
-                  padding: "8px",
-                  borderRadius: "8px",
-                  "&:hover": {
-                    backgroundColor: "rgba(0, 0, 0, 0.05)",
-                    transform: "scale(1.1)",
-                  },
-                }}
-              >
-                <img
-                  src="/icons/file.png"
-                  alt="Upload"
+                  alt="Voice Input"
                   style={{
                     width: "24px",
                     height: "24px",
-                    opacity: 0.6,
-                    transition: "opacity 0.2s ease",
+                    opacity: isListening ? 1 : 0.6,
                   }}
                 />
-              </label>
-            )}
-            <input
-              id="file-upload"
-              type="file"
-              onChange={handleFileUpload}
-              style={{ display: "none" }}
-            />
-            {isUploading && (
-              <div style={{ marginRight: "12px" }}>
-                <div style={{ fontSize: "12px", marginBottom: "4px" }}>
-                  上传中: {isUploading ? "100%" : "0%"}
-                </div>
-                <div
-                  style={{
-                    width: "100px",
-                    height: "4px",
-                    backgroundColor: "rgba(0, 0, 0, 0.1)",
-                    borderRadius: "2px",
-                    overflow: "hidden",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: `${isUploading ? "100%" : "0%"}`,
-                      height: "100%",
-                      backgroundColor: "#19c37d",
-                      transition: "width 0.3s ease",
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-            {uploadedFileName && !isUploading && (
-              <div
+              </button>
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="输入你的消息..."
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "4px 8px",
-                  backgroundColor: "rgba(25, 195, 125, 0.1)",
-                  borderRadius: "6px",
+                  flex: 1,
+                  padding: "12px 16px",
+                  borderRadius: "8px",
+                  border: "1px solid rgba(0, 0, 0, 0.1)",
                   marginRight: "12px",
-                  fontSize: "12px",
-                }}
-              >
-                <img
-                  src="/icons/file.png"
-                  alt="File"
-                  style={{ width: "16px", height: "16px", marginRight: "6px" }}
-                />
-                <span style={{ marginRight: "6px" }}>{uploadedFileName}</span>
-                <button
-                  onClick={() => {
-                    setUploadedFileName("");
-                    setIsUploading(false);
-                  }}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    padding: "0 4px",
-                    cursor: "pointer",
-                    fontSize: "14px",
-                    color: "#666",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    "&:hover": {
-                      color: "#ff4d4f",
-                    },
-                  }}
-                >
-                  ✕
-                </button>
-              </div>
-            )}
-            <button
-              onClick={startListening}
-              style={{
-                padding: "8px",
-                marginRight: "12px",
-                backgroundColor: isListening ? "#19c37d" : "transparent",
-                border: "none",
-                borderRadius: "50%",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "all 0.2s ease",
-              }}
-            >
-              <img
-                src={
-                  isListening
-                    ? "/icons/microphone-listen.png"
-                    : "/icons/microphone.png"
-                }
-                alt="Voice Input"
-                style={{
-                  width: "24px",
-                  height: "24px",
-                  opacity: isListening ? 1 : 0.6,
+                  fontSize: "14px",
+                  transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+                  outline: "none",
+                  backgroundColor: "#fff",
+                  "&:focus": {
+                    borderColor: "#19c37d",
+                    boxShadow: "0 0 0 2px rgba(25, 195, 125, 0.2)",
+                  },
                 }}
               />
-            </button>
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="输入你的消息..."
-              style={{
-                flex: 1,
-                padding: "12px 16px",
-                borderRadius: "8px",
-                border: "1px solid rgba(0, 0, 0, 0.1)",
-                marginRight: "12px",
-                fontSize: "14px",
-                transition: "border-color 0.3s ease, box-shadow 0.3s ease",
-                outline: "none",
-                backgroundColor: "#fff",
-                "&:focus": {
-                  borderColor: "#19c37d",
-                  boxShadow: "0 0 0 2px rgba(25, 195, 125, 0.2)",
-                },
-              }}
-            />
-            <button
-              onClick={handleSendMessage}
-              style={{
-                padding: "10px",
-                borderRadius: "8px",
-                backgroundColor: "#19c37d",
-                color: "#fff",
-                border: "none",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "20px",
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  backgroundColor: "#15a367",
-                  transform: "scale(1.05)",
-                },
-                "&:active": {
-                  transform: "scale(0.95)",
-                },
-              }}
-            >
-              ⮞
-            </button>
+              <button
+                onClick={handleSendMessage}
+                style={{
+                  padding: "10px",
+                  borderRadius: "8px",
+                  backgroundColor: "#19c37d",
+                  color: "#fff",
+                  border: "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "20px",
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    backgroundColor: "#15a367",
+                    transform: "scale(1.05)",
+                  },
+                  "&:active": {
+                    transform: "scale(0.95)",
+                  },
+                }}
+              >
+                ⮞
+              </button>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </ReactFlowProvider>
   );
 }
 
