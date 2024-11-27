@@ -230,7 +230,7 @@ function DocumentParser() {
       const recognition = new webkitSpeechRecognition();
       recognition.continuous = false;
       recognition.interimResults = false;
-      recognition.lang = "zh-CN"; // 设置语言为中文
+      recognition.lang = "zh-CN"; // 设置语为中文
 
       recognition.onstart = () => {
         setIsListening(true);
@@ -265,8 +265,88 @@ function DocumentParser() {
     const newNode = {
       id: (nodes.length + 1).toString(),
       type: "custom",
-      data: { label: "新节点" },
-      position: { x: contextMenu.x - 200, y: contextMenu.y },
+      data: {
+        label: (
+          <div
+            contentEditable
+            suppressContentEditableWarning
+            style={{
+              padding: "10px",
+              borderRadius: "8px",
+              backgroundColor: "transparent",
+              width: "auto",
+              height: "auto",
+              maxHeight: "300px",
+              maxWidth: "300px",
+              overflow: "overlay",
+              fontSize: "14px",
+              border: "1px solid #ccc",
+            }}
+          >
+            <div style={{ marginBottom: "10px" }}>
+              <label style={{ display: "block", marginBottom: "4px" }}>
+                节点名称
+              </label>
+              <input
+                type="text"
+                placeholder="节点名称"
+                style={{
+                  width: "100%",
+                  padding: "6px",
+                  border: "1px solid #ddd",
+                  borderRadius: "4px",
+                  marginBottom: "8px",
+                  outline: "none",
+                  transition: "border-color 0.3s ease",
+                }}
+                onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
+                onBlur={(e) => (e.target.style.borderColor = "#ddd")}
+              />
+            </div>
+            <div style={{ marginBottom: "10px" }}>
+              <label style={{ display: "block", marginBottom: "4px" }}>
+                执行操作
+              </label>
+              <input
+                type="text"
+                placeholder="执行操作"
+                style={{
+                  width: "100%",
+                  padding: "6px",
+                  border: "1px solid #ddd",
+                  borderRadius: "4px",
+                  marginBottom: "8px",
+                  outline: "none",
+                  transition: "border-color 0.3s ease",
+                }}
+                onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
+                onBlur={(e) => (e.target.style.borderColor = "#ddd")}
+              />
+            </div>
+            <div>
+              <label style={{ display: "block", marginBottom: "4px" }}>
+                输出格式
+              </label>
+              <input
+                type="text"
+                placeholder="输出格式"
+                style={{
+                  width: "100%",
+                  padding: "6px",
+                  border: "1px solid #ddd",
+                  borderRadius: "4px",
+                  marginBottom: "8px",
+                  outline: "none",
+                  transition: "border-color 0.3s ease",
+                }}
+                onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
+                onBlur={(e) => (e.target.style.borderColor = "#ddd")}
+              />
+            </div>
+          </div>
+        ),
+      },
+      position: { x: contextMenu.x - 450, y: contextMenu.y - 180 },
       style: {
         width: "auto",
         minWidth: "200px",
