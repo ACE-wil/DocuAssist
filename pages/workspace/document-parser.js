@@ -61,6 +61,11 @@ function DocumentParser() {
   const [messageHistory, setMessageHistory] = useState([]);
   const [copySuccess, setCopySuccess] = useState(null);
   const [hoveredButton, setHoveredButton] = useState(null);
+  const [contextMenu, setContextMenu] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+  });
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -251,6 +256,30 @@ function DocumentParser() {
     }
   };
 
+  const onContextMenu = useCallback((event) => {
+    event.preventDefault();
+    setContextMenu({ visible: true, x: event.clientX, y: event.clientY });
+  }, []);
+
+  const addNode = useCallback(() => {
+    const newNode = {
+      id: (nodes.length + 1).toString(),
+      type: "custom",
+      data: { label: "新节点" },
+      position: { x: contextMenu.x - 50, y: contextMenu.y - 50 },
+      style: {
+        width: "auto",
+        minWidth: "200px",
+        maxWidth: "400px",
+        padding: "10px",
+        backgroundColor: "#e6f7ff",
+        borderRadius: "12px",
+      },
+    };
+    setNodes((nds) => nds.concat(newNode));
+    setContextMenu({ visible: false, x: 0, y: 0 });
+  }, [nodes, contextMenu]);
+
   return (
     <ReactFlowProvider>
       <div
@@ -316,6 +345,7 @@ function DocumentParser() {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             fitView
+            onContextMenu={onContextMenu}
             style={{
               background: "#f0f0f0",
               borderRadius: "8px",
@@ -752,6 +782,40 @@ function DocumentParser() {
           </div>
         )}
       </div>
+      {contextMenu.visible && (
+        <div
+          style={{
+            position: "absolute",
+            top: contextMenu.y,
+            left: contextMenu.x,
+            backgroundColor: "white",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
+            zIndex: 1000,
+            padding: "8px",
+          }}
+        >
+          <button
+            onClick={addNode}
+            style={{
+              padding: "8px 16px",
+              backgroundColor: "#4a90e2",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontSize: "14px",
+              transition: "background-color 0.2s ease",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            }}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = "#357ABD")}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = "#4a90e2")}
+          >
+            添加节点
+          </button>
+        </div>
+      )}
     </ReactFlowProvider>
   );
 }
