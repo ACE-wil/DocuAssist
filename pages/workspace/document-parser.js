@@ -65,13 +65,55 @@ function DocumentParser() {
     const newNodes = chatHistory.map((message, index) => ({
       id: index.toString(),
       type: "default",
-      data: { label: message.content },
-      position: { x: 0, y: index * 100 },
+      data: {
+        label: (
+          <div
+            style={{
+              padding: "6px",
+              borderRadius: "8px",
+              backgroundColor: "transparent",
+              width: "auto",
+              height: "auto",
+              maxHeight: "300px",
+              maxWidth: "300px",
+              overflow: "overlay",
+              fontSize: "16px",
+            }}
+          >
+            <ReactMarkdown
+              components={{
+                code({ node, inline, className, children, ...props }) {
+                  const match = /language-(\w+)/.exec(className || "");
+                  return !inline && match ? (
+                    <SyntaxHighlighter
+                      style={vscDarkPlus}
+                      language={match[1]}
+                      PreTag="div"
+                      {...props}
+                    >
+                      {String(children).replace(/\n$/, "")}
+                    </SyntaxHighlighter>
+                  ) : (
+                    <code className={className} {...props}>
+                      {children}
+                    </code>
+                  );
+                },
+              }}
+            >
+              {message.content}
+            </ReactMarkdown>
+          </div>
+        ),
+      },
+      position: { x: 0, y: index * 150 },
       style: {
         width: "auto",
-        maxHeight: "300px",
-        overflow: "hidden",
+        minWidth: "200px",
+        maxWidth: "400px",
+        padding: "10px",
         backgroundColor: message.role === "assistant" ? "#f0f0f0" : "#e6f7ff",
+        borderRadius: "12px",
       },
     }));
 
@@ -224,7 +266,10 @@ function DocumentParser() {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           fitView
-          style={{ background: "#f0f0f0", borderRadius: "8px" }}
+          style={{
+            background: "#f0f0f0",
+            borderRadius: "8px",
+          }}
         >
           <MiniMap />
           <Controls />
