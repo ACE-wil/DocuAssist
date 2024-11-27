@@ -46,6 +46,9 @@ function DocumentParser() {
   const [edges, setEdges] = useState([]);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [messageHistory, setMessageHistory] = useState([]);
+  const [copySuccess, setCopySuccess] = useState(null);
+  const [hoveredButton, setHoveredButton] = useState(null);
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -358,58 +361,178 @@ function DocumentParser() {
                 />
                 <div
                   style={{
+                    position: "relative",
                     backgroundColor:
                       message.role === "assistant"
                         ? "rgba(247, 247, 248, 0.9)"
                         : "rgba(25, 195, 125, 0.1)",
-                    padding: "12px 16px",
+                    padding: "12px 16px 16px 16px",
                     borderRadius: "12px",
-                    height: "auto",
                     maxWidth: "80%",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    position: "relative",
                     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
+                    maxHeight: "300px",
+                    overflow: "overlay",
                   }}
                 >
-                  <ReactMarkdown
-                    components={{
-                      code({ node, inline, className, children, ...props }) {
-                        const match = /language-(\w+)/.exec(className || "");
-                        return !inline && match ? (
-                          <SyntaxHighlighter
-                            style={{
-                              ...vscDarkPlus,
-                              'pre[class*="language-"]': {
-                                ...vscDarkPlus['pre[class*="language-"]'],
-                                borderRadius: "8px",
-                                margin: "10px 0",
+                  <ReactMarkdown>{message.content}</ReactMarkdown>
+                  {message.role === "assistant" && (
+                    <div
+                      style={{
+                        marginTop: "12px",
+                        display: "flex",
+                        gap: "8px",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <button
+                        onClick={() => {
+                          navigator.clipboard
+                            .writeText(message.content)
+                            .then(() => {
+                              setCopySuccess(index);
+                              setTimeout(() => {
+                                setCopySuccess(null);
+                              }, 1500);
+                            })
+                            .catch((err) => {
+                              console.error("复制失败:", err);
+                              alert("复制失败，请重试");
+                            });
+                        }}
+                        onMouseEnter={() => setHoveredButton(`copy-${index}`)}
+                        onMouseLeave={() => setHoveredButton(null)}
+                        style={{
+                          padding: "4px 8px",
+                          backgroundColor:
+                            hoveredButton === `copy-${index}` ||
+                            copySuccess === index
+                              ? "#e6f7ff"
+                              : "#f0f0f0",
+                          border: `1px solid ${
+                            hoveredButton === `copy-${index}` ||
+                            copySuccess === index
+                              ? "#91d5ff"
+                              : "#ddd"
+                          }`,
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          fontSize: "12px",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px",
+                          color:
+                            hoveredButton === `copy-${index}`
+                              ? "#1890ff"
+                              : "#8a8a8a",
+                          position: "relative",
+                          transition: "all 0.2s ease",
+                          transform:
+                            copySuccess === index ? "scale(1.05)" : "scale(1)",
+                        }}
+                      >
+                        <img
+                          src={
+                            hoveredButton === `copy-${index}` ||
+                            copySuccess === index
+                              ? "/icons/copy-o.png"
+                              : "/icons/copy.png"
+                          }
+                          alt="copy"
+                          style={{
+                            width: "14px",
+                            height: "14px",
+                            opacity:
+                              hoveredButton === `copy-${index}` ? 0.8 : 0.6,
+                            transition: "all 0.2s ease",
+                            transform:
+                              copySuccess === index
+                                ? "rotate(360deg)"
+                                : "rotate(0)",
+                          }}
+                        />
+                        {copySuccess === index ? "✨ 已复制 ✨" : "复制"}
+                      </button>
+                      <button
+                        onClick={() => {
+                          // 重试逻辑保持不变
+                          const previousMessages = chatHistory.slice(0, index);
+                          setChatHistory(previousMessages);
+                          if (
+                            index > 0 &&
+                            chatHistory[index - 1].role === "user"
+                          ) {
+                            fetch("http://localhost:5000/api/chat", {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
                               },
-                            }}
-                            language={match[1]}
-                            PreTag="div"
-                            {...props}
-                          >
-                            {String(children).replace(/\n$/, "")}
-                          </SyntaxHighlighter>
-                        ) : (
-                          <code
-                            className={className}
-                            style={{
-                              backgroundColor: "rgba(0, 0, 0, 0.05)",
-                              padding: "2px 6px",
-                              borderRadius: "4px",
-                            }}
-                            {...props}
-                          >
-                            {children}
-                          </code>
-                        );
-                      },
-                    }}
-                  >
-                    {message.content}
-                  </ReactMarkdown>
+                              body: JSON.stringify({
+                                message: chatHistory[index - 1].content,
+                                messages: previousMessages,
+                              }),
+                            })
+                              .then((response) => response.json())
+                              .then((data) => {
+                                const assistantMessage = {
+                                  role: "assistant",
+                                  content: data.response,
+                                };
+                                setChatHistory((prev) => [
+                                  ...prev,
+                                  assistantMessage,
+                                ]);
+                              })
+                              .catch((error) => {
+                                console.error("Error:", error);
+                                alert("重试失败，请重试");
+                              });
+                          }
+                        }}
+                        onMouseEnter={() => setHoveredButton(`retry-${index}`)}
+                        onMouseLeave={() => setHoveredButton(null)}
+                        style={{
+                          padding: "4px 8px",
+                          backgroundColor:
+                            hoveredButton === `retry-${index}`
+                              ? "#e6f7ff"
+                              : "#f0f0f0",
+                          border: `1px solid ${
+                            hoveredButton === `retry-${index}`
+                              ? "#91d5ff"
+                              : "#ddd"
+                          }`,
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          fontSize: "12px",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px",
+                          color:
+                            hoveredButton === `retry-${index}`
+                              ? "#1890ff"
+                              : "#8a8a8a",
+                          transition: "all 0.2s ease",
+                        }}
+                      >
+                        <img
+                          src={
+                            hoveredButton === `retry-${index}`
+                              ? "/icons/retry-o.png"
+                              : "/icons/retry.png"
+                          }
+                          alt="retry"
+                          style={{
+                            width: "14px",
+                            height: "14px",
+                            opacity:
+                              hoveredButton === `retry-${index}` ? 0.8 : 0.6,
+                            transition: "all 0.2s ease",
+                          }}
+                        />
+                        重试
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
