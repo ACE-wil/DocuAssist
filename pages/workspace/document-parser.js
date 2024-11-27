@@ -45,6 +45,7 @@ function DocumentParser() {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [isListening, setIsListening] = useState(false);
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -202,6 +203,37 @@ function DocumentParser() {
         console.error("Error:", error);
         alert("发送失败，请重试");
       });
+  };
+
+  const startListening = () => {
+    if ("webkitSpeechRecognition" in window) {
+      const recognition = new webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = "zh-CN"; // 设置语言为中文
+
+      recognition.onstart = () => {
+        setIsListening(true);
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setInputValue(transcript);
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        setIsListening(false);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognition.start();
+    } else {
+      alert("您的浏览器不支持语音识别功能");
+    }
   };
 
   return (
@@ -492,6 +524,35 @@ function DocumentParser() {
                 </button>
               </div>
             )}
+            <button
+              onClick={startListening}
+              style={{
+                padding: "8px",
+                marginRight: "12px",
+                backgroundColor: isListening ? "#19c37d" : "transparent",
+                border: "none",
+                borderRadius: "50%",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.2s ease",
+              }}
+            >
+              <img
+                src={
+                  isListening
+                    ? "/icons/microphone-listen.png"
+                    : "/icons/microphone.png"
+                }
+                alt="Voice Input"
+                style={{
+                  width: "24px",
+                  height: "24px",
+                  opacity: isListening ? 1 : 0.6,
+                }}
+              />
+            </button>
             <input
               type="text"
               value={inputValue}
