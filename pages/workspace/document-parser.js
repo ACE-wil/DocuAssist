@@ -15,6 +15,7 @@ import "reactflow/dist/style.css";
 import axios from "axios";
 import CustomNode from "./CustomNode"; // 引入自定义节点组件
 import CustomEdge from "./CustomEdge"; // 引入自定义连接线组件
+import { style } from "@mui/system";
 const { Prism: SyntaxHighlighter } = require("react-syntax-highlighter");
 const {
   vscDarkPlus,
@@ -80,9 +81,56 @@ function DocumentParser() {
   useEffect(() => {
     const newNodes = chatHistory.map((message, index) => ({
       id: index.toString(),
-      type: "custom", // 使用自定义节点类型
-      data: { label: message.content },
+      type: "custom", // 确保使用自定义节点类型
+      data: {
+        label: (
+          <div
+            style={{
+              padding: "6px",
+              borderRadius: "8px",
+              backgroundColor: "transparent",
+              width: "auto",
+              height: "auto",
+              maxHeight: "300px",
+              maxWidth: "300px",
+              overflow: "overlay",
+              fontSize: "16px",
+            }}
+          >
+            <ReactMarkdown
+              components={{
+                code({ node, inline, className, children, ...props }) {
+                  const match = /language-(\w+)/.exec(className || "");
+                  return !inline && match ? (
+                    <SyntaxHighlighter
+                      style={vscDarkPlus}
+                      language={match[1]}
+                      PreTag="div"
+                      {...props}
+                    >
+                      {String(children).replace(/\n$/, "")}
+                    </SyntaxHighlighter>
+                  ) : (
+                    <code className={className} {...props}>
+                      {children}
+                    </code>
+                  );
+                },
+              }}
+            >
+              {message.content}
+            </ReactMarkdown>
+          </div>
+        ),
+      },
       position: { x: 0, y: index * 150 },
+      style: {
+        width: "auto",
+        minWidth: "200px",
+        maxWidth: "400px",
+        backgroundColor: message.role === "assistant" ? "#f0f0f0" : "#e6f7ff",
+        borderRadius: "12px",
+      },
     }));
 
     const newEdges = chatHistory.slice(1).map((_, index) => ({
@@ -268,7 +316,10 @@ function DocumentParser() {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             fitView
-            style={{ width: "100%", height: "100%" }}
+            style={{
+              background: "#f0f0f0",
+              borderRadius: "8px",
+            }}
           >
             <MiniMap />
             <Controls />
