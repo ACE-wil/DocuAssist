@@ -57,6 +57,7 @@ export default function MainNavigation({
             cursor: "pointer",
             fontSize: "20px",
             paddingBottom: "6px",
+            marginTop: "-8px",
             marginBottom: "10px",
           }}
         >
