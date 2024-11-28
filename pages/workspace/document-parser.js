@@ -104,84 +104,12 @@ function DocumentParser() {
     const padding = 40; // 增加水平间距
     const verticalSpacing = 50; // 垂直间距
 
-    const newNodes = chatHistory.map((message, index) => ({
-      id: `chat-${index}`, // 确保ID唯一
-      type: "custom", // 确保使用自定义节点类型
-      data: {
-        label: (
-          <div
-            style={{
-              padding: "6px",
-              borderRadius: "8px",
-              backgroundColor: "transparent",
-              width: "auto",
-              height: "auto",
-              maxHeight: "300px",
-              maxWidth: "300px",
-              overflow: "overlay",
-              fontSize: "16px",
-            }}
-          >
-            <ReactMarkdown
-              components={{
-                code({ node, inline, className, children, ...props }) {
-                  const match = /language-(\w+)/.exec(className || "");
-                  return !inline && match ? (
-                    <SyntaxHighlighter
-                      style={vscDarkPlus}
-                      language={match[1]}
-                      PreTag="div"
-                      {...props}
-                    >
-                      {String(children).replace(/\n$/, "")}
-                    </SyntaxHighlighter>
-                  ) : (
-                    <code className={className} {...props}>
-                      {children}
-                    </code>
-                  );
-                },
-              }}
-            >
-              {message.content}
-            </ReactMarkdown>
-          </div>
-        ),
-      },
-      position: {
-        x: (index % 2) * (nodeWidth + padding), // 增加水平间距
-        y: Math.floor(index / 2) * (nodeHeight + padding + verticalSpacing), // 计算 y 坐标并增加垂直间距
-      },
-      style: {
-        width: "auto",
-        minWidth: "200px",
-        maxWidth: "400px",
-        backgroundColor: message.role === "assistant" ? "#f0f0f0" : "#e6f7ff",
-        borderRadius: "12px",
-      },
-    }));
+    const newNodes = []; // 使用其他数据源来生成节点
+    setNodes(newNodes);
+  }, []); // 确保依赖项中没有 chatHistory
 
-    const newEdges = chatHistory.map((_, index) => ({
-      id: `e${index}-${index + 1}`,
-      source: `chat-${index}`,
-      target: `chat-${index + 1}`,
-      type: "custom", // 使用自定义连接线类型
-      style: {
-        stroke: "#4a90e2",
-        strokeWidth: 2,
-      },
-    }));
-
-    // 合并新旧节点
-    setNodes((prevNodes) => {
-      const chatNodeIds = new Set(newNodes.map((node) => node.id));
-      const filteredPrevNodes = prevNodes.filter(
-        (node) => !chatNodeIds.has(node.id)
-      );
-      return [...filteredPrevNodes, ...newNodes];
-    });
-
-    // 合并新旧连接线
+  // 假设 newEdges 是从某个函数中获取的
+  const updateEdges = (newEdges) => {
     setEdges((prevEdges) => {
       const chatEdgeIds = new Set(newEdges.map((edge) => edge.id));
       const filteredPrevEdges = prevEdges.filter(
@@ -191,7 +119,10 @@ function DocumentParser() {
 
       return [...filteredPrevEdges, ...newEdges];
     });
-  }, [chatHistory, edgesChange]);
+  };
+
+  // 在需要更新边的地方调用 updateEdges
+  // updateEdges(someNewEdges); // 确保 someNewEdges 是一个有效的边数组
 
   // 创建节点清理后的 JSON
   const cleanedNodes = nodes.map((node) => {
@@ -748,7 +679,7 @@ function DocumentParser() {
                                   : "rotate(0)",
                             }}
                           />
-                          {copySuccess === index ? "✨ 已复制 ✨" : "复制"}
+                          {copySuccess === index ? "✨ 已制 ✨" : "复制"}
                         </button>
                         <button
                           onClick={() => {
