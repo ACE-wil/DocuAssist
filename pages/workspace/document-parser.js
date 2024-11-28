@@ -116,7 +116,7 @@ function DocumentParser() {
     const padding = 20; // 节点之间的间距
 
     const newNodes = chatHistory.map((message, index) => ({
-      id: index.toString(),
+      id: `chat-${index}`, // 确保ID唯一
       type: "custom", // 确保使用自定义节点类型
       data: {
         label: (
@@ -174,8 +174,8 @@ function DocumentParser() {
 
     const newEdges = chatHistory.slice(1).map((_, index) => ({
       id: `e${index}-${index + 1}`,
-      source: index.toString(),
-      target: (index + 1).toString(),
+      source: `chat-${index}`,
+      target: `chat-${index + 1}`,
       type: "custom", // 使用自定义连接线类型
       style: {
         stroke: "#4a90e2",
@@ -183,8 +183,23 @@ function DocumentParser() {
       },
     }));
 
-    setNodes(newNodes);
-    setEdges(newEdges);
+    // 合并新旧节点
+    setNodes((prevNodes) => {
+      const chatNodeIds = new Set(newNodes.map((node) => node.id));
+      const filteredPrevNodes = prevNodes.filter(
+        (node) => !chatNodeIds.has(node.id)
+      );
+      return [...filteredPrevNodes, ...newNodes];
+    });
+
+    // 合并新旧连接线
+    setEdges((prevEdges) => {
+      const chatEdgeIds = new Set(newEdges.map((edge) => edge.id));
+      const filteredPrevEdges = prevEdges.filter(
+        (edge) => !chatEdgeIds.has(edge.id)
+      );
+      return [...filteredPrevEdges, ...newEdges];
+    });
 
     // 深度优先遍历以排序节点
     const depthFirstTraversal = (nodes, edges, startNodeId) => {
