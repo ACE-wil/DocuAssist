@@ -503,6 +503,11 @@ function DocumentParser() {
     setIsPreviewOpen(true);
   };
 
+  // 在组件挂载时设置应用程序元素
+  useEffect(() => {
+    Modal.setAppElement("#__next"); // 假设你使用的是 Next.js，根元素是 #__next
+  }, []);
+
   return (
     <ReactFlowProvider>
       <div
