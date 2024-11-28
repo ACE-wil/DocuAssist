@@ -24,20 +24,6 @@ import Modal from "react-modal"; // 确保安装了 react-modal
 import dynamic from "next/dynamic";
 
 const ReactJson = dynamic(() => import("react-json-view"), { ssr: false });
-const initialNodes = [
-  {
-    id: "1",
-    type: "custom",
-    data: { label: "你好！有什么我可以帮助你的吗？" },
-    position: { x: 0, y: 50 },
-  },
-  // 添加更多节点
-];
-
-const initialEdges = [
-  { id: "e1-2", source: "1", target: "2", type: "custom" },
-  // 添加更多连接线
-];
 
 const nodeTypes = {
   custom: CustomNode,
@@ -72,6 +58,8 @@ function DocumentParser() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [sortedNodes, setSortedNodes] = useState([]);
   const [ReactJson, setReactJson] = useState(null);
+  const [edgesChange, setEdgesChange] = useState(false);
+  const [edgesInfo, setEdgesInfo] = useState([]); // 初始化 edgesInfo 状态
 
   useEffect(() => {
     // 动态导入 react-json-view
@@ -113,8 +101,8 @@ function DocumentParser() {
   useEffect(() => {
     const nodeHeight = 150; // 假设每个节点的高度为150px
     const nodeWidth = 300; // 假设每个节点的宽度为300px
-    const padding = 40; // 节点之间的间距
-    const verticalSpacing = 50; // 增加垂直间距
+    const padding = 40; // 增加水平间距
+    const verticalSpacing = 50; // 垂直间距
 
     const newNodes = chatHistory.map((message, index) => ({
       id: `chat-${index}`, // 确保ID唯一
@@ -161,7 +149,7 @@ function DocumentParser() {
         ),
       },
       position: {
-        x: (index % 2) * (nodeWidth + padding), // 交替放置在两列
+        x: (index % 2) * (nodeWidth + padding), // 增加水平间距
         y: Math.floor(index / 2) * (nodeHeight + padding + verticalSpacing), // 计算 y 坐标并增加垂直间距
       },
       style: {
@@ -173,7 +161,7 @@ function DocumentParser() {
       },
     }));
 
-    const newEdges = chatHistory.slice(1).map((_, index) => ({
+    const newEdges = chatHistory.map((_, index) => ({
       id: `e${index}-${index + 1}`,
       source: `chat-${index}`,
       target: `chat-${index + 1}`,
@@ -199,40 +187,11 @@ function DocumentParser() {
       const filteredPrevEdges = prevEdges.filter(
         (edge) => !chatEdgeIds.has(edge.id)
       );
+      setEdgesInfo([...filteredPrevEdges, ...newEdges]);
+
       return [...filteredPrevEdges, ...newEdges];
     });
-
-    // 深度优先遍历以排序节点
-    const depthFirstTraversal = (nodes, edges, startNodeId) => {
-      const sorted = [];
-      const visited = new Set();
-      const nodeMap = new Map(nodes.map((node) => [node.id, node]));
-
-      const dfs = (nodeId) => {
-        if (!visited.has(nodeId)) {
-          visited.add(nodeId);
-          sorted.push(nodeMap.get(nodeId));
-
-          // 找到当前节点的所有目标节点并继续遍历
-          const outgoingEdges = edges.filter((edge) => edge.source === nodeId);
-          outgoingEdges.forEach((edge) => dfs(edge.target));
-        }
-      };
-
-      // 从指定的起始节点开始遍历
-      dfs(startNodeId);
-
-      return sorted;
-    };
-
-    const sorted = depthFirstTraversal(
-      [...initialNodes, ...newNodes],
-      [...initialEdges, ...newEdges],
-      "0"
-    );
-    setSortedNodes(sorted);
-    console.log(sorted);
-  }, [chatHistory]);
+  }, [chatHistory, edgesChange]);
 
   // 创建节点清理后的 JSON
   const cleanedNodes = nodes.map((node) => {
@@ -362,8 +321,9 @@ function DocumentParser() {
   }, []);
 
   const addNode = useCallback(() => {
+    const newNodeId = `chat-${nodes.length}`; // 根据现有节点数量生成新节点ID
     const newNode = {
-      id: (nodes.length + 1).toString(),
+      id: newNodeId,
       type: "custom",
       data: {
         label: (
@@ -401,7 +361,7 @@ function DocumentParser() {
                 }}
                 onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
                 onBlur={(e) => (e.target.style.borderColor = "#ddd")}
-                onChange={(e) => handleInputChange(e, newNode.id, "name")}
+                onChange={(e) => handleInputChange(e, newNodeId, "name")}
               />
             </div>
             <div style={{ marginBottom: "10px" }}>
@@ -422,7 +382,7 @@ function DocumentParser() {
                 }}
                 onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
                 onBlur={(e) => (e.target.style.borderColor = "#ddd")}
-                onChange={(e) => handleInputChange(e, newNode.id, "action")}
+                onChange={(e) => handleInputChange(e, newNodeId, "action")}
               />
             </div>
             <div>
@@ -443,7 +403,7 @@ function DocumentParser() {
                 }}
                 onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
                 onBlur={(e) => (e.target.style.borderColor = "#ddd")}
-                onChange={(e) => handleInputChange(e, newNode.id, "output")}
+                onChange={(e) => handleInputChange(e, newNodeId, "output")}
               />
             </div>
           </div>
@@ -452,7 +412,7 @@ function DocumentParser() {
         action: "",
         output: "",
       },
-      position: { x: contextMenu.x - 450, y: contextMenu.y - 180 },
+      position: { x: 0, y: 0 }, // 你可以根据需要设置初始位置
       style: {
         width: "auto",
         minWidth: "200px",
@@ -462,8 +422,7 @@ function DocumentParser() {
       },
     };
     setNodes((nds) => [...nds, newNode]);
-    setContextMenu({ visible: false, x: 0, y: 0 });
-  }, [nodes, contextMenu]);
+  }, [nodes]);
 
   const handleInputChange = (event, nodeId, field) => {
     const value = event.target.value;
@@ -1132,50 +1091,50 @@ function DocumentParser() {
         }}
       >
         <h2 style={{ marginBottom: "20px", textAlign: "center" }}>节点预览</h2>
-        {ReactJson && (
-          <>
-            <h3>原始 JSON:</h3>
-            <ReactJson
-              src={{ nodes, edges }}
-              theme="monokai"
-              collapsed={2}
-              enableClipboard={false}
-              displayDataTypes={false}
-              style={{
-                padding: "10px",
-                borderRadius: "4px",
-                backgroundColor: "#2d2d2d",
-                color: "#f8f8f2",
-                marginBottom: "20px",
-              }}
-            />
-            <h3>节点清理后的 JSON:</h3>
-            <ReactJson
-              src={{ nodes: cleanedNodes, edges }}
-              theme="monokai"
-              collapsed={2}
-              enableClipboard={false}
-              displayDataTypes={false}
-              style={{
-                padding: "10px",
-                borderRadius: "4px",
-                backgroundColor: "#2d2d2d",
-                color: "#f8f8f2",
-              }}
-            />
-          </>
-        )}
+        <h3>原始 JSON:</h3>
+        <ReactJson
+          src={{ nodes, edges }}
+          theme="monokai"
+          collapsed={2}
+          enableClipboard={false}
+          displayDataTypes={false}
+          style={{
+            padding: "10px",
+            borderRadius: "4px",
+            backgroundColor: "#2d2d2d",
+            color: "#f8f8f2",
+            marginBottom: "20px",
+          }}
+        />
+        <h3>节点清理后的 JSON:</h3>
+        <ReactJson
+          src={{ nodes: cleanedNodes, edges }}
+          theme="monokai"
+          collapsed={2}
+          enableClipboard={false}
+          displayDataTypes={false}
+          style={{
+            padding: "10px",
+            borderRadius: "4px",
+            backgroundColor: "#2d2d2d",
+            color: "#f8f8f2",
+          }}
+        />
+
+        <h3>连接线信息:</h3>
+        <ul>
+          {edgesInfo &&
+            edgesInfo.map((edge, index) => (
+              <li key={index}>
+                Source: {edge.source}, Target: {edge.target}
+              </li>
+            ))}
+        </ul>
         <h3>排序后的节点顺序:</h3>
         <ul>
-          {sortedNodes.map((node) => (
-            <li key={node?.id} style={{ marginBottom: "10px" }}>
-              {node?.data &&
-              (node.data.name || node.data.action || node.data.output)
-                ? `节点标题：${node.data.name || "未命名"}，执行操作：${
-                    node.data.action || "无操作"
-                  }，输出格式：${node.data.output || "无输出"}`
-                : node?.data?.label?.props?.children?.props?.children ||
-                  "内容不可用"}
+          {edgesInfo.map((edge, index) => (
+            <li key={index} style={{ marginBottom: "10px" }}>
+              {`Source: ${edge.source}, Target: ${edge.target}`}
             </li>
           ))}
         </ul>
