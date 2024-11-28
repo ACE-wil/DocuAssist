@@ -113,7 +113,8 @@ function DocumentParser() {
   useEffect(() => {
     const nodeHeight = 150; // 假设每个节点的高度为150px
     const nodeWidth = 300; // 假设每个节点的宽度为300px
-    const padding = 20; // 节点之间的间距
+    const padding = 40; // 节点之间的间距
+    const verticalSpacing = 50; // 增加垂直间距
 
     const newNodes = chatHistory.map((message, index) => ({
       id: `chat-${index}`, // 确保ID唯一
@@ -161,7 +162,7 @@ function DocumentParser() {
       },
       position: {
         x: (index % 2) * (nodeWidth + padding), // 交替放置在两列
-        y: Math.floor(index / 2) * (nodeHeight + padding), // 计算 y 坐标
+        y: Math.floor(index / 2) * (nodeHeight + padding + verticalSpacing), // 计算 y 坐标并增加垂直间距
       },
       style: {
         width: "auto",
