@@ -69,6 +69,7 @@ function DocumentParser() {
     y: 0,
   });
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [sortedNodes, setSortedNodes] = useState([]);
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -86,7 +87,25 @@ function DocumentParser() {
     [setEdges]
   );
 
+  // 提取节点文本内容的辅助函数
+  const extractTextFromNode = (node) => {
+    if (typeof node === "string") {
+      return node;
+    } else if (node.props?.children) {
+      if (Array.isArray(node.props.children)) {
+        return node.props.children.map(extractTextFromNode).join(" ");
+      } else {
+        return extractTextFromNode(node.props.children);
+      }
+    }
+    return "";
+  };
+
   useEffect(() => {
+    const nodeHeight = 150; // 假设每个节点的高度为150px
+    const nodeWidth = 300; // 假设每个节点的宽度为300px
+    const padding = 20; // 节点之间的间距
+
     const newNodes = chatHistory.map((message, index) => ({
       id: index.toString(),
       type: "custom", // 确保使用自定义节点类型
@@ -131,7 +150,10 @@ function DocumentParser() {
           </div>
         ),
       },
-      position: { x: 0, y: index * 150 },
+      position: {
+        x: (index % 2) * (nodeWidth + padding), // 交替放置在两列
+        y: Math.floor(index / 2) * (nodeHeight + padding), // 计算 y 坐标
+      },
       style: {
         width: "auto",
         minWidth: "200px",
@@ -154,7 +176,56 @@ function DocumentParser() {
 
     setNodes(newNodes);
     setEdges(newEdges);
+
+    // 深度优先遍历以排序节点
+    const depthFirstTraversal = (nodes, edges, startNodeId) => {
+      const sorted = [];
+      const visited = new Set();
+      const nodeMap = new Map(nodes.map((node) => [node.id, node]));
+
+      const dfs = (nodeId) => {
+        if (!visited.has(nodeId)) {
+          visited.add(nodeId);
+          sorted.push(nodeMap.get(nodeId));
+
+          // 找到当前节点的所有目标节点并继续遍历
+          const outgoingEdges = edges.filter((edge) => edge.source === nodeId);
+          outgoingEdges.forEach((edge) => dfs(edge.target));
+        }
+      };
+
+      // 从指定的起始节点开始遍历
+      dfs(startNodeId);
+
+      return sorted;
+    };
+
+    const sorted = depthFirstTraversal(
+      [...initialNodes, ...newNodes],
+      [...initialEdges, ...newEdges],
+      "0"
+    );
+    setSortedNodes(sorted);
   }, [chatHistory]);
+
+  // 创建节点清理后的 JSON
+  const cleanedNodes = nodes.map((node) => {
+    if (node.data.name || node.data.action || node.data.output) {
+      // 新增节点
+      return {
+        id: node.id,
+        content: `节点标题：${node.data.name || "未命名"}，执行操作：${
+          node.data.action || "无操作"
+        }，输出格式：${node.data.output || "无输出"}`,
+      };
+    } else {
+      // 原有节点
+      return {
+        id: node.id,
+        content: node.data.label.props.children.props?.children || "内容不可用",
+      };
+    }
+  });
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -210,7 +281,7 @@ function DocumentParser() {
       },
       body: JSON.stringify({
         message: inputValue,
-        messages: chatHistory, // 发送完整的对话历史
+        messages: chatHistory, // 送完整的对话历史
       }),
     })
       .then((response) => response.json())
@@ -304,6 +375,7 @@ function DocumentParser() {
                 }}
                 onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
                 onBlur={(e) => (e.target.style.borderColor = "#ddd")}
+                onChange={(e) => handleInputChange(e, newNode.id, "name")}
               />
             </div>
             <div style={{ marginBottom: "10px" }}>
@@ -324,6 +396,7 @@ function DocumentParser() {
                 }}
                 onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
                 onBlur={(e) => (e.target.style.borderColor = "#ddd")}
+                onChange={(e) => handleInputChange(e, newNode.id, "action")}
               />
             </div>
             <div>
@@ -344,10 +417,14 @@ function DocumentParser() {
                 }}
                 onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
                 onBlur={(e) => (e.target.style.borderColor = "#ddd")}
+                onChange={(e) => handleInputChange(e, newNode.id, "output")}
               />
             </div>
           </div>
         ),
+        name: "",
+        action: "",
+        output: "",
       },
       position: { x: contextMenu.x - 450, y: contextMenu.y - 180 },
       style: {
@@ -358,9 +435,27 @@ function DocumentParser() {
         borderRadius: "12px",
       },
     };
-    setNodes((nds) => nds.concat(newNode));
+    setNodes((nds) => [...nds, newNode]);
     setContextMenu({ visible: false, x: 0, y: 0 });
   }, [nodes, contextMenu]);
+
+  const handleInputChange = (event, nodeId, field) => {
+    const value = event.target.value;
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              [field]: value,
+            },
+          };
+        }
+        return node;
+      })
+    );
+  };
 
   useEffect(() => {
     const handleClickOutside = () => {
@@ -742,7 +837,7 @@ function DocumentParser() {
                               transition: "all 0.2s ease",
                             }}
                           />
-                          ���试
+                          重试
                         </button>
                       </div>
                     )}
@@ -994,13 +1089,14 @@ function DocumentParser() {
             width: "80%",
             maxHeight: "80%",
             overflow: "auto",
-            padding: "20px",
-            borderRadius: "8px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            padding: "20px", // 增加内边距
+            borderRadius: "8px", // 圆角
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // 阴影
           },
         }}
       >
         <h2 style={{ marginBottom: "20px", textAlign: "center" }}>节点预览</h2>
+        <h3>原始 JSON:</h3>
         <ReactJson
           src={{ nodes, edges }}
           theme="monokai" // 你可以选择其他主题
@@ -1010,10 +1106,38 @@ function DocumentParser() {
           style={{
             padding: "10px",
             borderRadius: "4px",
-            backgroundColor: "#2d2d2d",
-            color: "#f8f8f2",
-          }}
+            backgroundColor: "#2d2d2d", // 深色背景
+            color: "#f8f8f2", // 浅色文本
+            marginBottom: "20px", // 增加下边距
+          }} // 增加样���
         />
+        <h3>节点清理后的 JSON:</h3>
+        <ReactJson
+          src={{ nodes: cleanedNodes, edges }}
+          theme="monokai" // 你可以选择其他主题
+          collapsed={2} // 默认折叠的层级
+          enableClipboard={false} // 禁用复制功能
+          displayDataTypes={false} // 不显示数据类型
+          style={{
+            padding: "10px",
+            borderRadius: "4px",
+            backgroundColor: "#2d2d2d", // 深色背景
+            color: "#f8f8f2", // 浅色文本
+          }} // 增加样式
+        />
+        <h3>排序后的节点顺序:</h3>
+        <ul>
+          {sortedNodes.map((node) => (
+            <li key={node.id} style={{ marginBottom: "10px" }}>
+              {node.data.name || node.data.action || node.data.output
+                ? `节点标题：${node.data.name || "未命名"}，执行操作：${
+                    node.data.action || "无操作"
+                  }，输出格式：${node.data.output || "无输出"}`
+                : node.data.label.props.children.props?.children ||
+                  "内容不可用"}
+            </li>
+          ))}
+        </ul>
         <button
           onClick={() => setIsPreviewOpen(false)}
           style={{
