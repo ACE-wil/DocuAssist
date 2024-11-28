@@ -50,6 +50,7 @@ function DocumentParser() {
   const [messageHistory, setMessageHistory] = useState([]);
   const [copySuccess, setCopySuccess] = useState(null);
   const [hoveredButton, setHoveredButton] = useState(null);
+  const [inputHasChanged, setInputHasChanged] = useState(false);
   const [contextMenu, setContextMenu] = useState({
     visible: false,
     x: 0,
@@ -179,6 +180,17 @@ function DocumentParser() {
         });
     }
   };
+
+  const handleNodeAction = (nodeData) => {
+    console.log("Node action triggered:", nodeData);
+    setInputValue(nodeData.name); // 确保将节点数据传递给输入框
+    // 自动发送消息
+    setInputHasChanged(!inputHasChanged);
+  };
+
+  useEffect(() => {
+    handleSendMessage();
+  }, [inputHasChanged]);
 
   const handleSendMessage = () => {
     if (!inputValue.trim()) return;
@@ -519,7 +531,13 @@ function DocumentParser() {
             </button>
           )}
           <ReactFlow
-            nodes={nodes}
+            nodes={nodes.map((node) => ({
+              ...node,
+              data: {
+                ...node.data,
+                onNodeAction: handleNodeAction, // 传递回调函数
+              },
+            }))}
             edges={edges}
             nodeTypes={nodeTypes}
             edgeTypes={edgeTypes}

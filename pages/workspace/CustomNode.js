@@ -40,7 +40,10 @@ const CustomNode = ({ data, selected }) => {
             borderRadius: "4px",
             cursor: "pointer",
           }}
-          onClick={() => console.log("运行节点", data)}
+          onClick={() => {
+            console.log("Running node:", data);
+            data.onNodeAction(data);
+          }}
         >
           运行
         </button>
