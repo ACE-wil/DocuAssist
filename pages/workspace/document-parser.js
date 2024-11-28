@@ -215,6 +215,7 @@ function DocumentParser() {
       "0"
     );
     setSortedNodes(sorted);
+    console.log(sorted);
   }, [chatHistory]);
 
   // 创建节点清理后的 JSON
@@ -521,86 +522,91 @@ function DocumentParser() {
           }}
         >
           {/* 添加预览按钮 */}
-          <button
-            onClick={handlePreviewNodes}
-            style={{
-              position: "absolute",
-              top: "20px",
-              left: "20px",
-              zIndex: 999,
-              padding: "8px 16px",
-              backgroundColor: "#4a5568",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-              transition: "background-color 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#2d3748")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#4a5568")}
-          >
-            <span>预览节点</span>
-            <span style={{ fontSize: "16px" }}>👁️</span>
-          </button>
+          {!isPreviewOpen && (
+            <button
+              onClick={handlePreviewNodes}
+              style={{
+                position: "absolute",
+                top: "20px",
+                left: "20px",
+                zIndex: 999,
+                padding: "8px 16px",
+                backgroundColor: "#4a5568",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                transition: "background-color 0.2s ease",
+              }}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "#2d3748")}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = "#4a5568")}
+            >
+              <span>预览节点</span>
+              <span style={{ fontSize: "16px" }}>👁️</span>
+            </button>
+          )}
 
           {/* 添加导出按钮 */}
-          <button
-            onClick={handleExportNodes}
-            style={{
-              position: "absolute",
-              top: "20px",
-              left: "160px", // 调整位置以避免重叠
-              zIndex: 999,
-              padding: "8px 16px",
-              backgroundColor: "#4a5568",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-              transition: "background-color 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#2d3748")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#4a5568")}
-          >
-            <span>导出节点</span>
-            <span style={{ fontSize: "16px" }}>📥</span>
-          </button>
+          {!isPreviewOpen && (
+            <button
+              onClick={handleExportNodes}
+              style={{
+                position: "absolute",
+                top: "20px",
+                left: "160px", // 调整位置以避免重叠
+                zIndex: 999,
+                padding: "8px 16px",
+                backgroundColor: "#4a5568",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                transition: "background-color 0.2s ease",
+              }}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "#2d3748")}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = "#4a5568")}
+            >
+              <span>导出节点</span>
+              <span style={{ fontSize: "16px" }}>📥</span>
+            </button>
+          )}
 
           {/* 确保全屏按钮仍然存在 */}
-          <button
-            onClick={() => setIsFullScreen(!isFullScreen)}
-            style={{
-              position: "absolute",
-              top: "20px",
-              right: "20px",
-              zIndex: 999,
-              padding: "8px 16px",
-              backgroundColor: "#4a5568",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-              transition: "background-color 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#2d3748")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#4a5568")}
-          >
-            <span>{isFullScreen ? "退出全屏" : "全屏"}</span>
-            <span style={{ fontSize: "16px" }}>🔍</span>
-          </button>
-
+          {!isPreviewOpen && (
+            <button
+              onClick={() => setIsFullScreen(!isFullScreen)}
+              style={{
+                position: "absolute",
+                top: "20px",
+                right: "20px",
+                zIndex: 999,
+                padding: "8px 16px",
+                backgroundColor: "#4a5568",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                transition: "background-color 0.2s ease",
+              }}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "#2d3748")}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = "#4a5568")}
+            >
+              <span>{isFullScreen ? "退出全屏" : "全屏"}</span>
+              <span style={{ fontSize: "16px" }}>🔍</span>
+            </button>
+          )}
           <ReactFlow
             nodes={nodes}
             edges={edges}
