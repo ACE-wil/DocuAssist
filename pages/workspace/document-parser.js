@@ -21,8 +21,9 @@ const {
   vscDarkPlus,
 } = require("react-syntax-highlighter/dist/cjs/styles/prism");
 import Modal from "react-modal"; // 确保安装了 react-modal
-import ReactJson from "react-json-view"; // 引入 react-json-view
+import dynamic from "next/dynamic";
 
+const ReactJson = dynamic(() => import("react-json-view"), { ssr: false });
 const initialNodes = [
   {
     id: "1",
@@ -70,6 +71,14 @@ function DocumentParser() {
   });
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [sortedNodes, setSortedNodes] = useState([]);
+  const [ReactJson, setReactJson] = useState(null);
+
+  useEffect(() => {
+    // 动态导入 react-json-view
+    import("react-json-view").then((module) =>
+      setReactJson(() => module.default)
+    );
+  }, []);
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -1089,51 +1098,56 @@ function DocumentParser() {
             width: "80%",
             maxHeight: "80%",
             overflow: "auto",
-            padding: "20px", // 增加内边距
-            borderRadius: "8px", // 圆角
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // 阴影
+            padding: "20px",
+            borderRadius: "8px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           },
         }}
       >
         <h2 style={{ marginBottom: "20px", textAlign: "center" }}>节点预览</h2>
-        <h3>原始 JSON:</h3>
-        <ReactJson
-          src={{ nodes, edges }}
-          theme="monokai" // 你可以选择其他主题
-          collapsed={2} // 默认折叠的层级
-          enableClipboard={false} // 禁用复制功能
-          displayDataTypes={false} // 不显示数据类型
-          style={{
-            padding: "10px",
-            borderRadius: "4px",
-            backgroundColor: "#2d2d2d", // 深色背景
-            color: "#f8f8f2", // 浅色文本
-            marginBottom: "20px", // 增加下边距
-          }} // 增加样���
-        />
-        <h3>节点清理后的 JSON:</h3>
-        <ReactJson
-          src={{ nodes: cleanedNodes, edges }}
-          theme="monokai" // 你可以选择其他主题
-          collapsed={2} // 默认折叠的层级
-          enableClipboard={false} // 禁用复制功能
-          displayDataTypes={false} // 不显示数据类型
-          style={{
-            padding: "10px",
-            borderRadius: "4px",
-            backgroundColor: "#2d2d2d", // 深色背景
-            color: "#f8f8f2", // 浅色文本
-          }} // 增加样式
-        />
+        {ReactJson && (
+          <>
+            <h3>原始 JSON:</h3>
+            <ReactJson
+              src={{ nodes, edges }}
+              theme="monokai"
+              collapsed={2}
+              enableClipboard={false}
+              displayDataTypes={false}
+              style={{
+                padding: "10px",
+                borderRadius: "4px",
+                backgroundColor: "#2d2d2d",
+                color: "#f8f8f2",
+                marginBottom: "20px",
+              }}
+            />
+            <h3>节点清理后的 JSON:</h3>
+            <ReactJson
+              src={{ nodes: cleanedNodes, edges }}
+              theme="monokai"
+              collapsed={2}
+              enableClipboard={false}
+              displayDataTypes={false}
+              style={{
+                padding: "10px",
+                borderRadius: "4px",
+                backgroundColor: "#2d2d2d",
+                color: "#f8f8f2",
+              }}
+            />
+          </>
+        )}
         <h3>排序后的节点顺序:</h3>
         <ul>
           {sortedNodes.map((node) => (
-            <li key={node.id} style={{ marginBottom: "10px" }}>
-              {node.data.name || node.data.action || node.data.output
+            <li key={node?.id} style={{ marginBottom: "10px" }}>
+              {node?.data &&
+              (node.data.name || node.data.action || node.data.output)
                 ? `节点标题：${node.data.name || "未命名"}，执行操作：${
                     node.data.action || "无操作"
                   }，输出格式：${node.data.output || "无输出"}`
-                : node.data.label.props.children.props?.children ||
+                : node?.data?.label?.props?.children?.props?.children ||
                   "内容不可用"}
             </li>
           ))}
