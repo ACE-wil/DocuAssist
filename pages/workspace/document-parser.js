@@ -62,6 +62,8 @@ function DocumentParser() {
   const [showEmptyNode, setShowEmptyNode] = useState(true);
   const [nodeCounter, setNodeCounter] = useState(0); // 用于生成唯一节点ID的计数器
   const [isLoading, setIsLoading] = useState(false); // 确保 isLoading 状态存在
+  const [streamingContent, setStreamingContent] = useState(""); // 新增状态用于流式输出
+  const [isStreaming, setIsStreaming] = useState(false); // 新增状态用于控制流式输出
 
   useEffect(() => {
     // 动态导入 react-json-view
@@ -201,6 +203,8 @@ function DocumentParser() {
           role: "assistant",
           content: data.response,
         };
+        setIsStreaming(true); // 开始流式输出
+        streamAssistantMessage(assistantMessage.content);
         setChatHistory((prev) => [...prev, assistantMessage]);
         setInputValue("");
         setIsLoading(false); // 停止加载动画
@@ -210,6 +214,20 @@ function DocumentParser() {
         alert("发送失败，请重试");
         setIsLoading(false); // 停止加载动画
       });
+  };
+
+  const streamAssistantMessage = (content) => {
+    let index = 0;
+    setStreamingContent(""); // 清空流式内容
+    const interval = setInterval(() => {
+      if (index < content.length) {
+        setStreamingContent((prev) => prev + content[index]);
+        index++;
+      } else {
+        clearInterval(interval);
+        setIsStreaming(false); // 结束流式输出
+      }
+    }, 50); // 每50毫秒输出一个字符
   };
 
   const startListening = () => {
@@ -675,7 +693,11 @@ function DocumentParser() {
                     }}
                   >
                     {message.role === "assistant" ? (
-                      renderMarkdown(message.content)
+                      isStreaming && index === chatHistory.length - 1 ? (
+                        renderMarkdown(streamingContent)
+                      ) : (
+                        renderMarkdown(message.content)
+                      )
                     ) : (
                       <p>{message.content}</p>
                     )}
