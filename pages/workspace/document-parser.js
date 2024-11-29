@@ -62,6 +62,7 @@ function DocumentParser() {
   const [edgesChange, setEdgesChange] = useState(false);
   const [edgesInfo, setEdgesInfo] = useState([]); // 初始化 edgesInfo 状态
   const [showEmptyNode, setShowEmptyNode] = useState(true);
+  const [nodeCounter, setNodeCounter] = useState(0); // 用于生成唯一节点ID的计数器
 
   useEffect(() => {
     // 动态导入 react-json-view
@@ -163,7 +164,9 @@ function DocumentParser() {
 
   const handleNodeAction = (nodeData) => {
     console.log("Node action triggered:", nodeData);
-    setInputValue(nodeData.name); // 确保将节点数据传递给输入框
+    setInputValue(
+      `节点名称：${nodeData.name}，执行操作：${nodeData.action}，输出格式：${nodeData.output}`
+    ); // 确保将节点数据传递给输入框
     // 自动发送消息
     setInputHasChanged(!inputHasChanged);
   };
@@ -246,7 +249,7 @@ function DocumentParser() {
   const addNode = useCallback(
     (event) => {
       event.preventDefault();
-      const newNodeId = `chat-${nodes.length}`; // 根据现有节点数量生成新节点ID
+      const newNodeId = `chat-${nodeCounter}`; // 根据现有节点数量生成新节点ID
       const newNode = {
         id: newNodeId,
         type: "custom",
@@ -348,8 +351,9 @@ function DocumentParser() {
       };
       setNodes((nds) => [...nds, newNode]);
       setShowEmptyNode(false);
+      setNodeCounter((count) => count + 1); // 增加计数器
     },
-    [nodes]
+    [nodeCounter]
   );
 
   const handleInputChange = (event, nodeId, field) => {
