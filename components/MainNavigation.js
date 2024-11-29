@@ -56,11 +56,21 @@ export default function MainNavigation({
             border: "none",
             cursor: "pointer",
             fontSize: "20px",
-            padding: "8px",
+            paddingBottom: "6px",
+            marginTop: "-8px",
             marginBottom: "10px",
           }}
         >
           {isDark ? "🌞" : "🌙"}
+        </button>
+        <button
+          className="add-button"
+          onClick={() => setIsCreateAppModalOpen(true)}
+        >
+          <img
+            src={isDark ? "/icons/add-o.png" : "/icons/add.png"}
+            style={{ width: "30px", height: "30px" }}
+          ></img>
         </button>
         {navItems.map((item) => (
           <Link href={item.href} key={item.id}>
@@ -226,16 +236,13 @@ export default function MainNavigation({
         a,
         .bottom-nav-item,
         .avatar {
-          margin-bottom: 20px;
+          margin-bottom: 15px;
         }
         .add-button {
           background: none;
-          border: 1px solid #333;
-          border-radius: 50%;
-          width: 30px;
-          height: 30px;
           font-size: 20px;
           cursor: pointer;
+          border: none;
         }
         a,
         .bottom-nav-item {

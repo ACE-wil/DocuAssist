@@ -31,7 +31,8 @@ export default function GamePreview() {
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/lvpishu_1.mp4",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accessory",
