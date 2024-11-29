@@ -317,9 +317,7 @@ function DocumentParser() {
                 <label style={{ display: "block", marginBottom: "4px" }}>
                   输出格式
                 </label>
-                <input
-                  type="text"
-                  placeholder="输出格式"
+                <select
                   style={{
                     width: "100%",
                     padding: "6px",
@@ -332,8 +330,30 @@ function DocumentParser() {
                   onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
                   onBlur={(e) => (e.target.style.borderColor = "#ddd")}
                   onChange={(e) => handleInputChange(e, newNodeId, "output")}
-                />
+                >
+                  <option value="">选择输出格式</option>
+                  <option value="json">JSON</option>
+                  <option value="xml">XML</option>
+                  <option value="csv">CSV</option>
+                  <option value="text">文本</option>
+                </select>
               </div>
+              {/* <div style={{ marginBottom: "10px" }}>
+                <button
+                  style={{
+                    width: "100%",
+                    padding: "6px",
+                    borderRadius: "4px",
+                    backgroundColor: "#4a90e2",
+                    color: "white",
+                    border: "none",
+                    cursor: "pointer",
+                    marginTop: "4px",
+                  }}
+                >
+                  添加条件
+                </button>
+              </div> */}
             </div>
           ),
           name: "",
