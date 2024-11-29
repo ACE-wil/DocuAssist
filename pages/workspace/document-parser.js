@@ -426,6 +426,14 @@ function DocumentParser() {
     Modal.setAppElement("#__next"); // 假设你使用的是 Next.js，根元素是 #__next
   }, []);
 
+  // 定义一个空节点
+  const emptyNode = {
+    id: "empty-node",
+    type: "custom",
+    data: { label: "这是一个空节点" },
+    position: { x: 250, y: 250 },
+  };
+
   return (
     <ReactFlowProvider>
       <div
@@ -531,13 +539,17 @@ function DocumentParser() {
             </button>
           )}
           <ReactFlow
-            nodes={nodes.map((node) => ({
-              ...node,
-              data: {
-                ...node.data,
-                onNodeAction: handleNodeAction, // 传递回调函数
-              },
-            }))}
+            nodes={
+              nodes.length > 0
+                ? nodes.map((node) => ({
+                    ...node,
+                    data: {
+                      ...node.data,
+                      onNodeAction: handleNodeAction, // 传递回调函数
+                    },
+                  }))
+                : [emptyNode]
+            } // 条件渲染节点
             edges={edges}
             nodeTypes={nodeTypes}
             edgeTypes={edgeTypes}
