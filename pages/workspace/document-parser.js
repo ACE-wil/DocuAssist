@@ -1052,35 +1052,41 @@ function DocumentParser() {
         }}
       >
         <h2 style={{ marginBottom: "20px", textAlign: "center" }}>节点预览</h2>
-        <h3>原始 JSON:</h3>
-        <ReactJson
-          src={{ nodes, edges }}
-          theme="monokai"
-          collapsed={2}
-          enableClipboard={false}
-          displayDataTypes={false}
-          style={{
-            padding: "10px",
-            borderRadius: "4px",
-            backgroundColor: "#2d2d2d",
-            color: "#f8f8f2",
-            marginBottom: "20px",
-          }}
-        />
-        <h3>节点清理后的 JSON:</h3>
-        <ReactJson
-          src={{ nodes: cleanedNodes, edges }}
-          theme="monokai"
-          collapsed={2}
-          enableClipboard={false}
-          displayDataTypes={false}
-          style={{
-            padding: "10px",
-            borderRadius: "4px",
-            backgroundColor: "#2d2d2d",
-            color: "#f8f8f2",
-          }}
-        />
+        {ReactJson ? (
+          <>
+            <h3>原始 JSON:</h3>
+            <ReactJson
+              src={{ nodes, edges }}
+              theme="monokai"
+              collapsed={2}
+              enableClipboard={false}
+              displayDataTypes={false}
+              style={{
+                padding: "10px",
+                borderRadius: "4px",
+                backgroundColor: "#2d2d2d",
+                color: "#f8f8f2",
+                marginBottom: "20px",
+              }}
+            />
+            <h3>节点清理后的 JSON:</h3>
+            <ReactJson
+              src={{ nodes: cleanedNodes, edges }}
+              theme="monokai"
+              collapsed={2}
+              enableClipboard={false}
+              displayDataTypes={false}
+              style={{
+                padding: "10px",
+                borderRadius: "4px",
+                backgroundColor: "#2d2d2d",
+                color: "#f8f8f2",
+              }}
+            />
+          </>
+        ) : (
+          <p>加载中...</p>
+        )}
 
         <h3>连接线信息:</h3>
         <ul>

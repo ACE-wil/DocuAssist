@@ -25,6 +25,7 @@ export default function PopularApps() {
         </span>
       </Flex>
     ),
+    key: title,
   });
   const options = [
     {
@@ -59,9 +60,8 @@ export default function PopularApps() {
             width: 250,
           }}
           options={options}
-          size="large"
         >
-          <Input.Search size="large" placeholder="input here" />
+          <Input.Search placeholder="input here" style={{ height: "40px" }} />
         </AutoComplete>
         <Button color="primary" type="primary">
           上架应用
@@ -240,8 +240,8 @@ export default function PopularApps() {
       <style>
         {`
         .icon {
-    width: 1em;
-    height: 1em;
+    width: 1.2em;
+    height: 1.2em;
     vertical-align: -0.15em;
     fill: currentColor;
     overflow: hidden;
@@ -342,6 +342,7 @@ export default function PopularApps() {
         height:220px;
         margin-bottom: 30px;
         border: 1px solid #ccc;
+        overflow: hidden;
         }
         .ant-card img {
           position: relative;
