@@ -9,8 +9,6 @@ import ReactFlow, {
   ReactFlowProvider,
 } from "reactflow";
 import ReactMarkdown from "react-markdown";
-// import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-// import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import "reactflow/dist/style.css";
 import axios from "axios";
 import CustomNode from "./CustomNode"; // 引入自定义节点组件
@@ -443,6 +441,37 @@ function DocumentParser() {
     position: { x: 490, y: 410 },
   };
 
+  const renderMarkdown = (content) => (
+    <ReactMarkdown
+      children={content}
+      components={{
+        code({ node, inline, className, children, ...props }) {
+          const match = /language-(\w+)/.exec(className || "");
+          return !inline && match ? (
+            <SyntaxHighlighter
+              style={{
+                ...vscDarkPlus,
+                'pre[class*="language-"]': {
+                  ...vscDarkPlus['pre[class*="language-"]'],
+                  borderRadius: "8px", // 设置圆角
+                },
+              }}
+              language={match[1]}
+              PreTag="div"
+              {...props}
+            >
+              {String(children).replace(/\n$/, "")}
+            </SyntaxHighlighter>
+          ) : (
+            <code className={className} {...props}>
+              {children}
+            </code>
+          );
+        },
+      }}
+    />
+  );
+
   return (
     <ReactFlowProvider>
       <div
@@ -634,13 +663,17 @@ function DocumentParser() {
                           : "rgba(25, 195, 125, 0.1)",
                       padding: "12px 16px 16px 16px",
                       borderRadius: "12px",
-                      maxWidth: "80%",
+                      maxWidth: "85%",
                       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
                       maxHeight: "300px",
                       overflow: "overlay",
                     }}
                   >
-                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                    {message.role === "assistant" ? (
+                      renderMarkdown(message.content)
+                    ) : (
+                      <p>{message.content}</p>
+                    )}
                     {message.role === "assistant" && (
                       <div
                         style={{
