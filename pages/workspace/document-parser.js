@@ -1019,15 +1019,24 @@ function DocumentParser() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  height: "35px",
                   fontSize: "20px",
                   transition: "all 0.2s ease",
-                  "&:hover": {
-                    backgroundColor: "#15a367",
-                    transform: "scale(1.05)",
-                  },
-                  "&:active": {
-                    transform: "scale(0.95)",
-                  },
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = "#357ABD";
+                  e.target.style.transform = "scale(1.05)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = "#4a90e2";
+                  e.target.style.transform = "scale(1)";
+                }}
+                onMouseDown={(e) => {
+                  e.target.style.transform = "scale(0.95)";
+                }}
+                onMouseUp={(e) => {
+                  e.target.style.transform = "scale(1.05)";
                 }}
               >
                 ⮞
