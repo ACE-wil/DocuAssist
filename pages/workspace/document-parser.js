@@ -419,7 +419,7 @@ function DocumentParser() {
   const emptyNode = {
     id: "empty-node",
     type: "custom",
-    data: { label: "你还没有创建过节点握，快来创建你的借点吧！" },
+    data: { label: "你还没有创建过节点喔，快来创建你的节点吧！" },
     position: { x: 490, y: 410 },
   };
 
