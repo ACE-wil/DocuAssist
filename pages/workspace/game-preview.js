@@ -45,7 +45,8 @@ export default function GamePreview() {
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/qianyuqianxun.mp4",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accident",
@@ -58,7 +59,8 @@ export default function GamePreview() {
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/qianyuqianxun.mp4",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accidental",
@@ -71,7 +73,8 @@ export default function GamePreview() {
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/qianyuqianxun.mp4",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accommodate",
@@ -84,7 +87,8 @@ export default function GamePreview() {
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/qianyuqianxun.mp4",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accommodation",
@@ -97,7 +101,8 @@ export default function GamePreview() {
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/qianyuqianxun.mp4",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accompany",
@@ -110,7 +115,8 @@ export default function GamePreview() {
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/qianyuqianxun.mp4",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accomplish",
@@ -123,7 +129,8 @@ export default function GamePreview() {
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/qianyuqianxun.mp4",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accord",
@@ -136,7 +143,8 @@ export default function GamePreview() {
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/qianyuqianxun.mp4",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accordance",
@@ -149,7 +157,8 @@ export default function GamePreview() {
       ],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/qianyuqianxun.mp4",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "none",
@@ -157,7 +166,8 @@ export default function GamePreview() {
       options: [{ text: "重玩游戏", isCorrect: "true", nextScene: 0 }],
       npcName: "宫崎骏",
       npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo: "/videos/qianyuqianxun.mp4",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
   ];
 

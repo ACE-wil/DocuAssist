@@ -61,6 +61,7 @@ function DocumentParser() {
   const [ReactJson, setReactJson] = useState(null);
   const [edgesChange, setEdgesChange] = useState(false);
   const [edgesInfo, setEdgesInfo] = useState([]); // 初始化 edgesInfo 状态
+  const [showEmptyNode, setShowEmptyNode] = useState(true);
 
   useEffect(() => {
     // 动态导入 react-json-view
@@ -100,30 +101,9 @@ function DocumentParser() {
   };
 
   useEffect(() => {
-    const nodeHeight = 150; // 假设每个节点的高度为150px
-    const nodeWidth = 300; // 假设每个节点的宽度为300px
-    const padding = 40; // 增加水平间距
-    const verticalSpacing = 50; // 垂直间距
-
     const newNodes = []; // 使用其他数据源来生成节点
     setNodes(newNodes);
   }, []); // 确保依赖项中没有 chatHistory
-
-  // 假设 newEdges 是从某个函数中获取的
-  const updateEdges = (newEdges) => {
-    setEdges((prevEdges) => {
-      const chatEdgeIds = new Set(newEdges.map((edge) => edge.id));
-      const filteredPrevEdges = prevEdges.filter(
-        (edge) => !chatEdgeIds.has(edge.id)
-      );
-      setEdgesInfo([...filteredPrevEdges, ...newEdges]);
-
-      return [...filteredPrevEdges, ...newEdges];
-    });
-  };
-
-  // 在需要更新边的地方调用 updateEdges
-  // updateEdges(someNewEdges); // 确保 someNewEdges 是一个有效的边数组
 
   // 创建节点清理后的 JSON
   const cleanedNodes = nodes.map((node) => {
@@ -263,109 +243,114 @@ function DocumentParser() {
     setContextMenu({ visible: true, x: event.clientX, y: event.clientY });
   }, []);
 
-  const addNode = useCallback(() => {
-    const newNodeId = `chat-${nodes.length}`; // 根据现有节点数量生成新节点ID
-    const newNode = {
-      id: newNodeId,
-      type: "custom",
-      data: {
-        label: (
-          <div
-            contentEditable
-            suppressContentEditableWarning
-            style={{
-              padding: "10px",
-              borderRadius: "8px",
-              backgroundColor: "transparent",
-              width: "auto",
-              height: "auto",
-              maxHeight: "300px",
-              maxWidth: "300px",
-              overflow: "overlay",
-              fontSize: "14px",
-              border: "1px solid #ccc",
-            }}
-          >
-            <div style={{ marginBottom: "10px" }}>
-              <label style={{ display: "block", marginBottom: "4px" }}>
-                节点名称
-              </label>
-              <input
-                type="text"
-                placeholder="节点名称"
-                style={{
-                  width: "100%",
-                  padding: "6px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  marginBottom: "8px",
-                  outline: "none",
-                  transition: "border-color 0.3s ease",
-                }}
-                onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
-                onBlur={(e) => (e.target.style.borderColor = "#ddd")}
-                onChange={(e) => handleInputChange(e, newNodeId, "name")}
-              />
+  const addNode = useCallback(
+    (event) => {
+      event.preventDefault();
+      const newNodeId = `chat-${nodes.length}`; // 根据现有节点数量生成新节点ID
+      const newNode = {
+        id: newNodeId,
+        type: "custom",
+        data: {
+          label: (
+            <div
+              contentEditable
+              suppressContentEditableWarning
+              style={{
+                padding: "10px",
+                borderRadius: "8px",
+                backgroundColor: "transparent",
+                width: "auto",
+                height: "auto",
+                maxHeight: "300px",
+                maxWidth: "300px",
+                overflow: "overlay",
+                fontSize: "14px",
+                border: "1px solid #ccc",
+              }}
+            >
+              <div style={{ marginBottom: "10px" }}>
+                <label style={{ display: "block", marginBottom: "4px" }}>
+                  节点名称
+                </label>
+                <input
+                  type="text"
+                  placeholder="节点名称"
+                  style={{
+                    width: "100%",
+                    padding: "6px",
+                    border: "1px solid #ddd",
+                    borderRadius: "4px",
+                    marginBottom: "8px",
+                    outline: "none",
+                    transition: "border-color 0.3s ease",
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
+                  onBlur={(e) => (e.target.style.borderColor = "#ddd")}
+                  onChange={(e) => handleInputChange(e, newNodeId, "name")}
+                />
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <label style={{ display: "block", marginBottom: "4px" }}>
+                  执行操作
+                </label>
+                <input
+                  type="text"
+                  placeholder="执行操作"
+                  style={{
+                    width: "100%",
+                    padding: "6px",
+                    border: "1px solid #ddd",
+                    borderRadius: "4px",
+                    marginBottom: "8px",
+                    outline: "none",
+                    transition: "border-color 0.3s ease",
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
+                  onBlur={(e) => (e.target.style.borderColor = "#ddd")}
+                  onChange={(e) => handleInputChange(e, newNodeId, "action")}
+                />
+              </div>
+              <div>
+                <label style={{ display: "block", marginBottom: "4px" }}>
+                  输出格式
+                </label>
+                <input
+                  type="text"
+                  placeholder="输出格式"
+                  style={{
+                    width: "100%",
+                    padding: "6px",
+                    border: "1px solid #ddd",
+                    borderRadius: "4px",
+                    marginBottom: "8px",
+                    outline: "none",
+                    transition: "border-color 0.3s ease",
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
+                  onBlur={(e) => (e.target.style.borderColor = "#ddd")}
+                  onChange={(e) => handleInputChange(e, newNodeId, "output")}
+                />
+              </div>
             </div>
-            <div style={{ marginBottom: "10px" }}>
-              <label style={{ display: "block", marginBottom: "4px" }}>
-                执行操作
-              </label>
-              <input
-                type="text"
-                placeholder="执行操作"
-                style={{
-                  width: "100%",
-                  padding: "6px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  marginBottom: "8px",
-                  outline: "none",
-                  transition: "border-color 0.3s ease",
-                }}
-                onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
-                onBlur={(e) => (e.target.style.borderColor = "#ddd")}
-                onChange={(e) => handleInputChange(e, newNodeId, "action")}
-              />
-            </div>
-            <div>
-              <label style={{ display: "block", marginBottom: "4px" }}>
-                输出格式
-              </label>
-              <input
-                type="text"
-                placeholder="输出格式"
-                style={{
-                  width: "100%",
-                  padding: "6px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  marginBottom: "8px",
-                  outline: "none",
-                  transition: "border-color 0.3s ease",
-                }}
-                onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
-                onBlur={(e) => (e.target.style.borderColor = "#ddd")}
-                onChange={(e) => handleInputChange(e, newNodeId, "output")}
-              />
-            </div>
-          </div>
-        ),
-        name: "",
-        action: "",
-        output: "",
-      },
-      position: { x: 0, y: 0 }, // 你可以根据需要设置初始位置
-      style: {
-        width: "auto",
-        minWidth: "200px",
-        maxWidth: "400px",
-        backgroundColor: "#e6f7ff",
-        borderRadius: "12px",
-      },
-    };
-    setNodes((nds) => [...nds, newNode]);
-  }, [nodes]);
+          ),
+          name: "",
+          action: "",
+          output: "",
+        },
+        position: { x: event.clientX, y: event.clientY }, // 你可以根据需要设置初始位置
+        style: {
+          width: "auto",
+          minWidth: "200px",
+          maxWidth: "400px",
+          backgroundColor: "#e6f7ff",
+          borderRadius: "12px",
+        },
+      };
+      setNodes((nds) => [...nds, newNode]);
+      setShowEmptyNode(false);
+    },
+    [nodes]
+  );
 
   const handleInputChange = (event, nodeId, field) => {
     const value = event.target.value;
@@ -430,8 +415,8 @@ function DocumentParser() {
   const emptyNode = {
     id: "empty-node",
     type: "custom",
-    data: { label: "这是一个空节点" },
-    position: { x: 250, y: 250 },
+    data: { label: "你还没有创建过节点握，快来创建你的借点吧！" },
+    position: { x: 490, y: 410 },
   };
 
   return (
@@ -540,7 +525,7 @@ function DocumentParser() {
           )}
           <ReactFlow
             nodes={
-              nodes.length > 0
+              !showEmptyNode
                 ? nodes.map((node) => ({
                     ...node,
                     data: {
@@ -1009,7 +994,7 @@ function DocumentParser() {
           }}
         >
           <button
-            onClick={addNode}
+            onClick={(e) => addNode(e)}
             style={{
               padding: "8px 16px",
               backgroundColor: "#4a90e2",
