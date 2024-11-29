@@ -61,6 +61,7 @@ function DocumentParser() {
   const [edgesInfo, setEdgesInfo] = useState([]); // 初始化 edgesInfo 状态
   const [showEmptyNode, setShowEmptyNode] = useState(true);
   const [nodeCounter, setNodeCounter] = useState(0); // 用于生成唯一节点ID的计数器
+  const [isLoading, setIsLoading] = useState(false); // 确保 isLoading 状态存在
 
   useEffect(() => {
     // 动态导入 react-json-view
@@ -181,6 +182,7 @@ function DocumentParser() {
       content: inputValue,
     };
     setChatHistory((prev) => [...prev, userMessage]);
+    setIsLoading(true); // 开始加载动画
 
     // 发消息和完整的对话历史到后端
     fetch("http://localhost:5000/api/chat", {
@@ -201,10 +203,12 @@ function DocumentParser() {
         };
         setChatHistory((prev) => [...prev, assistantMessage]);
         setInputValue("");
+        setIsLoading(false); // 停止加载动画
       })
       .catch((error) => {
         console.error("Error:", error);
         alert("发送失败，请重试");
+        setIsLoading(false); // 停止加载动画
       });
   };
 
@@ -626,6 +630,7 @@ function DocumentParser() {
                 overflow: "auto",
                 marginBottom: "10px",
                 padding: "10px",
+                position: "relative", // 确保加载动画在对话框内
               }}
             >
               {chatHistory.map((message, index) => (
@@ -842,6 +847,17 @@ function DocumentParser() {
                   </div>
                 </div>
               ))}
+              {isLoading && (
+                <div
+                  className="loader"
+                  style={{
+                    width: "35px",
+                    height: "35px",
+                    left: "45%",
+                    margin: "40px 0px",
+                  }}
+                ></div>
+              )}
             </div>
 
             <div

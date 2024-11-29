@@ -1,8 +1,8 @@
-import '../styles/globals.css'
-import Layout from '../components/Layout'
-import { Provider } from 'react-redux'
-import { store } from '../store/store'
-import { ThemeProvider } from '../contexts/ThemeContext'
+import "../styles/globals.css";
+import Layout from "../components/Layout";
+import { Provider } from "react-redux";
+import { store } from "../store/store";
+import { ThemeProvider } from "../contexts/ThemeContext";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }) {
         </Layout>
       </ThemeProvider>
     </Provider>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;
