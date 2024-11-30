@@ -10,6 +10,14 @@ import ReactFlow, {
 } from "reactflow";
 import ReactMarkdown from "react-markdown";
 import "reactflow/dist/style.css";
+import {
+  JsonView,
+  allExpanded,
+  darkStyles,
+  defaultStyles,
+  collapseAllNested,
+} from "react-json-view-lite";
+import "react-json-view-lite/dist/index.css";
 import axios from "axios";
 import CustomNode from "./CustomNode"; // 引入自定义节点组件
 import CustomEdge from "./CustomEdge"; // 引入自定义连接线组件
@@ -20,8 +28,6 @@ const {
 } = require("react-syntax-highlighter/dist/cjs/styles/prism");
 import Modal from "react-modal"; // 确保安装了 react-modal
 import dynamic from "next/dynamic";
-
-const ReactJson = dynamic(() => import("react-json-view"), { ssr: false });
 
 const nodeTypes = {
   custom: CustomNode,
@@ -56,7 +62,6 @@ function DocumentParser() {
   });
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [sortedNodes, setSortedNodes] = useState([]);
-  const [ReactJson, setReactJson] = useState(null);
   const [edgesChange, setEdgesChange] = useState(false);
   const [edgesInfo, setEdgesInfo] = useState([]); // 初始化 edgesInfo 状态
   const [showEmptyNode, setShowEmptyNode] = useState(true);
@@ -64,13 +69,6 @@ function DocumentParser() {
   const [isLoading, setIsLoading] = useState(false); // 确保 isLoading 状态存在
   const [streamingContent, setStreamingContent] = useState(""); // 新增状态用于流式输出
   const [isStreaming, setIsStreaming] = useState(false); // 新增状态用于控制流式输出
-
-  useEffect(() => {
-    // 动态导入 react-json-view
-    import("react-json-view").then((module) =>
-      setReactJson(() => module.default)
-    );
-  }, []);
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -447,6 +445,8 @@ function DocumentParser() {
   }, [nodes, edges]);
 
   const handlePreviewNodes = () => {
+    console.log("Nodes before preview:", nodes);
+    console.log("Cleaned Nodes before preview:", cleanedNodes);
     setIsPreviewOpen(true);
   };
 
@@ -1148,41 +1148,20 @@ function DocumentParser() {
         }}
       >
         <h2 style={{ marginBottom: "20px", textAlign: "center" }}>节点预览</h2>
-        {ReactJson ? (
-          <>
-            <h3>原始 JSON:</h3>
-            <ReactJson
-              src={{ nodes, edges }}
-              theme="monokai"
-              collapsed={2}
-              enableClipboard={false}
-              displayDataTypes={false}
-              style={{
-                padding: "10px",
-                borderRadius: "4px",
-                backgroundColor: "#2d2d2d",
-                color: "#f8f8f2",
-                marginBottom: "20px",
-              }}
-            />
-            <h3>节点清理后的 JSON:</h3>
-            <ReactJson
-              src={{ nodes: cleanedNodes, edges }}
-              theme="monokai"
-              collapsed={2}
-              enableClipboard={false}
-              displayDataTypes={false}
-              style={{
-                padding: "10px",
-                borderRadius: "4px",
-                backgroundColor: "#2d2d2d",
-                color: "#f8f8f2",
-              }}
-            />
-          </>
-        ) : (
-          <p>加载中...</p>
-        )}
+        <>
+          <h3>原始 JSON:</h3>
+          <JsonView
+            data={{ nodes, edges }}
+            shouldExpandNode={collapseAllNested}
+            style={defaultStyles}
+          />
+          <h3>节点清理后的 JSON:</h3>
+          <JsonView
+            data={{ nodes: cleanedNodes, edges }}
+            shouldExpandNode={collapseAllNested}
+            style={darkStyles}
+          />
+        </>
 
         <h3>连接线信息:</h3>
         <ul>
