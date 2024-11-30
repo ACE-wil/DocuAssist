@@ -782,6 +782,7 @@ function DocumentParser() {
                         </button>
                         <button
                           onClick={() => {
+                            setIsLoading(true);
                             // 重试逻辑保持不变
                             const previousMessages = chatHistory.slice(
                               0,
@@ -804,16 +805,22 @@ function DocumentParser() {
                               })
                                 .then((response) => response.json())
                                 .then((data) => {
+                                  setIsLoading(false);
                                   const assistantMessage = {
                                     role: "assistant",
                                     content: data.response,
                                   };
+                                  setIsStreaming(true); // 开始流式输出
+                                  streamAssistantMessage(
+                                    assistantMessage.content
+                                  );
                                   setChatHistory((prev) => [
                                     ...prev,
                                     assistantMessage,
                                   ]);
                                 })
                                 .catch((error) => {
+                                  setIsLoading(false);
                                   console.error("Error:", error);
                                   alert("重试失败，请重试");
                                 });
