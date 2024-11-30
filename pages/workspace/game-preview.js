@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Howl, Howler } from "howler";
 import { useDispatch } from "react-redux";
-import { setNavigationVisibility } from "../../store/navigationSlice";
+import { setNavigationVisibility } from "@/store/navigationSlice";
 
 export default function GamePreview() {
   const [currentScene, setCurrentScene] = useState(0);

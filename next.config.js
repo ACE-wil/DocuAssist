@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+
+const path = require("path"); // 添加这一行
+
 const nextConfig = {
   reactStrictMode: true,
   webpack: (config) => {
@@ -8,6 +11,10 @@ const nextConfig = {
         fullySpecified: false,
       },
     });
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": path.resolve(__dirname, "./"),
+    };
     return config;
   },
 };
