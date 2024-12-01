@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/store/loadingSlice";
 import ReactFlow, {
   addEdge,
   MiniMap,
@@ -69,7 +71,12 @@ function DocumentParser() {
   const [isLoading, setIsLoading] = useState(false); // 确保 isLoading 状态存在
   const [streamingContent, setStreamingContent] = useState(""); // 新增状态用于流式输出
   const [isStreaming, setIsStreaming] = useState(false); // 新增状态用于控制流式输出
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    // 组件挂载后关闭 loading
+    dispatch(setLoading(false));
+  }, [dispatch]);
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
     [setNodes]

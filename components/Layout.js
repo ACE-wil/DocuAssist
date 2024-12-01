@@ -3,17 +3,21 @@ import { useRouter } from "next/router";
 import { useTheme } from "../contexts/ThemeContext";
 import MainNavigation from "./MainNavigation";
 import SecondaryNavigation from "./SecondaryNavigation";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import LoadingSpinner from "./LoadingSpinner";
+import { setLoading } from "../store/loadingSlice";
 
 export default function Layout({ children }) {
   const { theme, isDark } = useTheme();
   const [activeMainNav, setActiveMainNav] = useState("home");
   const [isExpanded, setIsExpanded] = useState(true);
   const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
-  const router = useRouter();
   const isNavigationVisible = useSelector(
     (state) => state.navigation.isVisible
   );
+  const loading = useSelector((state) => state.loading);
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     const path = router.pathname;
@@ -23,6 +27,29 @@ export default function Layout({ children }) {
     else if (path.startsWith("/templates")) setActiveMainNav("templates");
     else if (path.startsWith("/docs")) setActiveMainNav("docs");
   }, [router.pathname]);
+
+  useEffect(() => {
+    const handleStart = (url) => {
+      if (url !== router.asPath) {
+        dispatch(setLoading(true));
+      }
+    };
+    const handleComplete = (url) => {
+      if (url === router.asPath) {
+        dispatch(setLoading(false));
+      }
+    };
+
+    router.events.on("routeChangeStart", handleStart);
+    router.events.on("routeChangeComplete", handleComplete);
+    router.events.on("routeChangeError", handleComplete);
+
+    return () => {
+      router.events.off("routeChangeStart", handleStart);
+      router.events.off("routeChangeComplete", handleComplete);
+      router.events.off("routeChangeError", handleComplete);
+    };
+  }, [router, dispatch]);
 
   return (
     <div className="layout">
@@ -57,7 +84,9 @@ export default function Layout({ children }) {
         className={`content-container ${
           !isNavigationVisible ? "fullscreen" : ""
         }`}
+        style={{ position: "relative" }}
       >
+        {loading && <LoadingSpinner />}
         {children}
       </main>
       <style jsx>{`
@@ -88,6 +117,7 @@ export default function Layout({ children }) {
           flex-grow: 1;
           padding: 20px;
           overflow-y: auto;
+          position: relative;
         }
         .toggle-btn {
           position: absolute;

@@ -3,6 +3,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { Howl, Howler } from "howler";
 import { useDispatch } from "react-redux";
 import { setNavigationVisibility } from "@/store/navigationSlice";
+import { setLoading } from "@/store/loadingSlice";
 
 export default function GamePreview() {
   const [currentScene, setCurrentScene] = useState(0);
@@ -214,17 +215,9 @@ export default function GamePreview() {
   };
 
   useEffect(() => {
-    // const music = new Howl({
-    //   src: ["/music/lvpishu.FLAC"], // 需要添加背景音乐文件
-    //   loop: true,
-    //   volume: 0.2,
-    // });
-    // setBgMusic(music);
-    // music.play();
-    return () => {
-      // music.stop();
-    };
-  }, []);
+    // 组件挂载后关闭 loading
+    dispatch(setLoading(false));
+  }, [dispatch]);
 
   const handleChoice = (nextScene) => {
     if (nextScene > 0) {

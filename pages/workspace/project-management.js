@@ -1,64 +1,106 @@
-import { useState, useEffect } from 'react';
-import { 
-  FiFolder, FiFile, FiList, FiGrid, 
-  FiChevronRight, FiArrowLeft, FiSearch,
-  FiFileText, FiImage, FiPlus, FiUpload, FiX, FiEdit2, FiTrash2, FiLoader, FiCheckCircle, FiXCircle
-} from 'react-icons/fi';
-import Modal from 'react-modal';
+import { useState, useEffect } from "react";
+import {
+  FiFolder,
+  FiFile,
+  FiList,
+  FiGrid,
+  FiChevronRight,
+  FiArrowLeft,
+  FiSearch,
+  FiFileText,
+  FiImage,
+  FiPlus,
+  FiUpload,
+  FiX,
+  FiEdit2,
+  FiTrash2,
+  FiLoader,
+  FiCheckCircle,
+  FiXCircle,
+} from "react-icons/fi";
+import Modal from "react-modal";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/store/loadingSlice";
 
 export default function ProjectManagement() {
-  const [viewMode, setViewMode] = useState('grid');
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // 组件挂载后关闭 loading
+    dispatch(setLoading(false));
+  }, [dispatch]);
+  const [viewMode, setViewMode] = useState("grid");
   const [currentPath, setCurrentPath] = useState([]);
   const [previewFile, setPreviewFile] = useState(null);
-  
+
   const [projects, setProjects] = useState({
-    id: 'root',
-    name: '根目录',
-    type: 'folder',
+    id: "root",
+    name: "根目录",
+    type: "folder",
     children: [
       {
-        id: '1',
-        name: '文档解析项目',
-        type: 'folder',
+        id: "1",
+        name: "文档解析项目",
+        type: "folder",
         children: [
-          { id: '1-1', name: '数学试题.pdf', type: 'file', url: '/files/math.pdf' },
-          { id: '1-2', name: '物理试题.pdf', type: 'file', url: '/files/physics.pdf' }
-        ]
+          {
+            id: "1-1",
+            name: "数学试题.pdf",
+            type: "file",
+            url: "/files/math.pdf",
+          },
+          {
+            id: "1-2",
+            name: "物理试题.pdf",
+            type: "file",
+            url: "/files/physics.pdf",
+          },
+        ],
       },
       {
-        id: '2',
-        name: '游戏项目',
-        type: 'folder',
+        id: "2",
+        name: "游戏项目",
+        type: "folder",
         children: [
-          { id: '2-1', name: '答题闯关.doc', type: 'file', url: '/files/game.doc' },
-          { 
-            id: '2-2', 
-            name: '识竞赛',
-            type: 'folder',
+          {
+            id: "2-1",
+            name: "答题闯关.doc",
+            type: "file",
+            url: "/files/game.doc",
+          },
+          {
+            id: "2-2",
+            name: "识竞赛",
+            type: "folder",
             children: [
-              { id: '2-2-1', name: '题库.xlsx', type: 'file', url: '/files/questions.xlsx' }
-            ]
-          }
-        ]
-      }
-    ]
+              {
+                id: "2-2-1",
+                name: "题库.xlsx",
+                type: "file",
+                url: "/files/questions.xlsx",
+              },
+            ],
+          },
+        ],
+      },
+    ],
   });
 
   const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
-  const [newFolderName, setNewFolderName] = useState('');
+  const [newFolderName, setNewFolderName] = useState("");
   const [fileInput, setFileInput] = useState(null);
 
-  const [contextMenu, setContextMenu] = useState({ 
-    visible: false, 
-    x: 0, 
-    y: 0, 
+  const [contextMenu, setContextMenu] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
     item: null,
-    type: 'blank' // 'blank' 或 'item'
+    type: "blank", // 'blank' 或 'item'
   });
 
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
-    item: null
+    item: null,
   });
 
   const [editingFile, setEditingFile] = useState(null);
@@ -69,15 +111,15 @@ export default function ProjectManagement() {
 
   const [notification, setNotification] = useState({
     show: false,
-    message: '',
-    type: '', // 'success' 或 'error'
+    message: "",
+    type: "", // 'success' 或 'error'
   });
 
   const [uploadStatus, setUploadStatus] = useState({
     show: false,
     progress: 0,
-    fileName: '',
-    status: '' // 'uploading', 'success', 'error'
+    fileName: "",
+    status: "", // 'uploading', 'success', 'error'
   });
 
   useEffect(() => {
@@ -102,7 +144,7 @@ export default function ProjectManagement() {
   const getCurrentFolder = () => {
     let current = projects;
     for (const id of currentPath) {
-      current = current.children.find(item => item.id === id);
+      current = current.children.find((item) => item.id === id);
     }
     return current;
   };
@@ -116,25 +158,25 @@ export default function ProjectManagement() {
 
   // 获取当前路径显示
   const getPathDisplay = () => {
-    if (currentPath.length === 0) return '根目录';
-    
+    if (currentPath.length === 0) return "根目录";
+
     let current = projects;
     let path = [];
     for (const id of currentPath) {
-      current = current.children.find(item => item.id === id);
+      current = current.children.find((item) => item.id === id);
       path.push(current.name);
     }
-    return path.join(' / ');
+    return path.join(" / ");
   };
 
   // 处理单击
   const handleClick = (item) => {
-    if (item.type === 'folder') {
+    if (item.type === "folder") {
       setCurrentPath([...currentPath, item.id]);
     } else {
       // 检查文件类型
-      const ext = item.name.split('.').pop().toLowerCase();
-      if (['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+      const ext = item.name.split(".").pop().toLowerCase();
+      if (["pdf", "doc", "docx", "jpg", "jpeg", "png", "gif"].includes(ext)) {
         setPreviewFile(item);
       }
     }
@@ -142,10 +184,10 @@ export default function ProjectManagement() {
 
   // 获取文件图标
   const getFileIcon = (filename) => {
-    const ext = filename.split('.').pop().toLowerCase();
-    if (['pdf', 'doc', 'docx'].includes(ext)) {
+    const ext = filename.split(".").pop().toLowerCase();
+    if (["pdf", "doc", "docx"].includes(ext)) {
       return <FiFileText size={40} />;
-    } else if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+    } else if (["jpg", "jpeg", "png", "gif"].includes(ext)) {
       return <FiImage size={40} />;
     }
     return <FiFile size={40} />;
@@ -153,28 +195,28 @@ export default function ProjectManagement() {
 
   const handleCreateFolder = () => {
     if (!newFolderName.trim()) return;
-    
+
     try {
       const newFolder = {
         id: `folder-${Date.now()}`,
         name: newFolderName,
-        type: 'folder',
-        children: []
+        type: "folder",
+        children: [],
       };
 
       const updatedProjects = { ...projects };
       let current = updatedProjects;
       for (const id of currentPath) {
-        current = current.children.find(item => item.id === id);
+        current = current.children.find((item) => item.id === id);
       }
       current.children.push(newFolder);
-      
+
       setProjects(updatedProjects);
-      setNewFolderName('');
+      setNewFolderName("");
       closeModal();
-      showNotification('文件夹创建成功');
+      showNotification("文件夹创建成功");
     } catch (error) {
-      showNotification('文件夹创建失败', 'error');
+      showNotification("文件夹创建失败", "error");
     }
   };
 
@@ -187,16 +229,16 @@ export default function ProjectManagement() {
       show: true,
       progress: 0,
       fileName: file.name,
-      status: 'uploading'
+      status: "uploading",
     });
 
     // 模拟上传进度
     let progress = 0;
     const interval = setInterval(() => {
       progress += 5;
-      setUploadStatus(prev => ({
+      setUploadStatus((prev) => ({
         ...prev,
-        progress
+        progress,
       }));
 
       if (progress >= 100) {
@@ -205,23 +247,23 @@ export default function ProjectManagement() {
           const newFile = {
             id: `file-${Date.now()}`,
             name: file.name,
-            type: 'file',
-            url: URL.createObjectURL(file)
+            type: "file",
+            url: URL.createObjectURL(file),
           };
 
           const updatedProjects = { ...projects };
           let current = updatedProjects;
           for (const id of currentPath) {
-            current = current.children.find(item => item.id === id);
+            current = current.children.find((item) => item.id === id);
           }
           current.children.push(newFile);
-          
+
           setProjects(updatedProjects);
-          
+
           // 显示上传成功
-          setUploadStatus(prev => ({
+          setUploadStatus((prev) => ({
             ...prev,
-            status: 'success'
+            status: "success",
           }));
 
           // 3秒后隐藏提示
@@ -229,15 +271,14 @@ export default function ProjectManagement() {
             setUploadStatus({
               show: false,
               progress: 0,
-              fileName: '',
-              status: ''
+              fileName: "",
+              status: "",
             });
           }, 3000);
-
         } catch (error) {
-          setUploadStatus(prev => ({
+          setUploadStatus((prev) => ({
             ...prev,
-            status: 'error'
+            status: "error",
           }));
         }
       }
@@ -245,7 +286,7 @@ export default function ProjectManagement() {
 
     // 重置 input
     if (fileInput) {
-      fileInput.value = '';
+      fileInput.value = "";
     }
   };
 
@@ -259,9 +300,9 @@ export default function ProjectManagement() {
       const updatedProjects = { ...projects };
       let current = updatedProjects;
       for (const id of currentPath) {
-        current = current.children.find(i => i.id === id);
+        current = current.children.find((i) => i.id === id);
       }
-      const targetItem = current.children.find(i => i.id === item.id);
+      const targetItem = current.children.find((i) => i.id === item.id);
       targetItem.name = newName;
       setProjects(updatedProjects);
     }
@@ -271,7 +312,7 @@ export default function ProjectManagement() {
   const handleDelete = (item) => {
     setDeleteModal({
       isOpen: true,
-      item: item
+      item: item,
     });
     setContextMenu({ visible: false, x: 0, y: 0, item: null });
   };
@@ -282,14 +323,14 @@ export default function ProjectManagement() {
       const updatedProjects = { ...projects };
       let current = updatedProjects;
       for (const id of currentPath) {
-        current = current.children.find(i => i.id === id);
+        current = current.children.find((i) => i.id === id);
       }
-      current.children = current.children.filter(i => i.id !== item.id);
+      current.children = current.children.filter((i) => i.id !== item.id);
       setProjects(updatedProjects);
       closeDeleteModal();
-      showNotification(`${item.type === 'folder' ? '文件夹' : '文件'}删除成功`);
+      showNotification(`${item.type === "folder" ? "文件夹" : "文件"}删除成功`);
     } catch (error) {
-      showNotification('删除失败', 'error');
+      showNotification("删除失败", "error");
     }
   };
 
@@ -297,22 +338,22 @@ export default function ProjectManagement() {
     const handleClickOutside = () => {
       setContextMenu({ visible: false, x: 0, y: 0, item: null });
     };
-    
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  const showNotification = (message, type = 'success') => {
+  const showNotification = (message, type = "success") => {
     setNotification({
       show: true,
       message,
-      type
+      type,
     });
     setTimeout(() => {
       setNotification({
         show: false,
-        message: '',
-        type: ''
+        message: "",
+        type: "",
       });
     }, 3000);
   };
@@ -321,26 +362,29 @@ export default function ProjectManagement() {
     <div className="file-explorer">
       <div className="toolbar">
         <div className="navigation">
-          <button 
-            onClick={handleBack} 
+          <button
+            onClick={handleBack}
             disabled={currentPath.length === 0}
             className="nav-button"
           >
-            <FiArrowLeft size={20} color={currentPath.length === 0 ? '#ccc' : '#666'} />
+            <FiArrowLeft
+              size={20}
+              color={currentPath.length === 0 ? "#ccc" : "#666"}
+            />
           </button>
           <div className="path-display">
-            {currentPath.length === 0 ? '根目录' : getCurrentFolder().name}
+            {currentPath.length === 0 ? "根目录" : getCurrentFolder().name}
           </div>
         </div>
         <div className="actions">
-          <button 
+          <button
             className="action-button"
             onClick={() => setIsCreateFolderModalOpen(true)}
           >
             <FiPlus size={18} />
             <span>新建文件夹</span>
           </button>
-          <button 
+          <button
             className="action-button upload"
             onClick={() => fileInput.click()}
           >
@@ -349,28 +393,34 @@ export default function ProjectManagement() {
           </button>
           <input
             type="file"
-            ref={ref => setFileInput(ref)}
-            style={{ display: 'none' }}
+            ref={(ref) => setFileInput(ref)}
+            style={{ display: "none" }}
             onChange={handleFileUpload}
           />
         </div>
         <div className="view-controls">
-          <button 
-            className={`view-button ${viewMode === 'list' ? 'active' : ''}`}
-            onClick={() => setViewMode('list')}
+          <button
+            className={`view-button ${viewMode === "list" ? "active" : ""}`}
+            onClick={() => setViewMode("list")}
           >
-            <FiList size={20} color={viewMode === 'list' ? '#1890ff' : '#666'} />
+            <FiList
+              size={20}
+              color={viewMode === "list" ? "#1890ff" : "#666"}
+            />
           </button>
-          <button 
-            className={`view-button ${viewMode === 'grid' ? 'active' : ''}`}
-            onClick={() => setViewMode('grid')}
+          <button
+            className={`view-button ${viewMode === "grid" ? "active" : ""}`}
+            onClick={() => setViewMode("grid")}
           >
-            <FiGrid size={20} color={viewMode === 'grid' ? '#1890ff' : '#666'} />
+            <FiGrid
+              size={20}
+              color={viewMode === "grid" ? "#1890ff" : "#666"}
+            />
           </button>
         </div>
       </div>
 
-      <div 
+      <div
         className={`content ${viewMode}`}
         onContextMenu={(e) => {
           e.preventDefault();
@@ -379,12 +429,12 @@ export default function ProjectManagement() {
             x: e.pageX,
             y: e.pageY,
             item: null,
-            type: 'blank'
+            type: "blank",
           });
         }}
       >
-        {getCurrentFolder().children.map(item => (
-          <div 
+        {getCurrentFolder().children.map((item) => (
+          <div
             key={item.id}
             className="item"
             onClick={() => handleClick(item)}
@@ -396,15 +446,16 @@ export default function ProjectManagement() {
                 x: e.pageX,
                 y: e.pageY,
                 item: item,
-                type: 'item'
+                type: "item",
               });
             }}
           >
             <div className="item-icon">
-              {item.type === 'folder' ? 
-                <FiFolder size={40} /> : 
+              {item.type === "folder" ? (
+                <FiFolder size={40} />
+              ) : (
                 getFileIcon(item.name)
-              }
+              )}
             </div>
             <div className="item-name">
               {editingFile?.id === item.id ? (
@@ -414,20 +465,20 @@ export default function ProjectManagement() {
                   autoFocus
                   onBlur={(e) => handleRenameSubmit(item, e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
+                    if (e.key === "Enter") {
                       handleRenameSubmit(item, e.target.value);
-                    } else if (e.key === 'Escape') {
+                    } else if (e.key === "Escape") {
                       setEditingFile(null);
                     }
                   }}
                   onClick={(e) => e.stopPropagation()}
                   style={{
-                    width: '100%',
-                    padding: '4px 8px',
-                    border: '1px solid #1890ff',
-                    borderRadius: '4px',
-                    outline: 'none',
-                    fontSize: 'inherit'
+                    width: "100%",
+                    padding: "4px 8px",
+                    border: "1px solid #1890ff",
+                    borderRadius: "4px",
+                    outline: "none",
+                    fontSize: "inherit",
                   }}
                 />
               ) : (
@@ -444,28 +495,28 @@ export default function ProjectManagement() {
         onRequestClose={() => setPreviewFile(null)}
         style={{
           overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.75)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
+            backgroundColor: "rgba(0, 0, 0, 0.75)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           },
           content: {
-            position: 'relative',
-            top: 'auto',
-            left: 'auto',
-            right: 'auto',
-            bottom: 'auto',
-            width: '80%',
-            height: '80%',
-            padding: '20px'
-          }
+            position: "relative",
+            top: "auto",
+            left: "auto",
+            right: "auto",
+            bottom: "auto",
+            width: "80%",
+            height: "80%",
+            padding: "20px",
+          },
         }}
       >
         {previewFile && (
           <div className="preview-container">
             <div className="preview-header">
               <h3>{previewFile.name}</h3>
-              <button 
+              <button
                 onClick={() => setPreviewFile(null)}
                 className="close-button"
               >
@@ -474,10 +525,14 @@ export default function ProjectManagement() {
             </div>
             <div className="preview-content">
               {previewFile.name.match(/\.(jpg|jpeg|png|gif)$/i) ? (
-                <img 
-                  src={previewFile.url} 
+                <img
+                  src={previewFile.url}
                   alt={previewFile.name}
-                  style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} 
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "100%",
+                    objectFit: "contain",
+                  }}
                 />
               ) : previewFile.name.match(/\.pdf$/i) ? (
                 <object
@@ -486,7 +541,16 @@ export default function ProjectManagement() {
                   width="100%"
                   height="100%"
                 >
-                  <p>您的浏览器不支持 PDF 预览，<a href={previewFile.url} target="_blank" rel="noopener noreferrer">点击下载</a></p>
+                  <p>
+                    您的浏览器不支持 PDF 预览，
+                    <a
+                      href={previewFile.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      点击下载
+                    </a>
+                  </p>
                 </object>
               ) : (
                 <div className="unsupported-file">
@@ -504,42 +568,39 @@ export default function ProjectManagement() {
         onRequestClose={closeModal}
         style={{
           overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           },
           content: {
-            position: 'relative',
-            top: 'auto',
-            left: 'auto',
-            right: 'auto',
-            bottom: 'auto',
-            width: '400px',
-            padding: '20px',
-            borderRadius: '8px',
-            background: 'white',
+            position: "relative",
+            top: "auto",
+            left: "auto",
+            right: "auto",
+            bottom: "auto",
+            width: "400px",
+            padding: "20px",
+            borderRadius: "8px",
+            background: "white",
             opacity: 0,
-            transform: 'scale(0.8)',
-            transition: 'all 0.3s ease-in-out'
-          }
+            transform: "scale(0.8)",
+            transition: "all 0.3s ease-in-out",
+          },
         }}
         onAfterOpen={() => {
           setTimeout(() => {
-            const content = document.querySelector('.ReactModal__Content');
+            const content = document.querySelector(".ReactModal__Content");
             if (content) {
               content.style.opacity = 1;
-              content.style.transform = 'scale(1)';
+              content.style.transform = "scale(1)";
             }
           }, 0);
         }}
       >
         <div className="modal-header">
           <h3>新建文件夹</h3>
-          <button 
-            onClick={closeModal}
-            className="close-button"
-          >
+          <button onClick={closeModal} className="close-button">
             ×
           </button>
         </div>
@@ -553,13 +614,10 @@ export default function ProjectManagement() {
           />
         </div>
         <div className="modal-footer">
-          <button 
-            onClick={closeModal}
-            className="cancel-button"
-          >
+          <button onClick={closeModal} className="cancel-button">
             取消
           </button>
-          <button 
+          <button
             onClick={handleCreateFolder}
             className="confirm-button"
             disabled={!newFolderName.trim()}
@@ -570,49 +628,49 @@ export default function ProjectManagement() {
       </Modal>
 
       {contextMenu.visible && (
-        <div 
+        <div
           className="context-menu"
-          style={{ 
-            position: 'fixed',
+          style={{
+            position: "fixed",
             top: contextMenu.y,
             left: contextMenu.x,
-            background: 'white',
-            borderRadius: '8px',
-            boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
-            padding: '4px 0',
-            minWidth: '180px',
+            background: "white",
+            borderRadius: "8px",
+            boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
+            padding: "4px 0",
+            minWidth: "180px",
             zIndex: 1000,
-            animation: 'fadeIn 0.15s ease-out'
+            animation: "fadeIn 0.15s ease-out",
           }}
         >
-          {contextMenu.type === 'item' ? (
+          {contextMenu.type === "item" ? (
             <>
-              <div 
+              <div
                 className="menu-item"
                 onClick={() => handleRename(contextMenu.item)}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 16px',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "8px 16px",
+                  cursor: "pointer",
+                  transition: "all 0.2s",
                 }}
               >
                 <FiEdit2 size={14} />
                 <span>重命名</span>
               </div>
-              <div 
+              <div
                 className="menu-item delete"
                 onClick={() => handleDelete(contextMenu.item)}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 16px',
-                  cursor: 'pointer',
-                  color: '#ff4d4f',
-                  transition: 'all 0.2s'
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "8px 16px",
+                  cursor: "pointer",
+                  color: "#ff4d4f",
+                  transition: "all 0.2s",
                 }}
               >
                 <FiTrash2 size={14} />
@@ -621,31 +679,31 @@ export default function ProjectManagement() {
             </>
           ) : (
             <>
-              <div 
+              <div
                 className="menu-item"
                 onClick={() => setIsCreateFolderModalOpen(true)}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 16px',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "8px 16px",
+                  cursor: "pointer",
+                  transition: "all 0.2s",
                 }}
               >
                 <FiFolder size={14} />
                 <span>新建文件夹</span>
               </div>
-              <div 
+              <div
                 className="menu-item"
                 onClick={() => fileInput.click()}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 16px',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "8px 16px",
+                  cursor: "pointer",
+                  transition: "all 0.2s",
                 }}
               >
                 <FiUpload size={14} />
@@ -661,149 +719,165 @@ export default function ProjectManagement() {
         onRequestClose={closeDeleteModal}
         style={{
           overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           },
           content: {
-            position: 'relative',
-            top: 'auto',
-            left: 'auto',
-            right: 'auto',
-            bottom: 'auto',
-            width: '400px',
-            padding: '20px',
-            borderRadius: '8px',
-            background: 'white',
+            position: "relative",
+            top: "auto",
+            left: "auto",
+            right: "auto",
+            bottom: "auto",
+            width: "400px",
+            padding: "20px",
+            borderRadius: "8px",
+            background: "white",
             opacity: 0,
-            transform: 'scale(0.8)',
-            transition: 'all 0.3s ease-in-out'
-          }
+            transform: "scale(0.8)",
+            transition: "all 0.3s ease-in-out",
+          },
         }}
         onAfterOpen={() => {
           setTimeout(() => {
-            const content = document.querySelector('.ReactModal__Content');
+            const content = document.querySelector(".ReactModal__Content");
             if (content) {
               content.style.opacity = 1;
-              content.style.transform = 'scale(1)';
+              content.style.transform = "scale(1)";
             }
           }, 0);
         }}
       >
         <div className="modal-header">
           <h3>确认删除</h3>
-          <button 
-            onClick={closeDeleteModal}
-            className="close-button"
-          >
+          <button onClick={closeDeleteModal} className="close-button">
             <FiX size={20} />
           </button>
         </div>
-        <div className="modal-content" style={{ margin: '20px 0' }}>
+        <div className="modal-content" style={{ margin: "20px 0" }}>
           <p>确定要删除 "{deleteModal.item?.name}" 吗？</p>
-          {deleteModal.item?.type === 'folder' && (
-            <p style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '8px' }}>
+          {deleteModal.item?.type === "folder" && (
+            <p style={{ color: "#ff4d4f", fontSize: "14px", marginTop: "8px" }}>
               注意：文件夹中的所有内容都将被删除！
             </p>
           )}
         </div>
         <div className="modal-footer">
-          <button 
-            onClick={closeDeleteModal}
-            className="cancel-button"
-          >
+          <button onClick={closeDeleteModal} className="cancel-button">
             取消
           </button>
-          <button 
-            onClick={confirmDelete}
-            className="confirm-button delete"
-          >
+          <button onClick={confirmDelete} className="confirm-button delete">
             删除
           </button>
         </div>
       </Modal>
 
       {notification.show && (
-        <div 
+        <div
           style={{
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            background: notification.type === 'success' ? '#f6ffed' : '#fff2f0',
-            border: `1px solid ${notification.type === 'success' ? '#b7eb8f' : '#ffccc7'}`,
-            borderRadius: '8px',
-            padding: '16px 32px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            background: notification.type === "success" ? "#f6ffed" : "#fff2f0",
+            border: `1px solid ${
+              notification.type === "success" ? "#b7eb8f" : "#ffccc7"
+            }`,
+            borderRadius: "8px",
+            padding: "16px 32px",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
             zIndex: 2000,
-            animation: 'fadeInScale 0.3s ease-out'
+            animation: "fadeInScale 0.3s ease-out",
           }}
         >
-          {notification.type === 'success' ? (
+          {notification.type === "success" ? (
             <FiCheckCircle size={24} color="#52c41a" />
           ) : (
             <FiXCircle size={24} color="#ff4d4f" />
           )}
-          <span style={{ color: '#333', fontSize: '16px' }}>{notification.message}</span>
+          <span style={{ color: "#333", fontSize: "16px" }}>
+            {notification.message}
+          </span>
         </div>
       )}
 
       {uploadStatus.show && (
-        <div 
+        <div
           style={{
-            position: 'fixed',
-            bottom: '24px',
-            right: '24px',
-            background: '#fff',
-            borderRadius: '8px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            padding: '12px',
-            width: '280px',
+            position: "fixed",
+            bottom: "24px",
+            right: "24px",
+            background: "#fff",
+            borderRadius: "8px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            padding: "12px",
+            width: "280px",
             zIndex: 2000,
-            animation: 'slideUp 0.3s ease-out'
+            animation: "slideUp 0.3s ease-out",
           }}
         >
-          <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div
+            style={{
+              marginBottom: "8px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <FiFile size={16} color="#666" />
-              <span style={{ 
-                color: '#333', 
-                fontSize: '14px',
-                maxWidth: '180px',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
-              }}>{uploadStatus.fileName}</span>
+              <span
+                style={{
+                  color: "#333",
+                  fontSize: "14px",
+                  maxWidth: "180px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {uploadStatus.fileName}
+              </span>
             </div>
-            {uploadStatus.status === 'success' && <FiCheckCircle size={16} color="#1890ff" />}
-            {uploadStatus.status === 'error' && <FiXCircle size={16} color="#ff4d4f" />}
+            {uploadStatus.status === "success" && (
+              <FiCheckCircle size={16} color="#1890ff" />
+            )}
+            {uploadStatus.status === "error" && (
+              <FiXCircle size={16} color="#ff4d4f" />
+            )}
           </div>
-          <div style={{ 
-            height: '4px', 
-            background: '#f0f0f0', 
-            borderRadius: '2px', 
-            overflow: 'hidden' 
-          }}>
-            <div style={{
-              height: '100%',
-              width: `${uploadStatus.progress}%`,
-              background: '#1890ff',
-              transition: 'width 0.3s ease-in-out'
-            }} />
+          <div
+            style={{
+              height: "4px",
+              background: "#f0f0f0",
+              borderRadius: "2px",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: `${uploadStatus.progress}%`,
+                background: "#1890ff",
+                transition: "width 0.3s ease-in-out",
+              }}
+            />
           </div>
-          <div style={{ 
-            marginTop: '6px', 
-            fontSize: '12px', 
-            color: uploadStatus.status === 'error' ? '#ff4d4f' : '#666',
-            textAlign: 'right'
-          }}>
-            {uploadStatus.status === 'uploading' && `${uploadStatus.progress}%`}
-            {uploadStatus.status === 'success' && '上传完成'}
-            {uploadStatus.status === 'error' && '上传失败'}
+          <div
+            style={{
+              marginTop: "6px",
+              fontSize: "12px",
+              color: uploadStatus.status === "error" ? "#ff4d4f" : "#666",
+              textAlign: "right",
+            }}
+          >
+            {uploadStatus.status === "uploading" && `${uploadStatus.progress}%`}
+            {uploadStatus.status === "success" && "上传完成"}
+            {uploadStatus.status === "error" && "上传失败"}
           </div>
         </div>
       )}
@@ -993,13 +1067,13 @@ export default function ProjectManagement() {
           font-size: 0.9rem;
           cursor: pointer;
           transition: all 0.2s;
-          box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         .action-button:hover {
           background: #f8f9fa;
           transform: translateY(-1px);
-          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .action-button svg {
@@ -1046,7 +1120,7 @@ export default function ProjectManagement() {
         .folder-name-input:focus {
           border-color: #1890ff;
           outline: none;
-          box-shadow: 0 0 0 2px rgba(24,144,255,0.2);
+          box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
         }
 
         .modal-footer {
@@ -1082,7 +1156,7 @@ export default function ProjectManagement() {
           border-radius: 8px;
           padding: 4px 0;
           min-width: 160px;
-          box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
           z-index: 1000;
           animation: fadeIn 0.15s ease-out;
         }
@@ -1168,4 +1242,3 @@ export default function ProjectManagement() {
     </div>
   );
 }
-

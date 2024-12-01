@@ -1,7 +1,16 @@
 import Link from "next/link";
 import { useTheme } from "../contexts/ThemeContext";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/store/loadingSlice";
 
 export default function HomePage() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // 组件挂载后关闭 loading
+    dispatch(setLoading(false));
+  }, [dispatch]);
   const { theme } = useTheme();
 
   return (

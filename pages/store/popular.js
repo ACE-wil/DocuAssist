@@ -1,8 +1,18 @@
 import { UserOutlined, SearchOutlined } from "@ant-design/icons";
 import { AutoComplete, Button, Flex, Input, Card, Divider } from "antd";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/store/loadingSlice";
 // import "./iconfont/iconfont";
 const { Meta } = Card;
+
 export default function PopularApps() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // 组件挂载后关闭 loading
+    dispatch(setLoading(false));
+  }, [dispatch]);
   const Title = (props) => (
     <Flex align="center" justify="space-between">
       {props.title}

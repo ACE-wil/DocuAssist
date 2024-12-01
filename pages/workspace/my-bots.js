@@ -1,151 +1,166 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/store/loadingSlice";
+
 export default function MyBots() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // 组件挂载后关闭 loading
+    dispatch(setLoading(false));
+  }, [dispatch]);
   const categories = {
     recent: {
       title: "最近使用",
       models: [
         {
-          name: 'GPT-4 Turbo',
-          image: '/gpt4_Turbo.png',
-          description: '最新的GPT-4模型',
-          features: ['128k上下文']
+          name: "GPT-4 Turbo",
+          image: "/gpt4_Turbo.png",
+          description: "最新的GPT-4模型",
+          features: ["128k上下文"],
         },
         {
-          name: 'Claude 3',
-          image: '/claude3.png',
-          description: '强大的理解能力',
-          features: ['200k上下文']
+          name: "Claude 3",
+          image: "/claude3.png",
+          description: "强大的理解能力",
+          features: ["200k上下文"],
         },
         {
-          name: '文心一言',
-          image: '/wenxin.png',
-          description: '百度AI助手',
-          features: ['中文优化']
+          name: "文心一言",
+          image: "/wenxin.png",
+          description: "百度AI助手",
+          features: ["中文优化"],
         },
         {
-          name: '通义千问',
-          image: '/tongyi.png',
-          description: '阿里AI助手',
-          features: ['开源可商用']
-        }
-      ]
+          name: "通义千问",
+          image: "/tongyi.png",
+          description: "阿里AI助手",
+          features: ["开源可商用"],
+        },
+      ],
     },
     language: {
       title: "语言模型",
       models: [
         {
-          name: 'GPT-4 Turbo',
-          image: '/gpt4_Turbo.png',
-          description: '最强大语言模型',
-          features: ['128k上下文']
+          name: "GPT-4 Turbo",
+          image: "/gpt4_Turbo.png",
+          description: "最强大语言模型",
+          features: ["128k上下文"],
         },
         {
-          name: 'Claude 3',
-          image: '/claude3.png',
-          description: '精确推理能力',
-          features: ['200k上下文']
+          name: "Claude 3",
+          image: "/claude3.png",
+          description: "精确推理能力",
+          features: ["200k上下文"],
         },
         {
-          name: 'GPT-3.5',
-          image: '/GPT-3.5.png',
-          description: '性价比之选',
-          features: ['16k上下文']
+          name: "GPT-3.5",
+          image: "/GPT-3.5.png",
+          description: "性价比之选",
+          features: ["16k上下文"],
         },
         {
-          name: 'BERT',
-          image: '/Google-BERT.png',
-          description: '自然语言处理',
-          features: ['文本分析']
+          name: "BERT",
+          image: "/Google-BERT.png",
+          description: "自然语言处理",
+          features: ["文本分析"],
         },
         {
-          name: 'LLaMA 2',
-          image: '/LLaMa2.png',
-          description: '开源大模型',
-          features: ['本地部署']
-        }
-      ]
+          name: "LLaMA 2",
+          image: "/LLaMa2.png",
+          description: "开源大模型",
+          features: ["本地部署"],
+        },
+      ],
     },
     chinese: {
       title: "中文模型",
       models: [
         {
-          name: '通义千问',
-          image: '/tongyi.png',
-          description: 'Qwen2-72B开源',
-          features: ['开源可商用']
+          name: "通义千问",
+          image: "/tongyi.png",
+          description: "Qwen2-72B开源",
+          features: ["开源可商用"],
         },
         {
-          name: '文心一言',
-          image: '/wenxin.png',
-          description: '百度AI助手',
-          features: ['中文优化']
+          name: "文心一言",
+          image: "/wenxin.png",
+          description: "百度AI助手",
+          features: ["中文优化"],
         },
         {
-          name: '智谱清言',
-          image: '/智谱清言.jpg',
-          description: '智谱AI助手',
-          features: ['学术研究']
+          name: "智谱清言",
+          image: "/智谱清言.jpg",
+          description: "智谱AI助手",
+          features: ["学术研究"],
         },
         {
-          name: 'SenseChat',
-          image: '/shangtang.png',
-          description: '商汤AI助手',
-          features: ['企业服务']
-        }
-      ]
+          name: "SenseChat",
+          image: "/shangtang.png",
+          description: "商汤AI助手",
+          features: ["企业服务"],
+        },
+      ],
     },
     multimodal: {
       title: "多模态模型",
       models: [
         {
-          name: 'CLIP',
-          image: '/CLIP.png',
-          description: '图文理解模型',
-          features: ['多模态']
+          name: "CLIP",
+          image: "/CLIP.png",
+          description: "图文理解模型",
+          features: ["多模态"],
         },
         {
-          name: 'GPT-4V',
-          image: '/GPT4V.png',
-          description: '视觉语言模型',
-          features: ['图像理解']
+          name: "GPT-4V",
+          image: "/GPT4V.png",
+          description: "视觉语言模型",
+          features: ["图像理解"],
         },
         {
-          name: 'Claude 3',
-          image: '/claude3.png',
-          description: '多模态理解',
-          features: ['文档分析']
-        }
-      ]
+          name: "Claude 3",
+          image: "/claude3.png",
+          description: "多模态理解",
+          features: ["文档分析"],
+        },
+      ],
     },
     image: {
       title: "图像生成",
       models: [
         {
-          name: 'DALL-E 3',
-          image: '/dall-e-3.jpg',
-          description: 'OpenAI绘画',
-          features: ['图像生成']
+          name: "DALL-E 3",
+          image: "/dall-e-3.jpg",
+          description: "OpenAI绘画",
+          features: ["图像生成"],
         },
         {
-          name: 'Midjourney',
-          image: '/Midjourne.png',
-          description: '艺术创作',
-          features: ['高清图像']
+          name: "Midjourney",
+          image: "/Midjourne.png",
+          description: "艺术创作",
+          features: ["高清图像"],
         },
         {
-          name: 'Stable XL',
-          image: '/stablediffusion.png',
-          description: '开源生成',
-          features: ['本地部署']
-        }
-      ]
-    }
+          name: "Stable XL",
+          image: "/stablediffusion.png",
+          description: "开源生成",
+          features: ["本地部署"],
+        },
+      ],
+    },
   };
 
   return (
     <div className="my-bots-container">
       <div className="content-area">
         {Object.entries(categories).map(([key, category], index) => (
-          <div key={key} id={key} className="category-section" style={{ marginTop: index === 0 ? '0' : '50px'}}>
+          <div
+            key={key}
+            id={key}
+            className="category-section"
+            style={{ marginTop: index === 0 ? "0" : "50px" }}
+          >
             <h2 className="category-title">{category.title}</h2>
             <div className="models-grid">
               {category.models.map((model, index) => (
@@ -158,7 +173,9 @@ export default function MyBots() {
                     <p>{model.description}</p>
                     <div className="features">
                       {model.features.map((feature, i) => (
-                        <span key={i} className="feature-tag">{feature}</span>
+                        <span key={i} className="feature-tag">
+                          {feature}
+                        </span>
                       ))}
                     </div>
                   </div>

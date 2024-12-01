@@ -1,11 +1,18 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/store/loadingSlice";
 
 export default function TemplatesIndex() {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    router.replace('/templates/recommended');
+    // 组件挂载后关闭 loading
+    dispatch(setLoading(false));
+  }, [dispatch]);
+  useEffect(() => {
+    router.replace("/templates/recommended");
   }, []);
 
   return (

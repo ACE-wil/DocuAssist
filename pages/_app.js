@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import "../styles/globals.css";
 import Layout from "../components/Layout";
 import { Provider } from "react-redux";
