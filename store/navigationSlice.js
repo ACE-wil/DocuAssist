@@ -1,16 +1,21 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const navigationSlice = createSlice({
-  name: 'navigation',
+  name: "navigation",
   initialState: {
-    isVisible: true
+    isVisible: true,
+    navExpand: true,
   },
   reducers: {
     setNavigationVisibility: (state, action) => {
       state.isVisible = action.payload;
-    }
-  }
+    },
+    setNavExpand: (state, action) => {
+      state.navExpand = action.payload;
+    },
+  },
 });
 
-export const { setNavigationVisibility } = navigationSlice.actions;
-export default navigationSlice.reducer; 
+export const { setNavigationVisibility, setNavExpand } =
+  navigationSlice.actions;
+export default navigationSlice.reducer;

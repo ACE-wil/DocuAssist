@@ -6,6 +6,7 @@ import SecondaryNavigation from "./SecondaryNavigation";
 import { useSelector, useDispatch } from "react-redux";
 import LoadingSpinner from "./LoadingSpinner";
 import { setLoading } from "../store/loadingSlice";
+import { setNavExpand } from "../store/navigationSlice";
 
 export default function Layout({ children }) {
   const { theme, isDark } = useTheme();
@@ -18,6 +19,7 @@ export default function Layout({ children }) {
   const loading = useSelector((state) => state.loading);
   const dispatch = useDispatch();
   const router = useRouter();
+  const navExpand = useSelector((state) => state.navigation.navExpand);
 
   useEffect(() => {
     const path = router.pathname;
@@ -51,6 +53,17 @@ export default function Layout({ children }) {
     };
   }, [router, dispatch]);
 
+  useEffect(() => {
+    // 同步 navExpand 状态到 isExpand
+    setIsExpanded(navExpand);
+  }, [navExpand]);
+
+  const toggleExpand = () => {
+    const newExpandState = !isExpanded;
+    setIsExpanded(newExpandState);
+    dispatch(setNavExpand(newExpandState));
+  };
+
   return (
     <div className="layout">
       {isNavigationVisible && (
@@ -71,7 +84,7 @@ export default function Layout({ children }) {
           />
           <button
             className="toggle-btn"
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={toggleExpand}
             style={{
               color: isDark ? theme.text.secondary : theme.text.primary,
             }}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "@/store/loadingSlice";
 import ReactFlow, {
   addEdge,
@@ -30,6 +30,7 @@ const {
 } = require("react-syntax-highlighter/dist/cjs/styles/prism");
 import Modal from "react-modal"; // 确保安装了 react-modal
 import dynamic from "next/dynamic";
+import { setNavExpand } from "@/store/navigationSlice";
 
 const nodeTypes = {
   custom: CustomNode,
@@ -71,6 +72,7 @@ function DocumentParser() {
   const [isLoading, setIsLoading] = useState(false); // 确保 isLoading 状态存在
   const [streamingContent, setStreamingContent] = useState(""); // 新增状态用于流式输出
   const [isStreaming, setIsStreaming] = useState(false); // 新增状态用于控制流式输出
+  const navExpand = useSelector((state) => state.navigation.navExpand);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -274,6 +276,7 @@ function DocumentParser() {
   const addNode = useCallback(
     (event) => {
       event.preventDefault();
+      console.log(event.clientX);
       const newNodeId = `chat-${nodeCounter}`; // 根据现有节点数量生成新节点ID
       const newNode = {
         id: newNodeId,
@@ -1102,7 +1105,9 @@ function DocumentParser() {
           style={{
             position: "absolute",
             top: contextMenu.y,
-            left: contextMenu.x,
+            left: `calc(${
+              navExpand ? contextMenu.x - 305 : contextMenu.x - 105
+            }px)`,
             backgroundColor: "white",
             border: "1px solid #ccc",
             borderRadius: "4px",
