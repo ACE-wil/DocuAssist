@@ -308,7 +308,7 @@ function DocumentParser() {
         data: {
           label: (
             <div
-              contentEditable
+              // contentEditable
               suppressContentEditableWarning
               style={{
                 padding: "10px",
