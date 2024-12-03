@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "@/store/loadingSlice";
 import ReactFlow, {
@@ -74,6 +74,7 @@ function DocumentParser() {
   const [isStreaming, setIsStreaming] = useState(false); // 新增状态用于控制流式输出
   const navExpand = useSelector((state) => state.navigation.navExpand);
   const dispatch = useDispatch();
+  const [nodeHistory, setNodeHistory] = useState([]); // 新增状态用于存储节点历史
 
   useEffect(() => {
     // 组件挂载后关闭 loading
@@ -273,11 +274,34 @@ function DocumentParser() {
     setContextMenu({ visible: true, x: event.clientX, y: event.clientY });
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey && event.key === "z") {
+        event.preventDefault();
+        undoLastNode();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [nodes]);
+
+  const undoLastNode = () => {
+    setNodes((prevNodes) => {
+      if (prevNodes.length === 0) return prevNodes;
+      const newNodes = [...prevNodes];
+      newNodes.pop(); // 移除最后一个节点
+      return newNodes;
+    });
+  };
+
   const addNode = useCallback(
     (event) => {
       event.preventDefault();
-      console.log(event.clientX);
-      const newNodeId = `chat-${nodeCounter}`; // 根据现有节点数量生成新节点ID
+      const newNodeId = `chat-${nodeCounter}`;
       const newNode = {
         id: newNodeId,
         type: "custom",
@@ -388,7 +412,7 @@ function DocumentParser() {
           action: "",
           output: "",
         },
-        position: { x: event.clientX, y: event.clientY }, // 你可以根据需要设置初始位置
+        position: { x: event.clientX, y: event.clientY },
         style: {
           width: "auto",
           minWidth: "200px",
@@ -398,8 +422,9 @@ function DocumentParser() {
         },
       };
       setNodes((nds) => [...nds, newNode]);
+      setNodeHistory((history) => [...history, newNode]); // 将新节点添加到历史记录
       setShowEmptyNode(false);
-      setNodeCounter((count) => count + 1); // 增加计数器
+      setNodeCounter((count) => count + 1);
     },
     [nodeCounter]
   );
