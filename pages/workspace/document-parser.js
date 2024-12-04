@@ -1152,7 +1152,7 @@ function DocumentParser() {
                 style={{
                   padding: "10px",
                   borderRadius: "8px",
-                  backgroundColor: "#19c37d",
+                  backgroundColor: "#4a90e2",
                   color: "#fff",
                   border: "none",
                   cursor: "pointer",
