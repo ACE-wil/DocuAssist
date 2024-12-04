@@ -311,48 +311,93 @@ function DocumentParser() {
               // contentEditable
               suppressContentEditableWarning
               style={{
-                padding: "10px",
+                padding: "2px",
                 borderRadius: "8px",
                 backgroundColor: "transparent",
-                width: "auto",
-                height: "auto",
-                maxHeight: "300px",
-                maxWidth: "300px",
-                overflow: "overlay",
+                width: "330px",
+                height: "155px",
+                // maxHeight: "300px",
+                // maxWidth: "300px",
+                overflow: "hidden",
                 fontSize: "14px",
-                border: "1px solid #ccc",
+                // border: "1px solid #ccc",
               }}
             >
-              <div style={{ marginBottom: "10px" }}>
-                <label style={{ display: "block", marginBottom: "4px" }}>
-                  节点名称
-                </label>
-                <input
-                  type="text"
-                  placeholder="节点名称"
+              <div
+                style={{
+                  width: "100%",
+                  height: "30px",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <div
                   style={{
-                    width: "100%",
-                    padding: "6px",
-                    border: "1px solid #ddd",
-                    borderRadius: "4px",
-                    marginBottom: "8px",
-                    outline: "none",
-                    transition: "border-color 0.3s ease",
+                    width: "15px",
+                    height: "15px",
+                    borderRadius: "50%",
+                    backgroundColor: "#4a90e2",
                   }}
-                  onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
-                  onBlur={(e) => (e.target.style.borderColor = "#ddd")}
-                  onChange={(e) => handleInputChange(e, newNodeId, "name")}
-                />
+                ></div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    width: "330px",
+                    lineHeight: "30px",
+                  }}
+                >
+                  <label
+                    style={{
+                      width: "60px",
+                      margin: "0 5px",
+                    }}
+                  >
+                    节点名称
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="节点名称"
+                    style={{
+                      width: "240px",
+                      padding: "6px",
+                      border: "1px solid #ddd",
+                      borderRadius: "4px",
+                      outline: "none",
+                      transition: "border-color 0.3s ease",
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
+                    onBlur={(e) => (e.target.style.borderColor = "#ddd")}
+                    onChange={(e) => handleInputChange(e, newNodeId, "name")}
+                  />
+                </div>
               </div>
-              <div style={{ marginBottom: "10px" }}>
-                <label style={{ display: "block", marginBottom: "4px" }}>
+              <div style={{ borderTop: "1px solid #ddd" }}></div>
+              <div
+                style={{
+                  marginBottom: "10px",
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: "10px",
+                }}
+              >
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "4px",
+                    marginRight: "5px",
+                    width: "60px",
+                  }}
+                >
                   执行操作
                 </label>
                 <input
                   type="text"
                   placeholder="执行操作"
                   style={{
-                    width: "100%",
+                    width: "260px",
                     padding: "6px",
                     border: "1px solid #ddd",
                     borderRadius: "4px",
@@ -365,13 +410,26 @@ function DocumentParser() {
                   onChange={(e) => handleInputChange(e, newNodeId, "action")}
                 />
               </div>
-              <div>
-                <label style={{ display: "block", marginBottom: "4px" }}>
+              <div
+                style={{
+                  marginBottom: "10px",
+                  display: "flex",
+                  flexDirection: "row",
+                }}
+              >
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "4px",
+                    width: "60px",
+                    marginRight: "5px",
+                  }}
+                >
                   输出格式
                 </label>
                 <select
                   style={{
-                    width: "100%",
+                    width: "260px",
                     padding: "6px",
                     border: "1px solid #ddd",
                     borderRadius: "4px",
@@ -390,22 +448,6 @@ function DocumentParser() {
                   <option value="text">文本</option>
                 </select>
               </div>
-              {/* <div style={{ marginBottom: "10px" }}>
-                <button
-                  style={{
-                    width: "100%",
-                    padding: "6px",
-                    borderRadius: "4px",
-                    backgroundColor: "#4a90e2",
-                    color: "white",
-                    border: "none",
-                    cursor: "pointer",
-                    marginTop: "4px",
-                  }}
-                >
-                  添加条件
-                </button>
-              </div> */}
             </div>
           ),
           name: "",
