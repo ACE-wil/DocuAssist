@@ -4,6 +4,7 @@ import { Handle, Position } from "reactflow";
 
 const CustomNode = ({ data, selected }) => {
   const [isHovered, setIsHovered] = useState(false);
+
   return (
     <div
       style={{
@@ -18,6 +19,15 @@ const CustomNode = ({ data, selected }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      <div
+        style={{
+          width: "15px",
+          height: "15px",
+          borderRadius: "50%",
+          backgroundColor: selected ? "yellow" : data.color,
+          margin: "0 auto",
+        }}
+      ></div>
       <Handle
         type="target"
         position={Position.Top}
@@ -62,6 +72,7 @@ const CustomNode = ({ data, selected }) => {
           onClick={() => {
             console.log("Running node:", data);
             data.onNodeAction(data);
+            console.log("currentRunNodeId:", data.currentRunNodeId);
           }}
         >
           运行

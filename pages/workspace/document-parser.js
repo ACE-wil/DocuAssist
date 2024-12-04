@@ -75,7 +75,8 @@ function DocumentParser() {
   const navExpand = useSelector((state) => state.navigation.navExpand);
   const dispatch = useDispatch();
   const [nodeHistory, setNodeHistory] = useState([]); // 新增状态用于存储节点历史
-
+  const [nodeLightColor, setNodeLightColor] = useState({});
+  const [currentRunNodeId, setCurrentRunNodeId] = useState(null); // 当前运行的节点
   useEffect(() => {
     // 组件挂载后关闭 loading
     dispatch(setLoading(false));
@@ -175,8 +176,8 @@ function DocumentParser() {
     console.log("Node action triggered:", nodeData);
     setInputValue(
       `节点名称：${nodeData.name}，执行操作：${nodeData.action}，输出格式：${nodeData.output}`
-    ); // 确保将节点数据传递给输入框
-    // 自动发送消息
+    );
+    setCurrentRunNodeId(nodeData.nodeId);
     setInputHasChanged(!inputHasChanged);
   };
 
@@ -215,12 +216,20 @@ function DocumentParser() {
         streamAssistantMessage(assistantMessage.content);
         setChatHistory((prev) => [...prev, assistantMessage]);
         setInputValue("");
-        setIsLoading(false); // 停止加载动画
+        setIsLoading(false);
+        setNodeLightColor((colors) => ({
+          ...colors,
+          [currentRunNodeId]: "green", // 成功为绿色，失败为红色
+        }));
       })
       .catch((error) => {
         console.error("Error:", error);
         alert("发送失败，请重试");
-        setIsLoading(false); // 停止加载动画
+        setNodeLightColor((colors) => ({
+          ...colors,
+          [currentRunNodeId]: "red", // 成功为绿色，失败为红色
+        }));
+        setIsLoading(false);
       });
   };
 
@@ -453,6 +462,7 @@ function DocumentParser() {
           name: "",
           action: "",
           output: "",
+          nodeId: newNodeId,
         },
         position: { x: event.clientX, y: event.clientY },
         style: {
@@ -464,6 +474,10 @@ function DocumentParser() {
         },
       };
       setNodes((nds) => [...nds, newNode]);
+      setNodeLightColor((colors) => ({
+        ...colors,
+        [newNodeId]: "blue", // 默认颜色为蓝色
+      }));
       setNodeHistory((history) => [...history, newNode]); // 将新节点添加到历史记录
       setShowEmptyNode(false);
       setNodeCounter((count) => count + 1);
@@ -683,6 +697,7 @@ function DocumentParser() {
                     data: {
                       ...node.data,
                       onNodeAction: handleNodeAction, // 传递回调函数
+                      color: nodeLightColor[node.id] || "blue",
                     },
                   }))
                 : [emptyNode]
