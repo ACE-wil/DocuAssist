@@ -23,13 +23,26 @@ const CustomNode = ({ data, selected }) => {
     >
       <div
         style={{
-          width: "15px",
-          height: "15px",
-          borderRadius: "50%",
-          backgroundColor: selected ? "#B2CA65" : data.color,
-          margin: "0 auto",
+          width: "100%",
+          display: "flex",
+          justifyContent: "space-between",
         }}
-      ></div>
+      >
+        <i style={{ fontSize: "12px", color: "#07080980" }}>
+          节点id: {data.nodeId || "空"}
+        </i>
+        <div
+          style={{
+            width: "15px",
+            height: "15px",
+            borderRadius: "50%",
+            backgroundColor: selected ? "#B2CA65" : data.color,
+            marginTop: "-4px",
+            marginBottom: "10px",
+            marginLeft: "auto",
+          }}
+        ></div>
+      </div>
       <Handle
         type="target"
         position={Position.Top}
