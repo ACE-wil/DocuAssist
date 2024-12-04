@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/store/loadingSlice";
+import styles from "@/styles/recommended.module.css";
 
 const templates = [
   {
@@ -55,20 +56,7 @@ export default function RecommendedTemplates() {
       <h1>模板</h1>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
         {templates.map((template, index) => (
-          <div
-            key={index}
-            style={{
-              width: "calc(25% - 20px)",
-              border: "1px solid #ddd",
-              borderRadius: "15px",
-              overflow: "hidden",
-              padding: "12px",
-              backgroundColor: "#fff",
-              cursor: "pointer",
-              boxShadow:
-                "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
-            }}
-          >
+          <div key={index} className={styles.template}>
             <img
               src={template.image}
               alt={template.title}
