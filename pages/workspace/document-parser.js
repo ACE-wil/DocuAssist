@@ -219,7 +219,7 @@ function DocumentParser() {
         setIsLoading(false);
         setNodeLightColor((colors) => ({
           ...colors,
-          [currentRunNodeId]: "green", // 成功为绿色，失败为红色
+          [currentRunNodeId]: "#5EC29D", // 成功为绿色，失败为红色
         }));
       })
       .catch((error) => {
@@ -227,7 +227,7 @@ function DocumentParser() {
         alert("发送失败，请重试");
         setNodeLightColor((colors) => ({
           ...colors,
-          [currentRunNodeId]: "red", // 成功为绿色，失败为红色
+          [currentRunNodeId]: "#D96A79", // 成功为绿色，失败为红色
         }));
         setIsLoading(false);
       });
@@ -344,24 +344,18 @@ function DocumentParser() {
               >
                 <div
                   style={{
-                    width: "15px",
-                    height: "15px",
-                    borderRadius: "50%",
-                    backgroundColor: "#4a90e2",
-                  }}
-                ></div>
-                <div
-                  style={{
                     display: "flex",
                     flexDirection: "row",
                     width: "330px",
                     lineHeight: "30px",
+                    marginTop: "2px",
                   }}
                 >
                   <label
                     style={{
                       width: "60px",
                       margin: "0 5px",
+                      color: "#3B3B3B",
                     }}
                   >
                     节点名称
@@ -398,6 +392,7 @@ function DocumentParser() {
                     marginBottom: "4px",
                     marginRight: "5px",
                     width: "60px",
+                    color: "#3B3B3B",
                   }}
                 >
                   执行操作
@@ -432,6 +427,7 @@ function DocumentParser() {
                     marginBottom: "4px",
                     width: "60px",
                     marginRight: "5px",
+                    color: "#3B3B3B",
                   }}
                 >
                   输出格式
@@ -445,6 +441,7 @@ function DocumentParser() {
                     marginBottom: "8px",
                     outline: "none",
                     transition: "border-color 0.3s ease",
+                    color: "#3B3B3B",
                   }}
                   onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
                   onBlur={(e) => (e.target.style.borderColor = "#ddd")}
@@ -476,7 +473,7 @@ function DocumentParser() {
       setNodes((nds) => [...nds, newNode]);
       setNodeLightColor((colors) => ({
         ...colors,
-        [newNodeId]: "blue", // 默认颜色为蓝色
+        [newNodeId]: "#4a90e2", // 默认颜色为蓝色
       }));
       setNodeHistory((history) => [...history, newNode]); // 将新节点添加到历史记录
       setShowEmptyNode(false);
@@ -550,7 +547,13 @@ function DocumentParser() {
   const emptyNode = {
     id: "empty-node",
     type: "custom",
-    data: { label: "你还没有创建过节点喔，快来创建你的节点吧！" },
+    data: {
+      label: (
+        <div style={{ marginBottom: "10px" }}>
+          你还没有创建过节点喔，快来创建你的节点吧！
+        </div>
+      ),
+    },
     position: { x: 490, y: 410 },
   };
 

@@ -9,12 +9,14 @@ const CustomNode = ({ data, selected }) => {
     <div
       style={{
         padding: "10px",
-        border: "2px solid #4a90e2",
+        // border: "2px solid #4a90e2",
         borderRadius: "8px",
         backgroundColor: "#f0f4f8",
         minWidth: "150px",
         textAlign: "center",
         position: "relative",
+        boxShadow:
+          "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -24,7 +26,7 @@ const CustomNode = ({ data, selected }) => {
           width: "15px",
           height: "15px",
           borderRadius: "50%",
-          backgroundColor: selected ? "yellow" : data.color,
+          backgroundColor: selected ? "#B2CA65" : data.color,
           margin: "0 auto",
         }}
       ></div>
