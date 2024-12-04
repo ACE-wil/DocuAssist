@@ -31,6 +31,9 @@ const {
 import Modal from "react-modal"; // 确保安装了 react-modal
 import dynamic from "next/dynamic";
 import { setNavExpand } from "@/store/navigationSlice";
+import { Input } from "antd";
+
+const { TextArea } = Input;
 
 const nodeTypes = {
   custom: CustomNode,
@@ -324,7 +327,7 @@ function DocumentParser() {
                 borderRadius: "8px",
                 backgroundColor: "transparent",
                 width: "330px",
-                height: "155px",
+                height: "175px",
                 // maxHeight: "300px",
                 // maxWidth: "300px",
                 overflow: "hidden",
@@ -354,7 +357,7 @@ function DocumentParser() {
                   <label
                     style={{
                       width: "60px",
-                      margin: "0 5px",
+                      margin: "0 8px 0 7px",
                       color: "#3B3B3B",
                     }}
                   >
@@ -390,27 +393,25 @@ function DocumentParser() {
                   style={{
                     display: "block",
                     marginBottom: "4px",
-                    marginRight: "5px",
-                    width: "60px",
+                    margin: "0 5px",
+                    width: "85px",
                     color: "#3B3B3B",
                   }}
                 >
                   执行操作
                 </label>
-                <input
-                  type="text"
+                <TextArea
                   placeholder="执行操作"
-                  style={{
-                    width: "260px",
-                    padding: "6px",
-                    border: "1px solid #ddd",
-                    borderRadius: "4px",
-                    marginBottom: "8px",
-                    outline: "none",
-                    transition: "border-color 0.3s ease",
+                  autoSize={{ minRows: 3, maxRows: 3 }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "#4a90e2";
+                    e.target.style.boxShadow =
+                      "0 0 5px rgba(74, 144, 226, 0.5)"; // 添加聚焦时的阴影
                   }}
-                  onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
-                  onBlur={(e) => (e.target.style.borderColor = "#ddd")}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "#ddd";
+                    e.target.style.boxShadow = "none"; // 移除失焦时的阴影
+                  }}
                   onChange={(e) => handleInputChange(e, newNodeId, "action")}
                 />
               </div>
@@ -419,14 +420,15 @@ function DocumentParser() {
                   marginBottom: "10px",
                   display: "flex",
                   flexDirection: "row",
+                  fontSize: "14px",
+                  lineHeight: "30px",
                 }}
               >
                 <label
                   style={{
                     display: "block",
-                    marginBottom: "4px",
                     width: "60px",
-                    marginRight: "5px",
+                    margin: "0 8px 0 7px",
                     color: "#3B3B3B",
                   }}
                 >
