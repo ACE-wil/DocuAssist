@@ -236,7 +236,7 @@ export default function MainNavigation({
         a,
         .bottom-nav-item,
         .avatar {
-          margin-bottom: 15px;
+          margin-bottom: 14px;
         }
         .add-button {
           background: none;
