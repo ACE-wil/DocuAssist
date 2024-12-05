@@ -1,54 +1,28 @@
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/store/loadingSlice";
 import styles from "@/styles/recommended.module.css";
 
-const templates = [
-  {
-    title: "知乎应用搭建快速入门",
-    description: "通过两个简单的应用案例，帮你快速上手知乎的应用搭建。",
-    copies: "5.3K 复制",
-    price: "免费",
-    image: "/GPT-3.5.png",
-  },
-  {
-    title: "智能搜索",
-    description: "利用应用搜索插件和大模型，智能总结互联网信息。",
-    copies: "882 复制",
-    price: "免费",
-    image: "/GPT-3.5.png",
-  },
-  {
-    title: "智能搜索",
-    description: "利用应用搜索插件和大模型，智能总结互联网信息。",
-    copies: "882 复制",
-    price: "免费",
-    image: "/GPT-3.5.png",
-  },
-  {
-    title: "智能搜索",
-    description: "利用应用搜索插件和大模型，智能总结互联网信息。",
-    copies: "882 复制",
-    price: "免费",
-    image: "/GPT-3.5.png",
-  },
-  {
-    title: "智能搜索",
-    description: "利用应用搜索插件和大模型，智能总结互联网信息。",
-    copies: "882 复制",
-    price: "免费",
-    image: "/GPT-3.5.png",
-  },
-  // 添加更多模板...
-];
-
 export default function RecommendedTemplates() {
   const dispatch = useDispatch();
+  const [templates, setTemplates] = useState([]);
 
   useEffect(() => {
-    // 组件挂载后关闭 loading
-    dispatch(setLoading(false));
+    // 获取应用数据
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:5000/api/get-apps");
+        setTemplates(response.data.applications);
+      } catch (error) {
+        console.error("获取应用数据失败:", error);
+      } finally {
+        // 组件挂载后关闭 loading
+        dispatch(setLoading(false));
+      }
+    };
+
+    fetchData();
   }, [dispatch]);
 
   return (
@@ -58,8 +32,8 @@ export default function RecommendedTemplates() {
         {templates.map((template, index) => (
           <div key={index} className={styles.template}>
             <img
-              src={template.image}
-              alt={template.title}
+              src={template.app_avatar_path || "/default-image.png"}
+              alt={template.app_name}
               style={{
                 width: "100%",
                 height: "120px",
@@ -76,7 +50,7 @@ export default function RecommendedTemplates() {
                   flexDirection: "row",
                 }}
               >
-                {template.title}
+                {template.app_name}
                 <button
                   style={{
                     marginLeft: "5px",
@@ -121,7 +95,7 @@ export default function RecommendedTemplates() {
                   lineHeight: "1.5",
                 }}
               >
-                {template.description}
+                {template.app_description}
               </div>
               <div
                 style={{
@@ -130,7 +104,7 @@ export default function RecommendedTemplates() {
                   justifyContent: "space-between",
                 }}
               >
-                <div>{template.price}</div>
+                <div>免费</div>
                 <div
                   style={{
                     fontSize: "12px",
@@ -138,7 +112,7 @@ export default function RecommendedTemplates() {
                     lineHeight: "30px",
                   }}
                 >
-                  {template.copies}
+                  {template.copies || "N/A"}
                 </div>
               </div>
             </div>
