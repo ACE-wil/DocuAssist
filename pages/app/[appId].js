@@ -32,6 +32,25 @@ export default function AppDetail() {
     dispatch(setLoading(false));
   }, [dispatch]);
 
+  useEffect(() => {
+    if (!appId) return;
+
+    // 根据 appId 进行重定向
+    switch (appId) {
+      case "english":
+        router.push("/app/english/english");
+        break;
+      // 你可以在这里添加更多的 case 来处理不同的 appId
+      // case 'anotherAppId':
+      //   router.push('/app/anotherPage');
+      //   break;
+      default:
+        // 默认重定向到某个页面
+        router.push("/app/english/english");
+        break;
+    }
+  }, [appId, router]);
+
   if (!appData) {
     return <div>加载中...</div>;
   }
