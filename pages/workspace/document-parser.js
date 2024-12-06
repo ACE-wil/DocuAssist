@@ -23,7 +23,7 @@ import "react-json-view-lite/dist/index.css";
 import axios from "axios";
 import CustomNode from "./CustomNode"; // 引入自定义节点组件
 import CustomEdge from "./CustomEdge"; // 引入自定义连接线组件
-import { style } from "@mui/system";
+// import { style } from "@mui/system";
 const { Prism: SyntaxHighlighter } = require("react-syntax-highlighter");
 const {
   vscDarkPlus,

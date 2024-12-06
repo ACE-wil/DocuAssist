@@ -1,0 +1,56 @@
+.wordSpell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #22252d;  /* 更新背景色 */
+  color: #fff;
+  outline: none;  /* 移除focus时的轮廓 */
+}
+
+.word {
+  display: flex;
+  font-size: 48px;  /* 更大的字体 */
+  letter-spacing: 8px;  /* 字母间距 */
+  margin-bottom: 40px;
+}
+
+.letter {
+  position: relative;
+  margin: 0 10px;
+  padding: 0 5px;
+}
+
+.underline {
+  position: absolute;
+  bottom: -15px;  /* 调整方块位置 */
+  left: 0;
+  right: 0;
+  height: 8px;  /* 更高的方块 */
+  background-color: #fff;
+  border-radius: 2px;  /* 略微圆角 */
+}
+
+.correct {
+  color: #4caf50;  /* 更柔和的绿色 */
+}
+
+.incorrect {
+  color: #f44336;  /* 更柔和的红色 */
+}
+
+.progressBar {
+  width: 60%;  /* 更窄的进度条 */
+  height: 6px;  /* 更细的进度条 */
+  background-color: #333;
+  border-radius: 3px;
+  margin-top: 40px;
+}
+
+.progress {
+  height: 100%;
+  background-color: #4caf50;
+  border-radius: 3px;
+  transition: width 0.3s ease;  /* 平滑过渡效果 */
+}

@@ -13,6 +13,7 @@ const navContents = {
     { icon: "📁", label: "项目管理", href: "/workspace/project-management" },
     { icon: "📝", label: "文档解析", href: "/workspace/document-parser" },
     { icon: "🎮", label: "游戏预览", href: "/workspace/game-preview" },
+    { icon: "🎮", label: "单词拼写", href: "/workspace/word-Spell" },
   ],
   store: [
     { icon: "🔥", label: "热门应用", href: "/store/popular" },
