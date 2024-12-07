@@ -41,6 +41,11 @@ const navContents = {
     { icon: "💡", label: "推荐模板", href: "/templates/recommended" },
     { icon: "🔍", label: "浏览全部", href: "/templates/browse-all" },
   ],
+  gamespace: [
+    { icon: "🎮", label: "最近游戏", href: "/gamespace/recent" },
+    { icon: "🎮", label: "正在创建", href: "/gamespace/creating" },
+    { icon: "🎮", label: "我的游戏", href: "/gamespace/my-games" },
+  ],
   docs: [
     { icon: "📚", label: "快速入门", href: "/docs/quick-start" },
     { icon: "🔧", label: "基本功能", href: "/docs/basic-features" },

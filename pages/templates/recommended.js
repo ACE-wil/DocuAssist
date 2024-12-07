@@ -5,6 +5,7 @@ import { setLoading } from "@/store/loadingSlice";
 import styles from "@/styles/recommended.module.css";
 import { useRouter } from "next/router";
 import Modal from "react-modal";
+import CreateAppModal from "@/components/CreateAppModal";
 
 const customStyles = {
   overlay: {
@@ -44,6 +45,7 @@ export default function RecommendedTemplates() {
   const [language, setLanguage] = useState("zh");
   const [gameMode, setGameMode] = useState("single");
   const router = useRouter();
+  const [isCreateAppModalOpen, setIsCreateAppModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,7 +64,7 @@ export default function RecommendedTemplates() {
 
   const handleBoxClick = (appId) => {
     setSelectedAppId(appId);
-    setIsModalOpen(true);
+    setIsCreateAppModalOpen(true);
   };
 
   const handleFileChange = (e) => {
@@ -278,8 +280,8 @@ export default function RecommendedTemplates() {
               }}
             >
               <option value="warrior">冒险</option>
-              <option value="mage">励志</option>
-              <option value="archer">爱情</option>
+              {/* <option value="mage">励志</option>
+              <option value="archer">爱情</option> */}
             </select>
           </div>
 
@@ -297,8 +299,8 @@ export default function RecommendedTemplates() {
               }}
             >
               <option value="easy">简单</option>
-              <option value="medium">中等</option>
-              <option value="hard">困难</option>
+              {/* <option value="medium">中等</option>
+              <option value="hard">困难</option> */}
             </select>
           </div>
         </div>
@@ -323,8 +325,8 @@ export default function RecommendedTemplates() {
               }}
             >
               <option value="zh">中文</option>
-              <option value="en">英文</option>
-              <option value="jp">日文</option>
+              {/* <option value="en">英文</option>
+              <option value="jp">日文</option> */}
             </select>
           </div>
           <div style={{ flex: "1", marginLeft: "5px" }}>
@@ -341,7 +343,7 @@ export default function RecommendedTemplates() {
               }}
             >
               <option value="single">单人模式</option>
-              <option value="multi">多人模式</option>
+              {/* <option value="multi">多人模式</option> */}
             </select>
           </div>
         </div>
@@ -371,6 +373,10 @@ export default function RecommendedTemplates() {
           开始游戏
         </button>
       </Modal>
+      <CreateAppModal
+        isOpen={isCreateAppModalOpen}
+        onClose={() => setIsCreateAppModalOpen(false)}
+      />
     </div>
   );
 }

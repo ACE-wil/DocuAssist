@@ -2,9 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-
 import UpgradeModal from "./UpgradeModal";
-import CreateAppModal from "./CreateAppModal";
 import { useTheme } from "../contexts/ThemeContext";
 
 export default function MainNavigation({
@@ -18,13 +16,23 @@ export default function MainNavigation({
 
   const navItems = [
     { id: "home", icon: "🏠", label: "主页", href: "/" },
-    { id: "workspace", icon: "💼", label: "工作空间", href: "/workspace" },
-    { id: "store", icon: "🏪", label: "商店", href: "/store" },
-    { id: "templates", icon: "📋", label: "模板", href: "/templates" },
+    {
+      id: "workspace",
+      icon: "💼",
+      label: "工作空间",
+      href: "/workspace/my-bots",
+    },
+    { id: "store", icon: "🏪", label: "商店", href: "/store/popular" },
+    {
+      id: "templates",
+      icon: "📋",
+      label: "模板",
+      href: "/templates/recommended",
+    },
+    { id: "gamespace", icon: "🎮", label: "游戏区", href: "/gamespace/recent" },
   ];
 
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
-  const [isCreateAppModalOpen, setIsCreateAppModalOpen] = useState(false);
 
   const handleToggle = () => {
     setIsMessageBoxOpen(!isMessageBoxOpen);
@@ -62,15 +70,6 @@ export default function MainNavigation({
           }}
         >
           {isDark ? "🌞" : "🌙"}
-        </button>
-        <button
-          className="add-button"
-          onClick={() => setIsCreateAppModalOpen(true)}
-        >
-          <img
-            src={isDark ? "/icons/add-o.png" : "/icons/add.png"}
-            style={{ width: "30px", height: "30px" }}
-          ></img>
         </button>
         {navItems.map((item) => (
           <Link href={item.href} key={item.id}>
@@ -337,10 +336,6 @@ export default function MainNavigation({
       <UpgradeModal
         isOpen={isUpgradeModalOpen}
         onRequestClose={() => setIsUpgradeModalOpen(false)}
-      />
-      <CreateAppModal
-        isOpen={isCreateAppModalOpen}
-        onClose={() => setIsCreateAppModalOpen(false)}
       />
     </nav>
   );
