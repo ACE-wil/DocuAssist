@@ -11,7 +11,6 @@ export default function AppDetail() {
 
   useEffect(() => {
     if (!router.isReady) return; // 确保 router 已准备好
-
     const { appId, type } = router.query; // 获取 id 和 type
     console.log("appId", appId, "type", type);
     if (appId) {
