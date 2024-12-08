@@ -336,8 +336,8 @@ export default function RecentGames() {
               }}
             >
               <option value="zh">中文</option>
-              <option value="en">英文</option>
-              <option value="jp">日文</option>
+              {/* <option value="en">英文</option>
+              <option value="jp">日文</option> */}
             </select>
           </div>
           <div style={{ flex: "1", marginLeft: "5px" }}>
@@ -354,7 +354,7 @@ export default function RecentGames() {
               }}
             >
               <option value="single">单人模式</option>
-              <option value="multi">多人模式</option>
+              {/* <option value="multi">多人模式</option> */}
             </select>
           </div>
         </div>

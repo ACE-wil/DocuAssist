@@ -37,7 +37,7 @@ export default function EnglishApp() {
           "http://127.0.0.1:5000/api/get-my-apps"
         );
         const scenesData = response.data.myApps.find(
-          (app) => app.id === parseInt(6)
+          (app) => app.id === parseInt(14)
         )?.scene;
         setScenes(JSON.parse(scenesData));
       } catch (error) {

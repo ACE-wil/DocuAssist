@@ -41,6 +41,8 @@ export default function CreateAppModal({ isOpen, onClose }) {
   const [uploadProgress, setUploadProgress] = useState({ icon: 0, doc: 0 });
   const [previewIcon, setPreviewIcon] = useState(null);
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
+  const [storyType, setStoryType] = useState("adventure");
+  const [gameType, setGameType] = useState("english");
 
   const showToast = (message, type) => {
     setToast({ show: true, message, type });
@@ -69,6 +71,8 @@ export default function CreateAppModal({ isOpen, onClose }) {
     formData.append("app_name", appName);
     formData.append("app_description", appDescription);
     formData.append("creator_name", creatorName);
+    formData.append("story_type", storyType);
+    formData.append("game_type", gameType);
 
     if (appIcon) formData.append("app_avatar", appIcon);
     if (docFile) formData.append("doc_file", docFile);
@@ -210,6 +214,49 @@ export default function CreateAppModal({ isOpen, onClose }) {
               rows={3}
               style={{ resize: "none" }}
             />
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "1rem",
+              marginTop: "1rem",
+            }}
+          >
+            <div className="form-group">
+              <label>剧情选择</label>
+              <select
+                value={storyType}
+                onChange={(e) => setStoryType(e.target.value)}
+                style={{
+                  padding: "0.5rem",
+                  borderRadius: "4px",
+                  border: "1px solid #ddd",
+                  width: "100%",
+                }}
+              >
+                <option value="adventure">冒险片</option>
+                <option value="enlightenment">启蒙片</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>类型选择</label>
+              <select
+                value={gameType}
+                onChange={(e) => setGameType(e.target.value)}
+                style={{
+                  padding: "0.5rem",
+                  borderRadius: "4px",
+                  border: "1px solid #ddd",
+                  width: "100%",
+                }}
+              >
+                <option value="english">英语</option>
+                {/* <option value="chinese">中文</option> */}
+              </select>
+            </div>
           </div>
 
           <div
