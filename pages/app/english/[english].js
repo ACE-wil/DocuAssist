@@ -40,7 +40,6 @@ export default function EnglishApp() {
           (app) => app.id === parseInt(6)
         )?.scene;
         setScenes(JSON.parse(scenesData));
-        console.log("scenesData", scenesData);
       } catch (error) {
         console.error("获取场景数据失败:", error);
       }
@@ -49,8 +48,13 @@ export default function EnglishApp() {
     fetchScenes();
   }, [router.isReady, appId]);
 
+  useEffect(() => {
+    // 组件挂载后关闭 loading
+    dispatch(setLoading(false));
+  }, [dispatch]);
+
   if (!scenes || scenes.length === 0) {
-    return <div>加载中11...</div>;
+    return <div>加载中...</div>;
   }
 
   // const scenes = [
@@ -247,25 +251,6 @@ export default function EnglishApp() {
     }),
   };
 
-  // useEffect(() => {
-  //   // 组件挂载后关闭 loading
-  //   dispatch(setLoading(false));
-  // }, [dispatch]);
-
-  const handleChoice = (nextScene) => {
-    if (nextScene > 0) {
-      setShowCorrect(true);
-      setTimeout(() => setShowCorrect(false), 2000);
-      setCurrentScene(nextScene);
-      setGameHistory([...gameHistory, currentScene]);
-    } else if (nextScene === 0) {
-      setCurrentScene(nextScene);
-    } else {
-      setShowError(true);
-      setTimeout(() => setShowError(false), 2000);
-    }
-  };
-
   // 鼠标悬停效果
   const handleHover = () => {
     sounds.hover.play();
@@ -307,36 +292,14 @@ export default function EnglishApp() {
     }
   };
 
-  // 监听 F11 键
-  // useEffect(() => {
-  //   const handleKeyPress = (e) => {
-  //     if (e.key === "F11") {
-  //       e.preventDefault();
-  //       toggleFullscreen();
-  //     }
-  //   };
-
-  //   window.addEventListener("keydown", handleKeyPress);
-  //   return () => window.removeEventListener("keydown", handleKeyPress);
-  // }, []);
-
-  // useEffect(() => {
-  //   return () => {
-  //     if (document.fullscreenElement) {
-  //       document.exitFullscreen();
-  //     }
-  //     dispatch(setNavigationVisibility(true));
-  //   };
-  // }, [dispatch]);
-
-  // const handleVolumeChange = (e) => {
-  //   const volume = parseFloat(e.target.value);
-  //   setVideoVolume(volume);
-  //   const videoElement = document.querySelector(".background-video");
-  //   if (videoElement) {
-  //     videoElement.volume = volume;
-  //   }
-  // };
+  const handleVolumeChange = (e) => {
+    const volume = parseFloat(e.target.value);
+    setVideoVolume(volume);
+    const videoElement = document.querySelector(".background-video");
+    if (videoElement) {
+      videoElement.volume = volume;
+    }
+  };
 
   const handleMouseEnter = () => {
     setShowVolumeControl(true);
@@ -372,6 +335,42 @@ export default function EnglishApp() {
   const toggleImmersiveMode = () => {
     setIsImmersive(!isImmersive);
   };
+
+  const handleChoice = (nextScene) => {
+    if (nextScene > 0) {
+      setShowCorrect(true);
+      setTimeout(() => setShowCorrect(false), 2000);
+      setCurrentScene(nextScene);
+      setGameHistory([...gameHistory, currentScene]);
+    } else if (nextScene === 0) {
+      setCurrentScene(nextScene);
+    } else {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 2000);
+    }
+  };
+
+  // // 监听 F11 键
+  // useEffect(() => {
+  //   const handleKeyPress = (e) => {
+  //     if (e.key === "F11") {
+  //       e.preventDefault();
+  //       toggleFullscreen();
+  //     }
+  //   };
+
+  //   window.addEventListener("keydown", handleKeyPress);
+  //   return () => window.removeEventListener("keydown", handleKeyPress);
+  // }, []);
+
+  // useEffect(() => {
+  //   return () => {
+  //     if (document.fullscreenElement) {
+  //       document.exitFullscreen();
+  //     }
+  //     dispatch(setNavigationVisibility(true));
+  //   };
+  // }, [dispatch]);
 
   return (
     <div className="story-game">
