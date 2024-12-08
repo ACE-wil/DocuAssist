@@ -84,10 +84,6 @@ export default function MyGames() {
     setFile(null);
   };
 
-  const handleOptionChange = (e) => {
-    setOption(e.target.value);
-  };
-
   const handleStartGame = () => {
     setIsModalOpen(false);
     console.log("selectedAppId", selectedAppId);
@@ -98,105 +94,107 @@ export default function MyGames() {
     <div style={{ padding: "10px 20px 20px 20px" }}>
       <h1>我的游戏</h1>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-        {templates.map((template, index) => (
-          <div
-            key={index}
-            id={template.id}
-            data-type={template.type}
-            className={styles.template}
-            onClick={(e) => handleBoxClick(e)}
-            style={{ cursor: "pointer" }}
-          >
-            <img
-              src={template.app_avatar || "/default-image.png"}
-              alt={template.app_name}
-              style={{
-                width: "100%",
-                height: "120px",
-                objectFit: "cover",
-                borderRadius: "10px",
-              }}
-            />
-            <div style={{ paddingLeft: "3px" }}>
-              <div
+        {templates
+          .filter((template) => template.scene)
+          .map((template, index) => (
+            <div
+              key={index}
+              id={template.id}
+              data-type={template.type}
+              className={styles.template}
+              onClick={(e) => handleBoxClick(e)}
+              style={{ cursor: "pointer" }}
+            >
+              <img
+                src={template.app_avatar || "/default-image.png"}
+                alt={template.app_name}
                 style={{
-                  fontSize: "15px",
-                  margin: "2px 0px 2px 0px",
-                  display: "flex",
-                  flexDirection: "row",
+                  width: "100%",
+                  height: "120px",
+                  objectFit: "cover",
+                  borderRadius: "10px",
                 }}
-              >
-                {template.app_name}
-                <button
+              />
+              <div style={{ paddingLeft: "3px" }}>
+                <div
                   style={{
-                    marginLeft: "5px",
-                    backgroundColor: "rgb(240 240 240)",
-                    borderRadius: "5px",
-                    border: "none",
+                    fontSize: "15px",
+                    margin: "2px 0px 2px 0px",
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  {template.app_name}
+                  <button
+                    style={{
+                      marginLeft: "5px",
+                      backgroundColor: "rgb(240 240 240)",
+                      borderRadius: "5px",
+                      border: "none",
+                      fontSize: "12px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <img
+                      src="/icons/fileIcon.png"
+                      style={{ width: "16px", height: "16px" }}
+                    />
+                    应用
+                  </button>
+                </div>
+                <div
+                  style={{
                     fontSize: "12px",
+                    color: "#06070980",
+                    margin: "4px 0px 8px 0px",
                     display: "flex",
                     alignItems: "center",
                   }}
                 >
                   <img
-                    src="/icons/fileIcon.png"
-                    style={{ width: "16px", height: "16px" }}
+                    src="/logo.png"
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                      marginRight: "5px",
+                    }}
                   />
-                  应用
-                </button>
-              </div>
-              <div
-                style={{
-                  fontSize: "12px",
-                  color: "#06070980",
-                  margin: "4px 0px 8px 0px",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <img
-                  src="/logo.png"
-                  style={{
-                    width: "15px",
-                    height: "15px",
-                    marginRight: "5px",
-                  }}
-                />
-                DA官方
-              </div>
-              <div
-                style={{
-                  fontSize: "14px",
-                  color: "#06070980",
-                  lineHeight: "1.5",
-                }}
-              >
-                {template.app_description}
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div>免费</div>
+                  DA官方
+                </div>
                 <div
                   style={{
-                    fontSize: "12px",
+                    fontSize: "14px",
                     color: "#06070980",
-                    lineHeight: "30px",
+                    lineHeight: "1.5",
                   }}
                 >
-                  {/* <span style={{ marginRight: "4px" }}>
+                  {template.app_description}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div>免费</div>
+                  <div
+                    style={{
+                      fontSize: "12px",
+                      color: "#06070980",
+                      lineHeight: "30px",
+                    }}
+                  >
+                    {/* <span style={{ marginRight: "4px" }}>
                     {template.visit_count || "N/A"}
                   </span> */}
-                  <span>复制</span>
+                    <span>复制</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
       <Modal
         isOpen={isModalOpen}

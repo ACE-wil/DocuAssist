@@ -4,31 +4,7 @@ import { useDispatch } from "react-redux";
 import { setLoading } from "@/store/loadingSlice";
 import styles from "@/styles/recommended.module.css";
 import { useRouter } from "next/router";
-
-const customStyles = {
-  overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "opacity 0.3s ease-out",
-  },
-  content: {
-    position: "relative",
-    top: "auto",
-    left: "auto",
-    right: "auto",
-    bottom: "auto",
-    width: "400px",
-    padding: "20px",
-    borderRadius: "8px",
-    backgroundColor: "#fff",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    transform: "scale(0.8)",
-    opacity: 0,
-    transition: "transform 0.3s ease-out, opacity 0.3s ease-out",
-  },
-};
+import { Alert } from "antd"; // 引入 Ant Design 的 Alert 组件
 
 export default function Creating() {
   const dispatch = useDispatch();
@@ -43,13 +19,13 @@ export default function Creating() {
   const [gameMode, setGameMode] = useState("single");
   const router = useRouter();
   const [appType, setAppType] = useState(null);
-  const [isCreating, setIsCreating] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [isCreating, setIsCreating] = useState(false); // 新增状态
+  const [progress, setProgress] = useState(0); // 进度条状态
+  const [showAlert, setShowAlert] = useState(false); // 控制警告对话框的显示
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setIsCreating(true);
         const response = await axios.get(
           "http://127.0.0.1:5000/api/get-my-apps"
         );
@@ -58,7 +34,6 @@ export default function Creating() {
         console.error("获取应用数据失败:", error);
       } finally {
         dispatch(setLoading(false));
-        setIsCreating(false);
       }
     };
 
@@ -66,50 +41,19 @@ export default function Creating() {
   }, [dispatch]);
 
   const handleBoxClick = (e) => {
-    if (isCreating) return;
+    if (!isCreating) {
+      setShowAlert(true); // 显示自定义警告对话框
+      setTimeout(() => setShowAlert(false), 2000); // 2秒后自动隐藏
+      return; // 如果正在创建，禁止点击
+    }
+    setSelectedAppId(e.currentTarget.id);
+    setAppType(e.currentTarget.dataset.type);
+    console.log("sdadsa", e.currentTarget.id);
+    console.log("appType", e.currentTarget.dataset.type);
   };
 
   return (
     <div style={{ padding: "10px 20px 20px 20px" }}>
-      {isCreating && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div style={{ textAlign: "center", color: "#fff" }}>
-            <h2>正在创建中...</h2>
-            <div
-              style={{
-                width: "80%",
-                height: "10px",
-                backgroundColor: "#ccc",
-                borderRadius: "5px",
-                overflow: "hidden",
-                margin: "20px auto",
-              }}
-            >
-              <div
-                style={{
-                  width: `${progress}%`,
-                  height: "100%",
-                  backgroundColor: "#4a90e2",
-                  transition: "width 0.3s",
-                }}
-              ></div>
-            </div>
-          </div>
-        </div>
-      )}
       <h1>正在创建</h1>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
         {templates
@@ -121,7 +65,12 @@ export default function Creating() {
               data-type={template.type}
               className={styles.template}
               onClick={(e) => handleBoxClick(e)}
-              style={{ cursor: "pointer" }}
+              style={{
+                position: "relative",
+                cursor: "pointer",
+                overflow: "hidden",
+                borderRadius: "10px",
+              }}
             >
               <img
                 src={template.app_avatar || "/default-image.png"}
@@ -131,6 +80,7 @@ export default function Creating() {
                   height: "120px",
                   objectFit: "cover",
                   borderRadius: "10px",
+                  transition: "transform 0.3s ease",
                 }}
               />
               <div style={{ paddingLeft: "3px" }}>
@@ -208,9 +158,70 @@ export default function Creating() {
                   </div>
                 </div>
               </div>
+              {!isCreating && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "rgba(0, 0, 0, 0.3)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "white",
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textShadow: "1px 1px 2px rgba(0, 0, 0, 0.4)",
+                    letterSpacing: "2px",
+                    zIndex: 1,
+                    transition: "opacity 0.3s ease",
+                    opacity: 0.9,
+                  }}
+                >
+                  正在创建应用中...
+                </div>
+              )}
             </div>
           ))}
       </div>
+
+      {showAlert && (
+        <Alert
+          message="提示"
+          description="应用暂未创建完成，请稍后再试。"
+          type="warning"
+          showIcon
+          style={{
+            position: "fixed",
+            top: "40%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 1001,
+            width: "300px",
+            textAlign: "center",
+            animation: "fadeInOut 3s forwards",
+          }}
+        />
+      )}
+
+      <style jsx>{`
+        @keyframes fadeInOut {
+          0% {
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+          }
+        }
+      `}</style>
     </div>
   );
 }
