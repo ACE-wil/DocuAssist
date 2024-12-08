@@ -31,6 +31,11 @@ const customStyles = {
   },
 };
 
+// 在应用启动时设置
+if (typeof window !== "undefined") {
+  Modal.setAppElement("#__next");
+}
+
 export default function RecentGames() {
   const dispatch = useDispatch();
   const [templates, setTemplates] = useState([]);
@@ -44,7 +49,8 @@ export default function RecentGames() {
   const [language, setLanguage] = useState("zh");
   const [gameMode, setGameMode] = useState("single");
   const router = useRouter();
-
+  const [appType, setAppType] = useState(null);
+  const [nullcenes, setNullScenes] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -62,8 +68,11 @@ export default function RecentGames() {
     fetchData();
   }, [dispatch]);
 
-  const handleBoxClick = (appId) => {
-    setSelectedAppId(appId);
+  const handleBoxClick = (e) => {
+    setSelectedAppId(e.currentTarget.id);
+    setAppType(e.currentTarget.dataset.type);
+    console.log("sdadsa", e.currentTarget.id);
+    console.log("appType", e.currentTarget.dataset.type);
     setIsModalOpen(true);
   };
 
@@ -81,110 +90,115 @@ export default function RecentGames() {
 
   const handleStartGame = () => {
     setIsModalOpen(false);
-    router.push(`/app/${selectedAppId}`);
+    console.log("selectedAppId", selectedAppId);
+    router.push(`/app/${selectedAppId}?type=${appType}`); // 传递 id 和 type
   };
 
   return (
     <div style={{ padding: "10px 20px 20px 20px" }}>
       <h1>最近游戏</h1>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-        {templates.map((template, index) => (
-          <div
-            key={index}
-            className={styles.template}
-            onClick={() => handleBoxClick(template.appId)}
-            style={{ cursor: "pointer" }}
-          >
-            <img
-              src={template.app_avatar_path || "/default-image.png"}
-              alt={template.app_name}
-              style={{
-                width: "100%",
-                height: "120px",
-                objectFit: "cover",
-                borderRadius: "10px",
-              }}
-            />
-            <div style={{ paddingLeft: "3px" }}>
-              <div
+        {templates
+          .filter((app) => app.scene)
+          .map((template, index) => (
+            <div
+              key={index}
+              id={template.id}
+              data-type={template.type}
+              className={styles.template}
+              onClick={(e) => handleBoxClick(e)}
+              style={{ cursor: "pointer" }}
+            >
+              <img
+                src={template.app_avatar || "/default-image.png"}
+                alt={template.app_name}
                 style={{
-                  fontSize: "15px",
-                  margin: "2px 0px 2px 0px",
-                  display: "flex",
-                  flexDirection: "row",
+                  width: "100%",
+                  height: "120px",
+                  objectFit: "cover",
+                  borderRadius: "10px",
                 }}
-              >
-                {template.app_name}
-                <button
+              />
+              <div style={{ paddingLeft: "3px" }}>
+                <div
                   style={{
-                    marginLeft: "5px",
-                    backgroundColor: "rgb(240 240 240)",
-                    borderRadius: "5px",
-                    border: "none",
+                    fontSize: "15px",
+                    margin: "2px 0px 2px 0px",
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  {template.app_name}
+                  <button
+                    style={{
+                      marginLeft: "5px",
+                      backgroundColor: "rgb(240 240 240)",
+                      borderRadius: "5px",
+                      border: "none",
+                      fontSize: "12px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <img
+                      src="/icons/fileIcon.png"
+                      style={{ width: "16px", height: "16px" }}
+                    />
+                    应用
+                  </button>
+                </div>
+                <div
+                  style={{
                     fontSize: "12px",
+                    color: "#06070980",
+                    margin: "4px 0px 8px 0px",
                     display: "flex",
                     alignItems: "center",
                   }}
                 >
                   <img
-                    src="/icons/fileIcon.png"
-                    style={{ width: "16px", height: "16px" }}
+                    src="/logo.png"
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                      marginRight: "5px",
+                    }}
                   />
-                  应用
-                </button>
-              </div>
-              <div
-                style={{
-                  fontSize: "12px",
-                  color: "#06070980",
-                  margin: "4px 0px 8px 0px",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <img
-                  src="/logo.png"
-                  style={{
-                    width: "15px",
-                    height: "15px",
-                    marginRight: "5px",
-                  }}
-                />
-                DA官方
-              </div>
-              <div
-                style={{
-                  fontSize: "14px",
-                  color: "#06070980",
-                  lineHeight: "1.5",
-                }}
-              >
-                {template.app_description}
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div>免费</div>
+                  DA官方
+                </div>
                 <div
                   style={{
-                    fontSize: "12px",
+                    fontSize: "14px",
                     color: "#06070980",
-                    lineHeight: "30px",
+                    lineHeight: "1.5",
                   }}
                 >
-                  <span style={{ marginRight: "4px" }}>
+                  {template.app_description}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div>免费</div>
+                  <div
+                    style={{
+                      fontSize: "12px",
+                      color: "#06070980",
+                      lineHeight: "30px",
+                    }}
+                  >
+                    {/* <span style={{ marginRight: "4px" }}>
                     {template.visit_count || "N/A"}
-                  </span>
-                  <span>复制</span>
+                  </span> */}
+                    <span>复制</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
       <Modal
         isOpen={isModalOpen}

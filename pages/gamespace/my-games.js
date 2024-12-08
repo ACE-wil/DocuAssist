@@ -50,6 +50,7 @@ export default function MyGames() {
   const [gameMode, setGameMode] = useState("single");
   const router = useRouter();
   const [appType, setAppType] = useState(null);
+  const [nullcenes, setNullScenes] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
