@@ -33,7 +33,9 @@ export default function WordSpell() {
     if (showModal) return;
 
     const { key } = event;
-    if (key.length === 1 && /^[a-zA-Z]$/.test(key)) {
+    if (key === "Backspace") {
+      setUserInput(userInput.slice(0, -1));
+    } else if (key.length === 1 && /^[a-zA-Z]$/.test(key)) {
       const newInput = userInput + key;
       setUserInput(newInput);
 
