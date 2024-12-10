@@ -2,6 +2,11 @@ import { useState } from "react";
 import Modal from "react-modal";
 import Toast from "./Toast";
 
+// 设置应用的根元素
+if (typeof window !== "undefined") {
+  Modal.setAppElement("#__next");
+}
+
 const customStyles = {
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -23,7 +28,7 @@ const customStyles = {
     borderRadius: "12px",
     backgroundColor: "white",
     boxShadow: "0 8px 30px rgba(0, 0, 0, 0.12)",
-    maxHeight: "90vh",
+    maxHeight: "94vh",
     overflow: "visible",
     zIndex: 1001,
     transform: "scale(0.8)",
@@ -171,9 +176,7 @@ export default function CreateAppModal({ isOpen, onClose }) {
       >
         <div className="modal-header">
           <h2>创建新应用</h2>
-          <button onClick={onClose} className="close-button">
-            &times;
-          </button>
+          <button onClick={onClose} className="close-button"></button>
         </div>
 
         <form onSubmit={handleSubmit} className="create-app-form">
@@ -181,7 +184,7 @@ export default function CreateAppModal({ isOpen, onClose }) {
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
+              gap: "0.25rem",
             }}
           >
             <div className="form-group">
@@ -221,7 +224,7 @@ export default function CreateAppModal({ isOpen, onClose }) {
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               gap: "1rem",
-              marginTop: "1rem",
+              marginTop: "0.5rem",
             }}
           >
             <div className="form-group">
@@ -446,7 +449,7 @@ export default function CreateAppModal({ isOpen, onClose }) {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid #eee;
           }
@@ -468,13 +471,13 @@ export default function CreateAppModal({ isOpen, onClose }) {
           .create-app-form {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 0.5rem;
           }
 
           .form-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.25rem;
           }
 
           .form-group label {
@@ -485,7 +488,7 @@ export default function CreateAppModal({ isOpen, onClose }) {
 
           .form-group input[type="text"],
           .form-group textarea {
-            padding: 0.75rem;
+            padding: 0.5rem;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
@@ -523,14 +526,14 @@ export default function CreateAppModal({ isOpen, onClose }) {
           .submit-button {
             background-color: #4a90e2;
             color: white;
-            padding: 0.75rem;
+            padding: 0.5rem;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
             transition: background-color 0.2s;
-            margin-top: -5px;
+            margin-top: 5px;
           }
 
           .submit-button:hover {
