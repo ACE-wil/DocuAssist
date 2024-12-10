@@ -24,151 +24,140 @@ export default function GamePreview() {
     {
       word: "access",
       dialog:
-        "在《绿皮书》中，托尼站在那辆老旧的轿车旁，心中充满了对未知的忐忑与期待。他知道，找到进入黑人音乐家唐·雪利南方巡演的世界的access，不仅是开启一段工作的钥匙，更是踏入一个全新人生篇章的门槛。",
+        "在《绿皮书》中，托尼为了给家人更好的生活，迫切需要找到进入上流社会的access。他毅然接受了护送黑人钢琴家雪利的任务，心中既充满期待又不免忐忑，这扇门能否通向更美好的未来？",
       options: [
-        { text: "接近", isCorrect: "false", nextScene: -1 },
         { text: "入口", isCorrect: "true", nextScene: 1 },
         { text: "通道", isCorrect: "false", nextScene: -1 },
+        { text: "接近", isCorrect: "false", nextScene: -1 },
       ],
-      npcName: "宫崎骏",
-      npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcName: "绿皮书",
+      npcAvatar: "/avatars/lvpishu.jpg",
+      backgroundVideo: "/videos/lvpishu.mp4",
     },
     {
       word: "accessory",
       dialog:
-        "托尼的车，那辆泛着金属光泽的绿皮书座驾，不仅仅是他们旅途中的accessory，更是风雨同舟的伙伴。在每一个黎明与黄昏，它载着两人穿越偏见与隔阂，见证了一段超越种族与阶层的深厚友谊。",
+        "托尼的车在荒凉的南方小镇突然抛锚，他焦急地四处寻找必要的accessory。那一刻，他感受到了前所未有的无助，但为了雪利的巡演，他必须坚强地解决问题。",
       options: [
-        { text: "从犯", isCorrect: "false", nextScene: -1 },
-        { text: "附件", isCorrect: "true", nextScene: 2 },
-        { text: "同谋", isCorrect: "false", nextScene: -1 },
+        { text: "装饰品", isCorrect: "false", nextScene: -1 },
+        { text: "附件", isCorrect: "false", nextScene: -1 },
+        { text: "配件", isCorrect: "true", nextScene: 2 },
       ],
-      npcName: "宫崎骏",
-      npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcName: "绿皮书",
+      npcAvatar: "/avatars/lvpishu.jpg",
+      backgroundVideo: "/videos/lvpishu.mp4",
     },
     {
       word: "accident",
       dialog:
-        "一场突如其来的accident让托尼和唐·雪利被迫停留在荒凉的公路边。在等待救援的漫长时间里，他们从最初的尴尬沉默到后来的坦诚交谈，这次意外，像命运的安排，悄然拉近了两颗原本疏离的心。",
+        "在一次深夜的accident中，雪利和托尼的车被警察粗暴地拦下。托尼的心猛地一沉，他意识到这不仅是一次简单的意外，更是种族歧视的无情打击。",
       options: [
-        { text: "意外", isCorrect: "false", nextScene: -1 },
         { text: "事故", isCorrect: "true", nextScene: 3 },
-        { text: "偶发事件", isCorrect: "false", nextScene: -1 },
+        { text: "巧合", isCorrect: "false", nextScene: -1 },
+        { text: "事件", isCorrect: "false", nextScene: -1 },
       ],
-      npcName: "宫崎骏",
-      npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcName: "绿皮书",
+      npcAvatar: "/avatars/lvpishu.jpg",
+      backgroundVideo: "/videos/lvpishu.mp4",
     },
     {
       word: "accidental",
       dialog:
-        "他们的相遇，初看是那样accidental，仿佛只是人生旅途中的一次偶然交汇。然而，随着故事的展开，他们发现这段旅程早已在命运的蓝图上绘就，每一次微笑、每一次争执，都是不可或缺的篇章。",
+        "托尼在一次accidental的深夜长谈中，发现雪利内心深处的孤独和脆弱。那一刻，托尼的心被深深触动，他开始真正理解这位表面光鲜的钢琴家。",
       options: [
-        { text: "意外的", isCorrect: "false", nextScene: -1 },
-        { text: "非本质的", isCorrect: "false", nextScene: -1 },
+        { text: "随机的", isCorrect: "false", nextScene: -1 },
         { text: "偶然的", isCorrect: "true", nextScene: 4 },
+        { text: "意外的", isCorrect: "false", nextScene: -1 },
       ],
-      npcName: "宫崎骏",
-      npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
-    },
-    {
-      word: "accommodate",
-      dialog:
-        "面对南方根深蒂固的种族歧视，唐·雪利以优雅而坚韧的姿态努力accommodate。他既要在音乐会上展现无与伦比的才华，又要在现实中委曲求全，这份坚持与妥协，是对尊严与梦想的双重捍卫。",
-      options: [
-        { text: "供应", isCorrect: "false", nextScene: -1 },
-        { text: "适应", isCorrect: "true", nextScene: 5 },
-        { text: "容纳", isCorrect: "false", nextScene: -1 },
-      ],
-      npcName: "宫崎骏",
-      npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
-    },
-    {
-      word: "accommodation",
-      dialog:
-        "夜幕降临，托尼和唐·雪利却因肤色问题屡屡被拒之门外，找不到一处愿意接纳他们的accommodation。在那些寒冷的夜晚，他们蜷缩在车内，彼此的陪伴成了对抗世间冷漠的唯一温暖。",
-      options: [
-        { text: "预定铺位", isCorrect: "false", nextScene: -1 },
-        { text: "住所", isCorrect: "true", nextScene: 6 },
-        { text: "招待设备", isCorrect: "false", nextScene: -1 },
-      ],
-      npcName: "宫崎骏",
-      npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcName: "绿皮书",
+      npcAvatar: "/avatars/lvpishu.jpg",
+      backgroundVideo: "/videos/lvpishu.mp4",
     },
     {
       word: "accompany",
       dialog:
-        "托尼不仅仅是唐·雪利的司机和保镖，更是他在这段艰难旅程中的忠实伙伴。他们一起面对风雨，一起笑对困厄，accompany的意义，早已超越了职责，升华成了无言的默契与深情。",
+        "托尼全程accompany雪利，从繁华的北方都市到充满敌意的南方小镇。每一次的陪伴，都是一次心灵的碰撞，他们渐渐从陌生人变成了彼此生命中不可或缺的朋友。",
       options: [
-        { text: "陪伴", isCorrect: "true", nextScene: 7 },
+        { text: "陪伴", isCorrect: "true", nextScene: 5 },
         { text: "陪同", isCorrect: "false", nextScene: -1 },
-        { text: "伴随", isCorrect: "false", nextScene: -1 },
+        { text: "跟随", isCorrect: "false", nextScene: -1 },
       ],
-      npcName: "宫崎骏",
-      npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcName: "绿皮书",
+      npcAvatar: "/avatars/lvpishu.jpg",
+      backgroundVideo: "/videos/lvpishu.mp4",
     },
     {
       word: "accomplish",
       dialog:
-        "随着巡演的圆满结束，唐·雪利不仅accomplish了音乐上的辉煌成就，更在心灵深处完成了自我救赎与成长。他的每一次演奏，都在用音符打破偏见，用旋律呼唤平等。",
+        "尽管面对重重阻碍和歧视，雪利眼中依然闪烁着坚定的光芒，他誓要accomplish这场意义非凡的巡演。托尼被他的执着深深感染，决心全力支持。",
       options: [
-        { text: "达到", isCorrect: "false", nextScene: -1 },
+        { text: "达成", isCorrect: "false", nextScene: -1 },
+        { text: "完成", isCorrect: "true", nextScene: 6 },
         { text: "实现", isCorrect: "false", nextScene: -1 },
-        { text: "完成", isCorrect: "true", nextScene: 8 },
       ],
-      npcName: "宫崎骏",
-      npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcName: "绿皮书",
+      npcAvatar: "/avatars/lvpishu.jpg",
+      backgroundVideo: "/videos/lvpishu.mp4",
     },
     {
       word: "accord",
       dialog:
-        "当冬日的阳光洒在纽约的街道上，托尼和唐·雪利在彼此的目光中找到了深深的accord。他们以平等的尊重和理解，超越了曾经的隔阂，成为了彼此生命中不可或缺的朋友。",
+        "在旅途中，托尼和雪利逐渐学会了相互尊重和理解，他们的行为开始accord彼此的期望。那份默契的温暖，悄然融化了两颗曾经陌生的心。",
       options: [
-        { text: "和谐", isCorrect: "true", nextScene: 9 },
-        { text: "给予", isCorrect: "false", nextScene: -1 },
         { text: "一致", isCorrect: "false", nextScene: -1 },
+        { text: "协调", isCorrect: "false", nextScene: -1 },
+        { text: "符合", isCorrect: "true", nextScene: 7 },
       ],
-      npcName: "宫崎骏",
-      npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcName: "绿皮书",
+      npcAvatar: "/avatars/lvpishu.jpg",
+      backgroundVideo: "/videos/lvpishu.mp4",
     },
     {
       word: "accordance",
       dialog:
-        "他们的友谊，如同精心谱写的乐章，在相互理解和accordance的和弦中奏响。这份情谊，超越了肤色与阶层的界限，成为了人性光辉中最动人的篇章。",
+        "托尼严格按照雪利的要求，在accordance with他的生活习惯和演出安排，细心照料每一个细节。这份细致入微的关怀，让雪利感受到了久违的温暖。",
       options: [
-        { text: "授予", isCorrect: "false", nextScene: -1 },
-        { text: "和谐", isCorrect: "false", nextScene: -1 },
-        { text: "一致", isCorrect: "true", nextScene: 10 },
+        { text: "按照", isCorrect: "false", nextScene: -1 },
+        { text: "根据", isCorrect: "true", nextScene: 8 },
+        { text: "依照", isCorrect: "false", nextScene: -1 },
       ],
-      npcName: "宫崎骏",
-      npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcName: "绿皮书",
+      npcAvatar: "/avatars/lvpishu.jpg",
+      backgroundVideo: "/videos/lvpishu.mp4",
+    },
+    {
+      word: "afraid",
+      dialog:
+        "在南方种族歧视的阴影下，雪利时常感到afraid，夜深人静时，他的眼神流露出无尽的孤独和恐惧。托尼的坚定守护，成了他唯一的慰藉。",
+      options: [
+        { text: "恐惧", isCorrect: "false", nextScene: -1 },
+        { text: "担忧", isCorrect: "false", nextScene: -1 },
+        { text: "害怕", isCorrect: "true", nextScene: 9 },
+      ],
+      npcName: "绿皮书",
+      npcAvatar: "/avatars/lvpishu.jpg",
+      backgroundVideo: "/videos/lvpishu.mp4",
+    },
+    {
+      word: "punish",
+      dialog:
+        "当托尼因为保护雪利而违反规定，被警察无情punish时，雪利挺身而出，义正言辞地为他辩护。那一刻，两人的友谊升华成了无畏的并肩作战。",
+      options: [
+        { text: "处罚", isCorrect: "false", nextScene: -1 },
+        { text: "惩罚", isCorrect: "true", nextScene: 10 },
+        { text: "责罚", isCorrect: "false", nextScene: -1 },
+      ],
+      npcName: "绿皮书",
+      npcAvatar: "/avatars/lvpishu.jpg",
+      backgroundVideo: "/videos/lvpishu.mp4",
     },
     {
       word: "none",
-      dialog: "恭喜你完成了游戏的所有关卡，点击重玩游戏，重开始游戏",
+      dialog: "恭喜你完成了游戏的所有关卡，点击重玩游戏，重新开始游戏",
       options: [{ text: "重玩游戏", isCorrect: "true", nextScene: 0 }],
-      npcName: "宫崎骏",
-      npcAvatar: "/avatars/gongqijun.jpg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcName: "绿皮书",
+      npcAvatar: "/avatars/lvpishu.jpg",
+      backgroundVideo: "/videos/lvpishu.mp4",
     },
   ];
 

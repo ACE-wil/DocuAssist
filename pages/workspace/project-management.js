@@ -888,6 +888,7 @@ export default function ProjectManagement() {
           display: flex;
           flex-direction: column;
           background: white;
+          border-radius: 20px;
         }
 
         .toolbar {
@@ -896,6 +897,7 @@ export default function ProjectManagement() {
           padding: 1rem;
           border-bottom: 1px solid #eee;
           background: #f8f9fa;
+          border-radius: 20px;
         }
 
         .navigation {

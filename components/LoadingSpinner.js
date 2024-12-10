@@ -1,6 +1,9 @@
 import React from "react";
+import { useTheme } from "../contexts/ThemeContext";
 
 export default function LoadingSpinner() {
+  const { theme, isDark } = useTheme();
+
   return (
     <div className="spinner">
       <style jsx>{`
@@ -9,11 +12,14 @@ export default function LoadingSpinner() {
           align-items: center;
           justify-content: center;
           position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100vh;
-          background-color: rgba(255, 255, 255, 0.8);
+          top: 3vh;
+          left: 1%;
+          width: 98%;
+          height: 94vh;
+          border-radius: 20px;
+          background-color: ${isDark
+            ? "rgba(164, 164, 164, 0.8)"
+            : "rgba(255, 255, 255, 0.8)"};
           z-index: 1000;
         }
         .spinner::after {

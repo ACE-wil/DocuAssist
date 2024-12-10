@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styles from "@/styles/wordSpell.module.css";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/store/loadingSlice";
 
 export default function WordSpell() {
   const wordRef = useRef(null);
@@ -28,6 +30,12 @@ export default function WordSpell() {
   const [userInput, setUserInput] = useState("");
   const [progress, setProgress] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // 组件挂载后关闭 loading
+    dispatch(setLoading(false));
+  }, [dispatch]);
 
   const handleKeyPress = (event) => {
     if (showModal) return;
@@ -117,20 +125,33 @@ export default function WordSpell() {
 
       {showModal && (
         <div className={styles.modal}>
-          <div>< img className={styles.img1} src="/word-img/1.png"></img></div>
+          <div>
+            <img className={styles.img1} src="/word-img/1.png"></img>
+          </div>
           <div className={styles.modalContent}>
-            <h1 style={{fontSize:'38px',marginTop:'10px'}}>完成</h1>
+            <h1 style={{ fontSize: "38px", marginTop: "10px" }}>完成</h1>
             <p>恭喜你完成了本次单词拼写测试~</p>
             <p>是否进入下一组单词拼写练习？</p>
             <img src="https://www.type.fun/assets/img-complete-learn.620fc579.png"></img>
-            <div className={styles.tips}><span>Tips:</span><p>偷偷告诉你，在我的-设置里可以开关打字声音哦～</p></div>
+            <div className={styles.tips}>
+              <span>Tips:</span>
+              <p>偷偷告诉你，在我的-设置里可以开关打字声音哦～</p>
+            </div>
             <hr></hr>
             <div className={styles.btn}>
-              <button onClick={handleCancel} style={{backgroundColor:'#3d4149',color:'white'}}>取消</button>
- <button onClick={handleConfirm} style={{backgroundColor:'#9965db',color:'white'}}>确认</button>
-            
+              <button
+                onClick={handleCancel}
+                style={{ backgroundColor: "#3d4149", color: "white" }}
+              >
+                取消
+              </button>
+              <button
+                onClick={handleConfirm}
+                style={{ backgroundColor: "#9965db", color: "white" }}
+              >
+                确认
+              </button>
             </div>
-           
           </div>
         </div>
       )}
