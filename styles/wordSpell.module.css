@@ -9,7 +9,7 @@
   outline: none;
   
   position: relative;
-  user-select: none;
+  /* user-select: none; */
 }
 
 .word {
@@ -107,7 +107,7 @@
   font-size: 14px;
 }
 .modal hr{
-  width: 440px;
+  width: 400px;
   position: relative;
   left: -40px;
   border-color: #26282f;
@@ -120,6 +120,6 @@
 }
 /* .modal .btn */
 .modal .btn button{
-  width: 161px;
-  height: 50px;
+  width: 131px;
+  height: 40px;
 }
