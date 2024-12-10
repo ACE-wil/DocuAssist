@@ -1,10 +1,17 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "@/styles/wordSpell.module.css";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/store/loadingSlice";
 
 export default function WordSpell() {
+  const wordRef = useRef(null);
+
+  useEffect(() => {
+    if (wordRef.current) {
+      wordRef.current.focus();
+    }
+  }, []);
+
   const wordList = [
     { word: "strap", phonetic: "/stræp/", meaning: "带子" },
     { word: "hello", phonetic: "/həˈloʊ/", meaning: "你好" },
@@ -31,8 +38,12 @@ export default function WordSpell() {
   }, [dispatch]);
 
   const handleKeyPress = (event) => {
+    if (showModal) return;
+
     const { key } = event;
-    if (key.length === 1 && /^[a-zA-Z]$/.test(key)) {
+    if (key === "Backspace") {
+      setUserInput(userInput.slice(0, -1));
+    } else if (key.length === 1 && /^[a-zA-Z]$/.test(key)) {
       const newInput = userInput + key;
       setUserInput(newInput);
 
@@ -69,7 +80,13 @@ export default function WordSpell() {
   };
 
   return (
-    <div className={styles.wordSpell} tabIndex={0} onKeyDown={handleKeyPress}>
+    <div
+      className={styles.wordSpell}
+      tabIndex={0}
+      onKeyDown={handleKeyPress}
+      onClick={() => wordRef.current && wordRef.current.focus()}
+      ref={wordRef}
+    >
       <div className={styles.word}>
         {currentWord.split("").map((letter, index) => {
           const isTyped = index < userInput.length;
@@ -92,10 +109,12 @@ export default function WordSpell() {
         })}
       </div>
 
-      <div className={styles.phonetic}>
+      <div className={styles.phonetic} style={{ userSelect: 'none' }}>
         {wordList[currentWordIndex].phonetic}
       </div>
-      <div className={styles.meaning}>{wordList[currentWordIndex].meaning}</div>
+      <div className={styles.meaning} style={{ userSelect: 'none' }}>
+        {wordList[currentWordIndex].meaning}
+      </div>
 
       <div className={styles.progressBar}>
         <div

@@ -3,13 +3,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 100%;
   background-color: #22252d;
   color: #fff;
   outline: none;
   
   position: relative;
-  user-select: none;
+  /* user-select: none; */
 }
 
 .word {
@@ -82,8 +82,8 @@
   position: absolute;
   /* border: 5px solid red; */
   z-index: 9;
-  width: 450px;
-  height: 663px;
+  width: 400px;
+  height: 600px;
   
   background-color: #121418;
 }
@@ -107,7 +107,7 @@
   font-size: 14px;
 }
 .modal hr{
-  width: 440px;
+  width: 400px;
   position: relative;
   left: -40px;
   border-color: #26282f;
@@ -120,6 +120,6 @@
 }
 /* .modal .btn */
 .modal .btn button{
-  width: 161px;
-  height: 50px;
+  width: 131px;
+  height: 40px;
 }
