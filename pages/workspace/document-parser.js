@@ -1,15 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "@/store/loadingSlice";
-import ReactFlow, {
-  addEdge,
-  MiniMap,
-  Controls,
-  Background,
-  applyNodeChanges,
-  applyEdgeChanges,
-  ReactFlowProvider,
-} from "reactflow";
 import ReactMarkdown from "react-markdown";
 import "reactflow/dist/style.css";
 import {
@@ -21,6 +12,15 @@ import {
 } from "react-json-view-lite";
 import "react-json-view-lite/dist/index.css";
 import axios from "axios";
+import ReactFlow, {
+  addEdge,
+  MiniMap,
+  Controls,
+  Background,
+  applyNodeChanges,
+  applyEdgeChanges,
+  ReactFlowProvider,
+} from "reactflow";
 import CustomNode from "./CustomNode"; // 引入自定义节点组件
 import CustomEdge from "./CustomEdge"; // 引入自定义连接线组件
 // import { style } from "@mui/system";
