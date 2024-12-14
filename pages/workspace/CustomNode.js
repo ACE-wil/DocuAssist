@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Handle, Position } from "reactflow";
 
-const CustomNode = ({ data, selected }) => {
+const CustomNode = ({ data = {}, selected }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -29,7 +29,7 @@ const CustomNode = ({ data, selected }) => {
         }}
       >
         <i style={{ fontSize: "12px", color: "#07080980" }}>
-          节点id: {data.nodeId || "空"}
+          节点id: {data?.nodeId || "空"}
         </i>
         <div
           style={{
