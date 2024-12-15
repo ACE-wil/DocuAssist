@@ -32,7 +32,7 @@ export default function EnglishApp() {
     const fetchScenes = async () => {
       try {
         const response = await axios.get(
-          "http://127.0.0.1:5000/api/get-my-apps"
+          `${process.env.NEXT_PUBLIC_API_URL}/api/get-my-apps`
         );
         const scenesData = response.data.myApps.find(
           (app) => app.id === parseInt(appId)

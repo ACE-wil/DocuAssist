@@ -148,7 +148,7 @@ function DocumentParser() {
       formData.append("file", file);
 
       // 使 api/upload 接口上传并解析文件
-      fetch("http://localhost:5000/api/upload", {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload`, {
         method: "POST",
         body: formData,
       })
@@ -199,7 +199,7 @@ function DocumentParser() {
     setIsLoading(true); // 开始加载动画
 
     // 发消息和完整的对话历史到后端
-    fetch("http://localhost:5000/api/chat", {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -727,6 +727,7 @@ function DocumentParser() {
         </div>
         {!isFullScreen && (
           <div
+            className="dialog-container"
             style={{
               flex: 1,
               display: "flex",
@@ -737,6 +738,7 @@ function DocumentParser() {
               margin: "10px",
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
               transition: "all 0.3s ease",
+              maxWidth: "25vw",
             }}
           >
             <div
@@ -809,18 +811,41 @@ function DocumentParser() {
                       >
                         <button
                           onClick={() => {
-                            navigator.clipboard
-                              .writeText(message.content)
-                              .then(() => {
+                            if (
+                              navigator.clipboard &&
+                              navigator.clipboard.writeText
+                            ) {
+                              navigator.clipboard
+                                .writeText(message.content)
+                                .then(() => {
+                                  setCopySuccess(index);
+                                  setTimeout(() => {
+                                    setCopySuccess(null);
+                                  }, 1500);
+                                })
+                                .catch((err) => {
+                                  console.error("复制失败:", err);
+                                  alert("复制失败，请重试");
+                                });
+                            } else {
+                              // 使用 document.execCommand 作为降级方案
+                              const textArea =
+                                document.createElement("textarea");
+                              textArea.value = message.content;
+                              document.body.appendChild(textArea);
+                              textArea.select();
+                              try {
+                                document.execCommand("copy");
                                 setCopySuccess(index);
                                 setTimeout(() => {
                                   setCopySuccess(null);
                                 }, 1500);
-                              })
-                              .catch((err) => {
+                              } catch (err) {
                                 console.error("复制失败:", err);
                                 alert("复制失败，请重试");
-                              });
+                              }
+                              document.body.removeChild(textArea);
+                            }
                           }}
                           onMouseEnter={() => setHoveredButton(`copy-${index}`)}
                           onMouseLeave={() => setHoveredButton(null)}
@@ -875,7 +900,7 @@ function DocumentParser() {
                                   : "rotate(0)",
                             }}
                           />
-                          {copySuccess === index ? "✨ 已制 ✨" : "复制"}
+                          {copySuccess === index ? "✨ 已复制 ✨" : "复制"}
                         </button>
                         <button
                           onClick={() => {
@@ -890,16 +915,19 @@ function DocumentParser() {
                               index > 0 &&
                               chatHistory[index - 1].role === "user"
                             ) {
-                              fetch("http://localhost:5000/api/chat", {
-                                method: "POST",
-                                headers: {
-                                  "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({
-                                  message: chatHistory[index - 1].content,
-                                  messages: previousMessages,
-                                }),
-                              })
+                              fetch(
+                                `${process.env.NEXT_PUBLIC_API_URL}/api/chat`,
+                                {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                  },
+                                  body: JSON.stringify({
+                                    message: chatHistory[index - 1].content,
+                                    messages: previousMessages,
+                                  }),
+                                }
+                              )
                                 .then((response) => response.json())
                                 .then((data) => {
                                   setIsLoading(false);

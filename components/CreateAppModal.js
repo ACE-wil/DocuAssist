@@ -83,13 +83,16 @@ export default function CreateAppModal({ isOpen, onClose }) {
     if (docFile) formData.append("doc_file", docFile);
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/api/create-app", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-        },
-        body: formData,
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/create-app`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+          },
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error("创建失败，请稍后重试");

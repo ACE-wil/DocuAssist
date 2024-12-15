@@ -50,7 +50,9 @@ export default function RecommendedTemplates() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:5000/api/get-apps");
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/get-apps`
+        );
         setTemplates(response.data.applications);
       } catch (error) {
         console.error("获取应用数据失败:", error);

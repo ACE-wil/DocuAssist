@@ -55,7 +55,7 @@ export default function RecentGames() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://127.0.0.1:5000/api/get-my-apps"
+          `${process.env.NEXT_PUBLIC_API_URL}/api/get-my-apps`
         );
         setTemplates(response.data.myApps);
       } catch (error) {
