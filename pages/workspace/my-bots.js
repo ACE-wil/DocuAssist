@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/store/loadingSlice";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function MyBots() {
   const dispatch = useDispatch();
+  const { theme } = useTheme();
 
   useEffect(() => {
     // 组件挂载后关闭 loading
@@ -161,7 +163,12 @@ export default function MyBots() {
             className="category-section"
             style={{ marginTop: index === 0 ? "0" : "50px" }}
           >
-            <h2 className="category-title">{category.title}</h2>
+            <h2
+              className="category-title"
+              style={{ color: theme.text.primary }}
+            >
+              {category.title}
+            </h2>
             <div className="models-grid">
               {category.models.map((model, index) => (
                 <div key={index} className="model-card">

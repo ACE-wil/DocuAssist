@@ -3,12 +3,13 @@ import { AutoComplete, Button, Flex, Input, Card, Divider } from "antd";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/store/loadingSlice";
+import { useTheme } from "@/contexts/ThemeContext";
 // import "./iconfont/iconfont";
 const { Meta } = Card;
 
 export default function PopularApps() {
   const dispatch = useDispatch();
-
+  const { theme } = useTheme();
   useEffect(() => {
     // 组件挂载后关闭 loading
     dispatch(setLoading(false));
@@ -62,7 +63,7 @@ export default function PopularApps() {
   return (
     <>
       <div className="mytop">
-        <div>热门应用</div>
+        <div style={{ color: theme.text.primary }}>热门应用</div>
         <AutoComplete
           popupClassName="certain-category-search-dropdown"
           popupMatchSelectWidth={500}
@@ -83,14 +84,14 @@ export default function PopularApps() {
             src="https://lf-coze-web-cdn.coze.cn/obj/coze-web-cn/mf/marketplace/static/image/brand-daily-rec.48709716.png"
             alt="app"
           />
-          <h1>影视创作圈必尝试</h1>
-          <span>
+          <h1 style={{ color: theme.text.primary }}>影视创作圈必尝试</h1>
+          <span style={{ color: theme.text.secondary }}>
             将小说原文进行一键分镜推导描述词处理
             原文：我的男朋友中了苗族情蛊，最毒的蛊中极品。 角色：男友
             场景：苗族部落 中文描述：1位男性20
             岁，短发，褐色头发，金色眼睛，紫色长袍，痛苦的，面部狰狞，睁大
           </span>
-          <Button>立即聊聊</Button>
+          <Button style={{ marginTop: "10px" }}>立即聊聊</Button>
         </div>
 
         <div className="right">

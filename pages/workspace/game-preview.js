@@ -31,8 +31,9 @@ export default function GamePreview() {
         { text: "接近", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "/avatars/lvpishu.jpg",
-      backgroundVideo: "/videos/lvpishu.mp4",
+      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accessory",
@@ -44,8 +45,9 @@ export default function GamePreview() {
         { text: "配件", isCorrect: "true", nextScene: 2 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "/avatars/lvpishu.jpg",
-      backgroundVideo: "/videos/lvpishu.mp4",
+      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accident",
@@ -57,8 +59,9 @@ export default function GamePreview() {
         { text: "事件", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "/avatars/lvpishu.jpg",
-      backgroundVideo: "/videos/lvpishu.mp4",
+      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accidental",
@@ -70,8 +73,9 @@ export default function GamePreview() {
         { text: "意外的", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "/avatars/lvpishu.jpg",
-      backgroundVideo: "/videos/lvpishu.mp4",
+      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accompany",
@@ -83,8 +87,9 @@ export default function GamePreview() {
         { text: "跟随", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "/avatars/lvpishu.jpg",
-      backgroundVideo: "/videos/lvpishu.mp4",
+      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accomplish",
@@ -96,8 +101,9 @@ export default function GamePreview() {
         { text: "实现", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "/avatars/lvpishu.jpg",
-      backgroundVideo: "/videos/lvpishu.mp4",
+      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accord",
@@ -109,8 +115,9 @@ export default function GamePreview() {
         { text: "符合", isCorrect: "true", nextScene: 7 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "/avatars/lvpishu.jpg",
-      backgroundVideo: "/videos/lvpishu.mp4",
+      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "accordance",
@@ -122,8 +129,9 @@ export default function GamePreview() {
         { text: "依照", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "/avatars/lvpishu.jpg",
-      backgroundVideo: "/videos/lvpishu.mp4",
+      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "afraid",
@@ -135,8 +143,9 @@ export default function GamePreview() {
         { text: "害怕", isCorrect: "true", nextScene: 9 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "/avatars/lvpishu.jpg",
-      backgroundVideo: "/videos/lvpishu.mp4",
+      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "punish",
@@ -148,16 +157,18 @@ export default function GamePreview() {
         { text: "责罚", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "/avatars/lvpishu.jpg",
-      backgroundVideo: "/videos/lvpishu.mp4",
+      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
     {
       word: "none",
       dialog: "恭喜你完成了游戏的所有关卡，点击重玩游戏，重新开始游戏",
       options: [{ text: "重玩游戏", isCorrect: "true", nextScene: 0 }],
       npcName: "绿皮书",
-      npcAvatar: "/avatars/lvpishu.jpg",
-      backgroundVideo: "/videos/lvpishu.mp4",
+      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
+      backgroundVideo:
+        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
     },
   ];
 

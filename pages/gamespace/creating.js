@@ -5,9 +5,10 @@ import { setLoading } from "@/store/loadingSlice";
 import styles from "@/styles/recommended.module.css";
 import { useRouter } from "next/router";
 import { Alert } from "antd"; // 引入 Ant Design 的 Alert 组件
-
+import { useTheme } from "@/contexts/ThemeContext";
 export default function Creating() {
   const dispatch = useDispatch();
+  const { theme } = useTheme();
   const [templates, setTemplates] = useState([]);
   const [selectedAppId, setSelectedAppId] = useState(null);
   const [file, setFile] = useState(null);
@@ -54,7 +55,7 @@ export default function Creating() {
 
   return (
     <div style={{ padding: "10px 20px 20px 20px" }}>
-      <h1>正在创建</h1>
+      <h1 style={{ color: theme.text.primary }}>正在创建</h1>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
         {templates
           .filter((app) => !app.scene)

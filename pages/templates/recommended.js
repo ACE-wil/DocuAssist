@@ -6,7 +6,7 @@ import styles from "@/styles/recommended.module.css";
 import { useRouter } from "next/router";
 import Modal from "react-modal";
 import CreateAppModal from "@/components/CreateAppModal";
-
+import { useTheme } from "@/contexts/ThemeContext";
 const customStyles = {
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -45,6 +45,7 @@ export default function RecommendedTemplates() {
   const [language, setLanguage] = useState("zh");
   const [gameMode, setGameMode] = useState("single");
   const router = useRouter();
+  const { theme } = useTheme();
   const [isCreateAppModalOpen, setIsCreateAppModalOpen] = useState(false);
 
   useEffect(() => {
@@ -88,7 +89,7 @@ export default function RecommendedTemplates() {
 
   return (
     <div style={{ padding: "10px 20px 20px 20px" }}>
-      <h1>模板</h1>
+      <h1 style={{ color: theme.text.primary }}>模板</h1>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
         {templates.map((template, index) => (
           <div

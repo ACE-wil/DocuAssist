@@ -5,7 +5,7 @@ import { setLoading } from "@/store/loadingSlice";
 import styles from "@/styles/recommended.module.css";
 import { useRouter } from "next/router";
 import Modal from "react-modal";
-
+import { useTheme } from "@/contexts/ThemeContext";
 const customStyles = {
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -37,6 +37,7 @@ if (typeof window !== "undefined") {
 }
 
 export default function MyGames() {
+  const { theme } = useTheme();
   const dispatch = useDispatch();
   const [templates, setTemplates] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -92,7 +93,7 @@ export default function MyGames() {
 
   return (
     <div style={{ padding: "10px 20px 20px 20px" }}>
-      <h1>我的游戏</h1>
+      <h1 style={{ color: theme.text.primary }}>我的游戏</h1>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
         {templates
           .filter((template) => template.scene)
