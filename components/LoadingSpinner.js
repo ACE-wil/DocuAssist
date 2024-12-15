@@ -12,13 +12,13 @@ export default function LoadingSpinner() {
           align-items: center;
           justify-content: center;
           position: absolute;
-          top: 3vh;
-          left: 1%;
-          width: 98%;
-          height: 94vh;
+          top: 1vh;
+          left: 0%;
+          width: 99%;
+          height: 98vh;
           border-radius: 20px;
           background-color: ${isDark
-            ? "rgba(164, 164, 164, 0.8)"
+            ? "rgba(164, 164, 164, 0.9)"
             : "rgba(255, 255, 255, 0.8)"};
           z-index: 1000;
         }
@@ -28,7 +28,7 @@ export default function LoadingSpinner() {
           height: 40px;
           border: 4px solid rgba(0, 0, 0, 0.1);
           border-radius: 50%;
-          border-left-color: #09f;
+          border-left-color: ${theme.primary};
           animation: spin 1s linear infinite;
         }
         @keyframes spin {
