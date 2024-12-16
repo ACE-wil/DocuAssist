@@ -738,7 +738,7 @@ function DocumentParser() {
               margin: "10px",
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
               transition: "all 0.3s ease",
-              maxWidth: "25vw",
+              maxWidth: isUploading ? "35vw" : "30vw",
             }}
           >
             <div
