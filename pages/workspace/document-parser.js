@@ -730,6 +730,7 @@ function DocumentParser() {
             className="dialog-container"
             style={{
               flex: 1,
+              minWidth: "25vw",
               display: "flex",
               flexDirection: "column",
               padding: "20px",
@@ -1015,8 +1016,10 @@ function DocumentParser() {
             </div>
 
             <div
+              className="dialog-input-container"
               style={{
                 display: "flex",
+                width: "100%",
                 alignItems: "center",
                 padding: "12px",
                 backgroundColor: "rgba(247, 247, 248, 0.9)",
@@ -1162,7 +1165,7 @@ function DocumentParser() {
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="输入你的消息..."
                 style={{
-                  flex: 1,
+                  width: "calc(100%)",
                   padding: "12px 16px",
                   borderRadius: "8px",
                   border: "1px solid rgba(0, 0, 0, 0.1)",
