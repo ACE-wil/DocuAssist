@@ -123,3 +123,10 @@
   width: 131px;
   height: 40px;
 }
+.results{
+  position: absolute;
+  top: 50% !important;
+}
+.modal{
+  position: relative;
+}
