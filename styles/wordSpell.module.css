@@ -7,7 +7,7 @@
   background-color: #22252d;
   color: #fff;
   outline: none;
-  
+
   position: relative;
   /* user-select: none; */
 }
@@ -72,61 +72,86 @@
   transition: width 0.3s ease;
 }
 /* 黑色遮罩 */
-.myBlack{
+.myBlack {
   position: absolute;
   width: 100%;
   height: 100%;
   background-color: rgb(0, 0, 0);
 }
-.modal{
+.modal {
   position: absolute;
-  /* border: 5px solid red; */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
   z-index: 9;
   width: 400px;
-  height: 600px;
-  
+  height: auto;
+
   background-color: #121418;
 }
-.modal img{
+.modal img {
   width: 100%;
 }
-.modal .modalContent{
+.modal .modalContent {
   padding: 0 40px;
 }
-.modal p{
+.modal p {
   color: #bfbfc1;
 }
-.tips{
+.tips {
   display: flex;
   align-items: center;
   color: #9965db;
 }
-.tips p{
+.tips p {
   color: #6c717f;
   margin-left: 5px;
   font-size: 14px;
 }
-.modal hr{
+
+.fullScreenButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: transparent;
+  border: none;
+}
+
+.modal hr {
   width: 400px;
   position: relative;
   left: -40px;
   border-color: #26282f;
 }
-.modal .btn{
+.modal .btn {
   margin-top: 30px;
   display: flex;
   justify-content: space-between;
-  
+  margin-bottom: 20px;
 }
 /* .modal .btn */
-.modal .btn button{
+.modal .btn button {
   width: 131px;
   height: 40px;
 }
-.results{
+.results {
   position: absolute;
-  top: 50% !important;
+  top: 40% !important;
 }
-.modal{
-  position: relative;
+
+.statsContainer {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  text-align: right;
+  color: #7f8596; /* 与单词颜色一致 */
+  display: flex; /* 使子元素横向排列 */
+  gap: 10px; /* 子元素之间的间距 */
+}
+
+.accuracy,
+.typingSpeed,
+.progressPercentage {
+  margin: 0 10px; /* 移除上下间距 */
+  font-size: 20px;
 }

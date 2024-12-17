@@ -39,7 +39,7 @@ if (typeof window !== "undefined") {
 
 export default function RecentGames() {
   const dispatch = useDispatch();
-  const { toggleTheme, setTheme, theme } = useTheme();
+  const { toggleTheme, setTheme, theme, isDark } = useTheme();
   const [templates, setTemplates] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAppId, setSelectedAppId] = useState(null);
@@ -99,29 +99,57 @@ export default function RecentGames() {
 
   const characterQuotes = [
     {
-      name: "勇敢的骑士",
+      name: "宫崎骏",
       image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/gongqijun.jpg",
-      quote: "准备好迎接挑战了吗？",
+      quote:
+        "“人生就是一列开往坟墓的列车，路途上会有很多站，很难有人可以自始至终陪着走完。当陪你的人要下车时，即使不舍也该心存感激，然后挥手道别。” ——《千与千寻》",
     },
     {
-      name: "智慧的法师",
-      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/gongqijun.jpg",
-      quote: "今天是个赢得胜利的好日子！",
+      name: "阿甘",
+      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/forrestgump.jpg",
+      quote: "“生活就像一盒巧克力，你永远不知道你会得到什么。” ——《阿甘正传》",
     },
     {
-      name: "敏捷的盗贼",
-      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/gongqijun.jpg",
-      quote: "让我们开始一场精彩的冒险吧！",
+      name: "多莉",
+      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/dory.jpg",
+      quote: "“继续游，继续游。” ——《海底总动员》",
     },
     {
-      name: "强壮的战士",
-      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/gongqijun.jpg",
-      quote: "准备好，出发！",
+      name: "阿尔弗雷德",
+      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/alfred.jpg",
+      quote: "“为什么我们会跌倒？为了学会重新站起来。” ——《蝙蝠侠：侠影之谜》",
     },
     {
-      name: "神秘的巫师",
-      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/gongqijun.jpg",
-      quote: "新的冒险在等着你！",
+      name: "克里斯·加德纳",
+      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/chrisgardner.jpg",
+      quote:
+        "“别让别人告诉你你不能做什么。即使是我也不行。” ——《当幸福来敲门》",
+    },
+    {
+      name: "山姆",
+      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/sam.jpg",
+      quote: "“即使在黑暗中，也会有光明。” ——《指环王》",
+    },
+    {
+      name: "艾尔莎",
+      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/elsa.jpg",
+      quote: "“放手吧，过去的事就让它过去。” ——《冰雪奇缘》",
+    },
+    {
+      name: "哈利·波特",
+      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/harrypotter.jpg",
+      quote:
+        "“幸福可以在最黑暗的时刻找到，只要记得打开灯。” ——《哈利·波特与阿兹卡班的囚徒》",
+    },
+    {
+      name: "雷米",
+      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/remy.jpg",
+      quote: "“每个人都可以做出伟大的事情。” ——《料理鼠王》",
+    },
+    {
+      name: "伍迪",
+      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/woody.jpg",
+      quote: "“你有一个朋友。” ——《玩具总动员》",
     },
   ];
 
@@ -143,107 +171,144 @@ export default function RecentGames() {
     <div style={{ padding: "10px 20px 20px 20px" }}>
       <h1 style={{ color: theme.text.primary }}>最近游戏</h1>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-        {templates
-          .filter((app) => app.scene)
-          .map((template, index) => (
-            <div
-              key={index}
-              id={template.id}
-              data-type={template.type}
-              className={styles.template}
-              onClick={(e) => handleBoxClick(e)}
-              style={{ cursor: "pointer" }}
+        {templates.length === 0 ? (
+          <div
+            style={{
+              textAlign: "center",
+              width: "100%",
+              color: "#999",
+              position: "absolute",
+              top: "40%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <img
+              src={isDark ? "/icons/empty-dark.png" : "/icons/empty.png"}
+              alt="No Templates"
+              style={{ width: "150px", marginBottom: "20px" }}
+            />
+            <h2>最近暂无游戏</h2>
+            <p>您还没有任何游戏记录。开始创建一个新的游戏吧！</p>
+            <button
+              onClick={() => router.push("/templates/recommended")}
+              style={{
+                marginTop: "20px",
+                padding: "10px 20px",
+                backgroundColor: theme.button.primary,
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                letterSpacing: "1px",
+                cursor: "pointer",
+              }}
             >
-              <img
-                src={template.app_avatar || "/default-image.png"}
-                alt={template.app_name}
-                style={{
-                  width: "100%",
-                  height: "120px",
-                  objectFit: "cover",
-                  borderRadius: "10px",
-                }}
-              />
-              <div style={{ paddingLeft: "3px" }}>
-                <div
+              创建新游戏
+            </button>
+          </div>
+        ) : (
+          templates
+            .filter((app) => app.scene)
+            .map((template, index) => (
+              <div
+                key={index}
+                id={template.id}
+                data-type={template.type}
+                className={styles.template}
+                onClick={(e) => handleBoxClick(e)}
+                style={{ cursor: "pointer" }}
+              >
+                <img
+                  src={template.app_avatar || "/default-image.png"}
+                  alt={template.app_name}
                   style={{
-                    fontSize: "15px",
-                    margin: "2px 0px 2px 0px",
-                    display: "flex",
-                    flexDirection: "row",
+                    width: "100%",
+                    height: "120px",
+                    objectFit: "cover",
+                    borderRadius: "10px",
                   }}
-                >
-                  {template.app_name}
-                  <button
+                />
+                <div style={{ paddingLeft: "3px" }}>
+                  <div
                     style={{
-                      marginLeft: "5px",
-                      backgroundColor: "rgb(240 240 240)",
-                      borderRadius: "5px",
-                      border: "none",
+                      fontSize: "15px",
+                      margin: "2px 0px 2px 0px",
+                      display: "flex",
+                      flexDirection: "row",
+                    }}
+                  >
+                    {template.app_name}
+                    <button
+                      style={{
+                        marginLeft: "5px",
+                        backgroundColor: "rgb(240 240 240)",
+                        borderRadius: "5px",
+                        border: "none",
+                        fontSize: "12px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <img
+                        src="/icons/fileIcon.png"
+                        style={{ width: "16px", height: "16px" }}
+                      />
+                      应用
+                    </button>
+                  </div>
+                  <div
+                    style={{
                       fontSize: "12px",
+                      color: "#06070980",
+                      margin: "4px 0px 8px 0px",
                       display: "flex",
                       alignItems: "center",
                     }}
                   >
                     <img
-                      src="/icons/fileIcon.png"
-                      style={{ width: "16px", height: "16px" }}
+                      src="/logo.png"
+                      style={{
+                        width: "15px",
+                        height: "15px",
+                        marginRight: "5px",
+                      }}
                     />
-                    应用
-                  </button>
-                </div>
-                <div
-                  style={{
-                    fontSize: "12px",
-                    color: "#06070980",
-                    margin: "4px 0px 8px 0px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <img
-                    src="/logo.png"
-                    style={{
-                      width: "15px",
-                      height: "15px",
-                      marginRight: "5px",
-                    }}
-                  />
-                  DA官方
-                </div>
-                <div
-                  style={{
-                    fontSize: "14px",
-                    color: "#06070980",
-                    lineHeight: "1.5",
-                  }}
-                >
-                  {template.app_description}
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div>免费</div>
+                    DA官方
+                  </div>
                   <div
                     style={{
-                      fontSize: "12px",
+                      fontSize: "14px",
                       color: "#06070980",
-                      lineHeight: "30px",
+                      lineHeight: "1.5",
                     }}
                   >
-                    {/* <span style={{ marginRight: "4px" }}>
+                    {template.app_description}
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div>免费</div>
+                    <div
+                      style={{
+                        fontSize: "12px",
+                        color: "#06070980",
+                        lineHeight: "30px",
+                      }}
+                    >
+                      {/* <span style={{ marginRight: "4px" }}>
                     {template.visit_count || "N/A"}
                   </span> */}
-                    <span>复制</span>
+                      <span>复制</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+        )}
       </div>
       <Modal
         isOpen={isModalOpen}

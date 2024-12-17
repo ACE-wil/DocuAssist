@@ -34,6 +34,7 @@ export default function WordSpell() {
   const [startTime, setStartTime] = useState(null);
   const [typingSpeed, setTypingSpeed] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isHover, setIsHover] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -111,29 +112,28 @@ export default function WordSpell() {
     if (!isFullscreen) {
       if (elem.requestFullscreen) {
         elem.requestFullscreen();
-        
-      } else if (elem.mozRequestFullScreen) { // Firefox
+      } else if (elem.mozRequestFullScreen) {
+        // Firefox
         elem.mozRequestFullScreen();
-        
-      } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
+      } else if (elem.webkitRequestFullscreen) {
+        // Chrome, Safari and Opera
         elem.webkitRequestFullscreen();
-        
-      } else if (elem.msRequestFullscreen) { // IE/Edge
+      } else if (elem.msRequestFullscreen) {
+        // IE/Edge
         elem.msRequestFullscreen();
-        
       }
       dispatch(setNavigationVisibility(false));
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen();
-      
-      } else if (document.mozCancelFullScreen) { // Firefox
+      } else if (document.mozCancelFullScreen) {
+        // Firefox
         document.mozCancelFullScreen();
-      
-      } else if (document.webkitExitFullscreen) { // Chrome, Safari and Opera
+      } else if (document.webkitExitFullscreen) {
+        // Chrome, Safari and Opera
         document.webkitExitFullscreen();
-      
-      } else if (document.msExitFullscreen) { // IE/Edge
+      } else if (document.msExitFullscreen) {
+        // IE/Edge
         document.msExitFullscreen();
       }
       dispatch(setNavigationVisibility(true));
@@ -154,9 +154,18 @@ export default function WordSpell() {
 
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
-      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
-      document.removeEventListener("mozfullscreenchange", handleFullscreenChange);
-      document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        handleFullscreenChange
+      );
+      document.removeEventListener(
+        "mozfullscreenchange",
+        handleFullscreenChange
+      );
+      document.removeEventListener(
+        "MSFullscreenChange",
+        handleFullscreenChange
+      );
     };
   }, [dispatch]);
 
@@ -193,10 +202,10 @@ export default function WordSpell() {
         })}
       </div>
 
-      <div className={styles.phonetic} style={{ userSelect: 'none' }}>
+      <div className={styles.phonetic} style={{ userSelect: "none" }}>
         {wordList[currentWordIndex].phonetic}
       </div>
-      <div className={styles.meaning} style={{ userSelect: 'none' }}>
+      <div className={styles.meaning} style={{ userSelect: "none" }}>
         {wordList[currentWordIndex].meaning}
       </div>
 
@@ -207,12 +216,29 @@ export default function WordSpell() {
         ></div>
       </div>
 
-      <button onClick={handleFullScreen} className={styles.fullScreenButton}>
-        {isFullscreen ? "退出全屏" : "全屏"}
+      <button
+        onClick={handleFullScreen}
+        onMouseEnter={() => {
+          setIsHover(true);
+        }}
+        onMouseLeave={() => {
+          setIsHover(false);
+        }}
+        className={styles.fullScreenButton}
+      >
+        <img
+          src={
+            isHover ? "/icons/fullScreen-focus.png" : "/icons/fullScreen.png"
+          }
+          style={{ width: "30px", height: "30px" }}
+        ></img>
       </button>
 
       {showModal && (
-        <div className={styles.modal}>
+        <div
+          className={styles.modal}
+          style={isFullscreen ? { scale: "1" } : { scale: "0.9" }}
+        >
           <div>
             <img className={styles.img1} src="/word-img/1.png"></img>
           </div>
@@ -250,14 +276,14 @@ export default function WordSpell() {
       )}
       {showModal ? <div className={styles.myBlack}></div> : ""}
 
-      <div className={styles.accuracy}>
-        准确率: {accuracy}%
-      </div>
-      <div className={styles.typingSpeed}>
-        打字速度: {typingSpeed} 词/分钟
-      </div>
-      <div className={styles.progressPercentage}>
-        进度: {progressPercentage}%
+      <div className={styles.statsContainer}>
+        <div className={styles.accuracy}>准确率: {accuracy}%</div>
+        <div className={styles.typingSpeed}>
+          打字速度: {typingSpeed} 词/分钟
+        </div>
+        <div className={styles.progressPercentage}>
+          进度: {progressPercentage}%
+        </div>
       </div>
     </div>
   );

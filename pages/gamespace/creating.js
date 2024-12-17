@@ -8,7 +8,7 @@ import { Alert } from "antd"; // 引入 Ant Design 的 Alert 组件
 import { useTheme } from "@/contexts/ThemeContext";
 export default function Creating() {
   const dispatch = useDispatch();
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const [templates, setTemplates] = useState([]);
   const [selectedAppId, setSelectedAppId] = useState(null);
   const [file, setFile] = useState(null);
@@ -57,135 +57,172 @@ export default function Creating() {
     <div style={{ padding: "10px 20px 20px 20px" }}>
       <h1 style={{ color: theme.text.primary }}>正在创建</h1>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-        {templates
-          .filter((app) => !app.scene)
-          .map((template, index) => (
-            <div
-              key={index}
-              id={template.id}
-              data-type={template.type}
-              className={styles.template}
-              onClick={(e) => handleBoxClick(e)}
+        {templates.length === 0 ? (
+          <div
+            style={{
+              textAlign: "center",
+              width: "100%",
+              color: "#999",
+              position: "absolute",
+              top: "40%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <img
+              src={isDark ? "/icons/empty-dark.png" : "/icons/empty.png"}
+              alt="No Templates"
+              style={{ width: "150px", marginBottom: "20px" }}
+            />
+            <h2>暂无可用模板</h2>
+            <p>您还没有创建任何模板。开始创建一个新的模板吧！</p>
+            <button
+              onClick={() => router.push("/templates/recommended")}
               style={{
-                position: "relative",
+                marginTop: "20px",
+                padding: "10px 20px",
+                backgroundColor: theme.button.primary,
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                letterSpacing: "1px",
                 cursor: "pointer",
-                overflow: "hidden",
-                borderRadius: "10px",
               }}
             >
-              <img
-                src={template.app_avatar || "/default-image.png"}
-                alt={template.app_name}
+              创建新模板
+            </button>
+          </div>
+        ) : (
+          templates
+            .filter((app) => !app.scene)
+            .map((template, index) => (
+              <div
+                key={index}
+                id={template.id}
+                data-type={template.type}
+                className={styles.template}
+                onClick={(e) => handleBoxClick(e)}
                 style={{
-                  width: "100%",
-                  height: "120px",
-                  objectFit: "cover",
+                  position: "relative",
+                  cursor: "pointer",
+                  overflow: "hidden",
                   borderRadius: "10px",
-                  transition: "transform 0.3s ease",
                 }}
-              />
-              <div style={{ paddingLeft: "3px" }}>
-                <div
+              >
+                <img
+                  src={template.app_avatar || "/default-image.png"}
+                  alt={template.app_name}
                   style={{
-                    fontSize: "15px",
-                    margin: "2px 0px 2px 0px",
-                    display: "flex",
-                    flexDirection: "row",
+                    width: "100%",
+                    height: "120px",
+                    objectFit: "cover",
+                    borderRadius: "10px",
+                    transition: "transform 0.3s ease",
                   }}
-                >
-                  {template.app_name}
-                  <button
+                />
+                <div style={{ paddingLeft: "3px" }}>
+                  <div
                     style={{
-                      marginLeft: "5px",
-                      backgroundColor: "rgb(240 240 240)",
-                      borderRadius: "5px",
-                      border: "none",
+                      fontSize: "15px",
+                      margin: "2px 0px 2px 0px",
+                      display: "flex",
+                      flexDirection: "row",
+                    }}
+                  >
+                    {template.app_name}
+                    <button
+                      style={{
+                        marginLeft: "5px",
+                        backgroundColor: "rgb(240 240 240)",
+                        borderRadius: "5px",
+                        border: "none",
+                        fontSize: "12px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <img
+                        src="/icons/fileIcon.png"
+                        style={{ width: "16px", height: "16px" }}
+                      />
+                      应用
+                    </button>
+                  </div>
+                  <div
+                    style={{
                       fontSize: "12px",
+                      color: "#06070980",
+                      margin: "4px 0px 8px 0px",
                       display: "flex",
                       alignItems: "center",
                     }}
                   >
                     <img
-                      src="/icons/fileIcon.png"
-                      style={{ width: "16px", height: "16px" }}
+                      src="/logo.png"
+                      style={{
+                        width: "15px",
+                        height: "15px",
+                        marginRight: "5px",
+                      }}
                     />
-                    应用
-                  </button>
-                </div>
-                <div
-                  style={{
-                    fontSize: "12px",
-                    color: "#06070980",
-                    margin: "4px 0px 8px 0px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <img
-                    src="/logo.png"
-                    style={{
-                      width: "15px",
-                      height: "15px",
-                      marginRight: "5px",
-                    }}
-                  />
-                  DA官方
-                </div>
-                <div
-                  style={{
-                    fontSize: "14px",
-                    color: "#06070980",
-                    lineHeight: "1.5",
-                  }}
-                >
-                  {template.app_description}
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div>免费</div>
+                    DA官方
+                  </div>
                   <div
                     style={{
-                      fontSize: "12px",
+                      fontSize: "14px",
                       color: "#06070980",
-                      lineHeight: "30px",
+                      lineHeight: "1.5",
                     }}
                   >
-                    <span>复制</span>
+                    {template.app_description}
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div>免费</div>
+                    <div
+                      style={{
+                        fontSize: "12px",
+                        color: "#06070980",
+                        lineHeight: "30px",
+                      }}
+                    >
+                      <span>复制</span>
+                    </div>
                   </div>
                 </div>
+                {!isCreating && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      backgroundColor: "rgba(0, 0, 0, 0.3)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "white",
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      textShadow: "1px 1px 2px rgba(0, 0, 0, 0.4)",
+                      letterSpacing: "2px",
+                      zIndex: 1,
+                      transition: "opacity 0.3s ease",
+                      opacity: 0.9,
+                    }}
+                  >
+                    正在创建应用中...
+                  </div>
+                )}
               </div>
-              {!isCreating && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: "rgba(0, 0, 0, 0.3)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "white",
-                    fontSize: "18px",
-                    fontWeight: "bold",
-                    textShadow: "1px 1px 2px rgba(0, 0, 0, 0.4)",
-                    letterSpacing: "2px",
-                    zIndex: 1,
-                    transition: "opacity 0.3s ease",
-                    opacity: 0.9,
-                  }}
-                >
-                  正在创建应用中...
-                </div>
-              )}
-            </div>
-          ))}
+            ))
+        )}
       </div>
 
       {showAlert && (

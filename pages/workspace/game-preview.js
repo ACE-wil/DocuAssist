@@ -52,7 +52,7 @@ export default function GamePreview() {
     {
       word: "accident",
       dialog:
-        "在一次深夜的accident中，雪利和托尼的车被警察粗暴地拦下。托尼的心猛地一沉，他意识到这不仅是一次简单的意外，更是种族歧视的无情打击。",
+        "在一次深夜的accident中，雪利和托尼的车被警察粗暴地拦下。托尼的心猛地一���，他意识到这不仅是一次简单的意外，更是种族歧视的无情打击。",
       options: [
         { text: "事故", isCorrect: "true", nextScene: 3 },
         { text: "巧合", isCorrect: "false", nextScene: -1 },
@@ -108,7 +108,7 @@ export default function GamePreview() {
     {
       word: "accord",
       dialog:
-        "在旅途中，托尼和雪利逐渐学会了相互尊重和理解，他们的行为开始accord彼此的期望。那份默契的温暖，悄然融化了两颗曾经陌生的心。",
+        "在旅途中，托尼和雪利逐渐学会了��互尊重和理解，他们的行为开始accord彼此的期望。那份默契的温暖，悄然融化了两颗曾经陌生的心。",
       options: [
         { text: "一致", isCorrect: "false", nextScene: -1 },
         { text: "协调", isCorrect: "false", nextScene: -1 },
@@ -136,7 +136,7 @@ export default function GamePreview() {
     {
       word: "afraid",
       dialog:
-        "在南方种族歧视的阴影下，雪利时常感到afraid，夜深人静时，他的眼神流露出无尽的孤独和恐惧。托尼的坚定守护，成了他唯一的慰藉。",
+        "在南方种族歧视的阴影下，雪利��常感到afraid，夜深人静时，他的眼神流露出无尽的孤独和恐惧。托尼的坚定守护，成了他唯一的慰藉。",
       options: [
         { text: "恐惧", isCorrect: "false", nextScene: -1 },
         { text: "担忧", isCorrect: "false", nextScene: -1 },
@@ -163,7 +163,7 @@ export default function GamePreview() {
     },
     {
       word: "none",
-      dialog: "恭喜你完成了游戏的所有关卡，点击重玩游戏，重新开始游戏",
+      dialog: "恭喜你完成了游戏的所有关卡，点击重玩游���，重新开始游戏",
       options: [{ text: "重玩游戏", isCorrect: "true", nextScene: 0 }],
       npcName: "绿皮书",
       npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
@@ -342,7 +342,7 @@ export default function GamePreview() {
 
   return (
     <div className="story-game">
-      <label className="immersive-switch">
+      <label className="immersive-switch" style={{ color: "white" }}>
         <input
           type="checkbox"
           checked={isImmersive}
@@ -351,11 +351,11 @@ export default function GamePreview() {
         <span className="slider"></span>
         {isImmersive ? "沉浸式" : "普通模式"}
       </label>
-      {showError && <div className="error-message">{errorMessage}</div>}
-      {showCorrect && <div className="correct-message">{correctMessage}</div>}
-      <button className="fullscreen-btn" onClick={toggleFullscreen}>
+      <button className="fullscreen-btn purple-btn" onClick={toggleFullscreen}>
         {isFullscreen ? "退出全屏" : "进入全屏"}
       </button>
+      {showError && <div className="error-message">{errorMessage}</div>}
+      {showCorrect && <div className="correct-message">{correctMessage}</div>}
       <button
         className="mute-btn"
         onClick={toggleMute}
@@ -815,6 +815,148 @@ export default function GamePreview() {
           max-width: 22%;
           padding: 0.5rem 1rem;
           font-size: 1rem;
+        }
+
+        .subtle-btn {
+          display: flex;
+          align-items: center;
+          padding: 8px 16px;
+          background: rgba(0, 0, 0, 0.3); /* 半透明背景 */
+          border: none;
+          border-radius: 4px;
+          color: white;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: background 0.3s ease, transform 0.2s ease;
+          backdrop-filter: blur(5px); /* 背景模糊效果 */
+        }
+
+        .subtle-btn:hover {
+          background: rgba(0, 0, 0, 0.5); /* 悬停时稍微增加透明度 */
+          transform: scale(1.05); /* 悬停时轻微放大 */
+        }
+
+        .subtle-btn:active {
+          transform: scale(0.95); /* 点击时轻微缩小 */
+        }
+
+        .immersive-switch {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          z-index: 100;
+        }
+
+        .fullscreen-btn {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          z-index: 100;
+        }
+
+        .immersive-switch input {
+          margin-right: 10px;
+        }
+
+        .slider {
+          width: 40px;
+          height: 20px;
+          background-color: #ddd;
+          border-radius: 20px;
+          position: relative;
+          transition: background-color 0.2s;
+        }
+
+        .slider::before {
+          content: "";
+          position: absolute;
+          width: 18px;
+          height: 18px;
+          background-color: white;
+          border-radius: 50%;
+          top: 1px;
+          left: 1px;
+          transition: transform 0.2s;
+        }
+
+        input:checked + .slider {
+          background-color: ${theme.button.primary};
+        }
+
+        input:checked + .slider::before {
+          transform: translateX(20px);
+        }
+
+        .bright-btn {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          padding: 8px 16px;
+          background: linear-gradient(
+            45deg,
+            #ffeb3b,
+            #ff9800
+          ); /* 明亮的渐变背景 */
+          border: none;
+          border-radius: 4px;
+          color: #fff;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: background 0.3s ease, transform 0.2s ease;
+          box-shadow: 0 0 10px rgba(255, 235, 59, 0.5),
+            0 0 20px rgba(255, 152, 0, 0.5);
+          text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .bright-btn:hover {
+          background: linear-gradient(
+            45deg,
+            #ff9800,
+            #ffeb3b
+          ); /* 悬停时反转渐变 */
+          box-shadow: 0 0 20px rgba(255, 235, 59, 0.7),
+            0 0 30px rgba(255, 152, 0, 0.7);
+          transform: translateY(-2px);
+        }
+
+        .bright-btn:active {
+          transform: translateY(0);
+          box-shadow: 0 0 5px rgba(255, 235, 59, 0.3),
+            0 0 10px rgba(255, 152, 0, 0.3);
+        }
+
+        .purple-btn {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          padding: 8px 16px;
+          background: rgba(128, 0, 128, 0.3); /* 半透明紫色背景 */
+          border: none;
+          border-radius: 4px;
+          color: #fff;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: background 0.3s ease, transform 0.2s ease;
+          box-shadow: 0 0 10px rgba(128, 0, 128, 0.5),
+            0 0 20px rgba(75, 0, 130, 0.5);
+          text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .purple-btn:hover {
+          background: linear-gradient(
+            45deg,
+            rgba(128, 0, 128, 0.5),
+            rgba(75, 0, 130, 0.5)
+          ); /* 渐变紫色 */
+          box-shadow: 0 0 20px rgba(128, 0, 128, 0.7),
+            0 0 30px rgba(75, 0, 130, 0.7);
+          transform: translateY(-2px);
+        }
+
+        .purple-btn:active {
+          transform: translateY(0);
+          box-shadow: 0 0 5px rgba(128, 0, 128, 0.3),
+            0 0 10px rgba(75, 0, 130, 0.3);
         }
       `}</style>
 

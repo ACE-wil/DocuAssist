@@ -327,7 +327,7 @@ function DocumentParser() {
                 borderRadius: "8px",
                 backgroundColor: "transparent",
                 width: "330px",
-                height: "175px",
+                height: "200px",
                 // maxHeight: "300px",
                 // maxWidth: "300px",
                 overflow: "hidden",
@@ -389,7 +389,7 @@ function DocumentParser() {
                   marginTop: "10px",
                 }}
               >
-                <label
+                {/* <label
                   style={{
                     display: "block",
                     marginBottom: "4px",
@@ -399,10 +399,10 @@ function DocumentParser() {
                   }}
                 >
                   执行操作
-                </label>
+                </label> */}
                 <TextArea
                   placeholder="执行操作"
-                  autoSize={{ minRows: 3, maxRows: 3 }}
+                  autoSize={{ minRows: 4, maxRows: 4 }}
                   onFocus={(e) => {
                     e.target.style.borderColor = "#4a90e2";
                     e.target.style.boxShadow =
@@ -448,10 +448,11 @@ function DocumentParser() {
                   onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
                   onBlur={(e) => (e.target.style.borderColor = "#ddd")}
                   onChange={(e) => handleInputChange(e, newNodeId, "output")}
+                  defaultValue="json"
                 >
                   <option value="">选择输出格式</option>
                   <option value="json">JSON</option>
-                  <option value="xml">XML</option>
+                  {/* <option value="xml">XML</option> */}
                   <option value="csv">CSV</option>
                   <option value="text">文本</option>
                 </select>
