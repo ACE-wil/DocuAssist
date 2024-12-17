@@ -20,6 +20,9 @@ export const lightTheme = {
     hover: "#0056b3",
   },
   shadow: "0 4px 20px rgba(0,0,0,0.1)",
+  link: {
+    primary: "#1a73e8",
+  },
 };
 
 export const darkTheme = {
@@ -44,6 +47,9 @@ export const darkTheme = {
     hover: "#7b4db8",
   },
   shadow: "0 4px 20px rgba(0,0,0,0.3)",
+  link: {
+    primary: "#8ab4f8",
+  },
 };
 
 export const getTheme = (theme) => {
