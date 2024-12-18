@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { setLoading } from "@/store/loadingSlice";
 import { useTheme } from "@/contexts/ThemeContext";
 
-export default function QuickStart() {
+export default function Faq() {
   const dispatch = useDispatch();
   const { theme } = useTheme();
 
