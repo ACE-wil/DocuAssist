@@ -100,55 +100,55 @@ export default function RecentGames() {
   const characterQuotes = [
     {
       name: "宫崎骏",
-      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/gongqijun.jpg",
+      image: "http://cdn.docuparser.top/avatar/gongqijun.jpg",
       quote:
         "“人生就是一列开往坟墓的列车，路途上会有很多站，很难有人可以自始至终陪着走完。当陪你的人要下车时，即使不舍也该心存感激，然后挥手道别。” ——《千与千寻》",
     },
     {
       name: "阿甘",
-      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/forrestgump.jpg",
+      image: "http://cdn.docuparser.top/avatar/forrestgump.jpg",
       quote: "“生活就像一盒巧克力，你永远不知道你会得到什么。” ——《阿甘正传》",
     },
     {
       name: "多莉",
-      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/dory.jpg",
+      image: "http://cdn.docuparser.top/avatar/dory.jpg",
       quote: "“继续游，继续游。” ——《海底总动员》",
     },
     {
       name: "阿尔弗雷德",
-      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/alfred.jpg",
+      image: "http://cdn.docuparser.top/avatar/alfred.jpg",
       quote: "“为什么我们会跌倒？为了学会重新站起来。” ——《蝙蝠侠：侠影之谜》",
     },
     {
       name: "克里斯·加德纳",
-      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/chrisgardner.jpg",
+      image: "http://cdn.docuparser.top/avatar/chrisgardner.jpg",
       quote:
         "“别让别人告诉你你不能做什么。即使是我也不行。” ——《当幸福来敲门》",
     },
     {
       name: "山姆",
-      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/sam.jpg",
+      image: "http://cdn.docuparser.top/avatar/sam.jpg",
       quote: "“即使在黑暗中，也会有光明。” ——《指环王》",
     },
     {
       name: "艾尔莎",
-      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/elsa.jpg",
+      image: "http://cdn.docuparser.top/avatar/elsa.jpg",
       quote: "“放手吧，过去的事就让它过去。” ——《冰雪奇缘》",
     },
     {
       name: "哈利·波特",
-      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/harrypotter.jpg",
+      image: "http://cdn.docuparser.top/avatar/harrypotter.jpg",
       quote:
         "“幸福可以在最黑暗的时刻找到，只要记得打开灯。” ——《哈利·波特与阿兹卡班的囚徒》",
     },
     {
       name: "雷米",
-      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/remy.jpg",
+      image: "http://cdn.docuparser.top/avatar/remy.jpg",
       quote: "“每个人都可以做出伟大的事情。” ——《料理鼠王》",
     },
     {
       name: "伍迪",
-      image: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/woody.jpg",
+      image: "http://cdn.docuparser.top/avatar/woody.jpg",
       quote: "“你有一个朋友。” ——《玩具总动员》",
     },
   ];

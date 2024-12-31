@@ -27,7 +27,7 @@ export default function Api() {
           欢迎使用我们的平台！本指南将帮助您快速上手，了解平台的基本功能和使用方法。
         </p>
         <img
-          src="/LLaMa2.png"
+          src="/dall-e-3.jpg"
           alt="Quick Start"
           style={{ width: "70%", marginTop: "20px", borderRadius: "8px" }}
         />

@@ -18,24 +18,24 @@ const navContents = {
   store: [
     { icon: "🔥", label: "热门应用", href: "/store/popular" },
     { icon: "🆕", label: "最新上架", href: "/store/new-arrivals" },
-    {
-      icon: "🏪",
-      label: "代理店",
-      href: "/store/agency",
-      subItems: [
-        { icon: "📌", label: "热门代理", href: "/store/agency/popular" },
-        { icon: "🔍", label: "搜索代理", href: "/store/agency/search" },
-      ],
-    },
-    {
-      icon: "🔌",
-      label: "插件商店",
-      href: "/store/plugins",
-      subItems: [
-        { icon: "⭐", label: "推荐插件", href: "/store/plugins/recommended" },
-        { icon: "🔍", label: "浏览全部", href: "/store/plugins/browse" },
-      ],
-    },
+    // {
+    //   icon: "🏪",
+    //   label: "代理店",
+    //   href: "/store/agency",
+    //   subItems: [
+    //     { icon: "📌", label: "热门代理", href: "/store/agency/popular" },
+    //     { icon: "🔍", label: "搜索代理", href: "/store/agency/search" },
+    //   ],
+    // },
+    // {
+    //   icon: "🔌",
+    //   label: "插件商店",
+    //   href: "/store/plugins",
+    //   subItems: [
+    //     { icon: "⭐", label: "推荐插件", href: "/store/plugins/recommended" },
+    //     { icon: "🔍", label: "浏览全部", href: "/store/plugins/browse" },
+    //   ],
+    // },
   ],
   templates: [
     { icon: "💡", label: "推荐模板", href: "/templates/recommended" },
@@ -49,8 +49,8 @@ const navContents = {
   docs: [
     { icon: "📚", label: "快速入门", href: "/docs/quick-start" },
     { icon: "🔧", label: "基本功能", href: "/docs/basic-features" },
-    { icon: "🚀", label: "高级功能", href: "/docs/advanced-features" },
-    { icon: "🔌", label: "插件使用", href: "/docs/plugins" },
+    // { icon: "🚀", label: "高级功能", href: "/docs/advanced-features" },
+    // { icon: "🔌", label: "插件使用", href: "/docs/plugins" },
     { icon: "🔍", label: "API文档", href: "/docs/api" },
     { icon: "❓", label: "常见问题", href: "/docs/faq" },
   ],

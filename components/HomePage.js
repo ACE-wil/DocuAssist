@@ -41,7 +41,7 @@ export default function HomePage() {
               marginTop: "-20px",
             }}
           >
-            以自己的方式创建 AI 代理
+            以自己的方式创建 AI 应用
           </div>
           <div
             style={{
@@ -52,7 +52,7 @@ export default function HomePage() {
               textAlign: "left",
             }}
           >
-            新一代AI Agent构建平台，无需编码即可快速创建Agent并发布到各大平台。
+            新一代AI应用构建平台，无需编码即可快速创建AI应用并发布到平台开放使用。
           </div>
         </div>
 
@@ -80,7 +80,7 @@ export default function HomePage() {
               title: "什么是DocuAssist",
               description: "点击查看",
             },
-            { img: "/bn-2.jpeg", title: "快速启动", description: "点击查看" },
+            { img: "/bn-2.jpeg", title: "快速入门", description: "点击查看" },
             { img: "/bn-3.jpeg", title: "发行说明", description: "点击查看" },
           ].map((feature, index) => (
             <div key={index} className="feature-item">
@@ -115,29 +115,52 @@ export default function HomePage() {
               </h2>
             </div>
             <div className="app-list">
-              {[1, 2, 3].map((item) => (
+              {[
+                {
+                  name: "AI标题工厂",
+                  image: "/icons/ai-company.jpg",
+                  description:
+                    "别等啦🚀💥让关键词瞬间变身小红书、抖音爆款标题，击率提升50%📈，一键搞定。",
+                  viewer: 1234,
+                  star: 1234,
+                  like: 1234,
+                },
+                {
+                  name: "百变手抄报",
+                  image: "/icons/baibian.png",
+                  description:
+                    "还在为手抄报绞尽脑汁？还在对着空白的纸张无从下手？【百变手抄报】是一款超好用的手抄报神器：风格百变，创意无限！根据主题快速给出手抄报的设计方案和设计效果。让你告别繁琐的排版和绘画，让你的创意尽情挥洒，一键生成超好用的精美手抄报！",
+                  viewer: 1234,
+                  star: 1234,
+                  like: 1234,
+                },
+                {
+                  name: "色卡生成器V1.0",
+                  image: "/icons/seka.jpg",
+                  description: "上传你喜欢的图片，提取色彩，获取你的专属色卡！",
+                  viewer: 1234,
+                  star: 1234,
+                  like: 1234,
+                },
+              ].map((item) => (
                 <div
                   key={item}
                   className="app-card"
                   style={{ backgroundColor: theme.surface }}
                 >
                   <div className="app-info">
-                    <img
-                      src={`/bn-${item}.jpeg`}
-                      alt="应用图标"
-                      className="app-icon"
-                    />
+                    <img src={item.image} alt="应用图标" className="app-icon" />
                     <div className="app-details">
                       <div className="app-header">
                         <div className="app-title">
                           <h3 style={{ color: theme.text.primary }}>
-                            AI助手应用{item}
+                            {item.name}
                           </h3>
                           <span
                             className="app-author"
                             style={{ color: theme.text.secondary }}
                           >
-                            @作者{item}
+                            @{item.name}
                           </span>
                         </div>
                         <button className="follow-button">
@@ -149,7 +172,7 @@ export default function HomePage() {
                         className="app-description"
                         style={{ color: theme.text.secondary }}
                       >
-                        这是一个智能AI助手，可以帮助您完成各种任务，如翻译、写作、编程等。
+                        {item.description}
                       </p>
                       <div
                         className="app-stats"
@@ -187,33 +210,61 @@ export default function HomePage() {
               </h2>
             </div>
             <div className="recommended-grid">
-              {[1, 2, 3, 4].map((item) => (
+              {[
+                {
+                  name: "单人剧本杀-鬼魅酒店👻",
+                  image: "/icons/jubensha.jpg",
+                  description:
+                    "别等啦🚀💥让关键词瞬间变身小红书、抖音爆款标题，击率提升50%📈，一键搞定。",
+                  viewer: 1234,
+                  star: 1234,
+                  like: 1234,
+                },
+                {
+                  name: "认真看一百本书",
+                  image: "/icons/real.jpg",
+                  description:
+                    "还在为手抄报绞尽脑汁？还在对着空白的纸张无从下手？【百变手抄报】是一款超好用的手抄报神器：风格百变，创意无限！根据主题快速给出手抄报的设计方案和设计效果。让你告别繁琐的排版和绘画，让你的创意尽情挥洒，一键生成超好用的精美手抄报！",
+                  viewer: 1234,
+                  star: 1234,
+                  like: 1234,
+                },
+                {
+                  name: "色卡生成器V1.0",
+                  image: "/icons/seka.jpg",
+                  description: "上传你喜欢的图片，提取色彩，获取你的专属色卡！",
+                  viewer: 1234,
+                  star: 1234,
+                  like: 1234,
+                },
+              ].map((item) => (
                 <div
-                  key={item}
+                  key={item.name}
                   className="recommended-card"
                   style={{ backgroundColor: theme.surface }}
                 >
                   <div className="card-image">
-                    <img src={`/bn-${item}.jpeg`} alt="应用图标" />
+                    <img src={item.image} alt="应用图标" />
                   </div>
                   <div className="card-content">
                     <div className="card-header">
-                      <h3 style={{ color: theme.text.primary }}>
-                        推荐应用{item}
-                      </h3>
+                      <h3 style={{ color: theme.text.primary }}>{item.name}</h3>
                       <button className="mini-follow-button">
                         <span>+</span>
                       </button>
                     </div>
                     <div
                       className="card-stats"
-                      style={{ color: theme.text.tertiary }}
+                      style={{
+                        color: theme.text.tertiary,
+                        marginTop: "auto",
+                      }}
                     >
                       <span>
-                        <i className="icon">👁️</i> 3.4k
+                        <i className="icon">👁️</i> {item.viewer}
                       </span>
                       <span>
-                        <i className="icon">⭐</i> 789
+                        <i className="icon">⭐</i> {item.star}
                       </span>
                     </div>
                   </div>
@@ -539,6 +590,9 @@ export default function HomePage() {
 
         .card-content {
           padding: 12px;
+          display: flex;
+          flex-direction: column;
+          height: 100px;
         }
 
         .card-header {

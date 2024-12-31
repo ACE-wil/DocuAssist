@@ -32,8 +32,7 @@ export default function GamePreview() {
       ],
       npcName: "绿皮书",
       npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
     },
     {
       word: "accessory",

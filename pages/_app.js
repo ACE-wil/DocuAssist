@@ -7,8 +7,23 @@ import { Provider } from "react-redux";
 import { store } from "../store/store";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import { ReactFlowProvider } from "reactflow";
+import LoginModal from "../components/LoginModal";
 
 function MyApp({ Component, pageProps }) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    // 检查是否已登录
+    const token = localStorage.getItem("token");
+    if (!token && router.pathname !== "/login") {
+      setShowLoginModal(true);
+    } else {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   return (
     <>
       <Head>
@@ -24,6 +39,16 @@ function MyApp({ Component, pageProps }) {
           </ReactFlowProvider>
         </ThemeProvider>
       </Provider>
+      {showLoginModal && (
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => {
+            // 登录成功后关闭
+            setShowLoginModal(false);
+            setIsLoggedIn(true);
+          }}
+        />
+      )}
     </>
   );
 }
