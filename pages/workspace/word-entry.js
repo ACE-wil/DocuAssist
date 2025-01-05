@@ -44,15 +44,17 @@ export default function WordSpellEntry() {
         <button className="arrow left" onClick={handlePrev}>
           &lt;
         </button>
-        <div className="carousel-container">
-          <div className="carousel-images" ref={carouselRef}>
+        <div className="carousel-container" ref={carouselRef}>
+          <div style={{ display: "flex", flexDirection: "row" }}>
             {images.map((src, index) => (
-              <img
+              <div
                 key={index}
-                src={src}
-                alt="carousel"
-                className="carousel-image"
-              />
+                className="carousel-item"
+                style={{ margin: "0px 20px" }}
+              >
+                <img src={src} alt="carousel" className="carousel-image" />
+                <div className="image-caption">图片描述 {index + 1}</div>
+              </div>
             ))}
           </div>
         </div>
@@ -133,6 +135,42 @@ export default function WordSpellEntry() {
           height: 100%;
           background-color: white;
           transition: width 0.3s ease;
+        }
+        .carousel-container {
+          display: flex;
+          overflow-x: auto; /* 确保可以水平滚动 */
+          scroll-snap-type: x mandatory;
+          -webkit-overflow-scrolling: touch;
+          transition: scroll-left 0.5s ease;
+          margin: 0 25px;
+          scrollbar-width: none; /* Firefox */
+        }
+        .carousel-container::-webkit-scrollbar {
+          display: none; /* Chrome, Safari, Opera */
+        }
+        .carousel-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center; /* 垂直居中 */
+          transition: flex 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
+          flex: 1; /* 默认每个项目占据相同的空间 */
+        }
+        .carousel-item:hover {
+          flex: 1.5; /* 鼠标悬停时增加空间 */
+        }
+        .carousel-image {
+          width: 100%; /* 让图片占满父容器的宽度 */
+          height: auto;
+          border-radius: 10px;
+          margin: 0 25px;
+          scroll-snap-align: start;
+          border: 1px solid #ccc;
+        }
+        .image-caption {
+          margin-top: 10px;
+          font-size: 14px;
+          color: #333;
         }
       `}</style>
     </div>
