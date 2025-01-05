@@ -8,6 +8,7 @@ export default function WordSpellEntry() {
     "/word-img/chinese-poems.png",
     "/word-img/chinese-poems.png",
     "/word-img/chinese-poems.png",
+    "/word-img/chinese-poems.png",
     // 添加更多图片路径
   ];
 
@@ -15,19 +16,13 @@ export default function WordSpellEntry() {
 
   const handlePrev = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({
-        left: -scrollAmount,
-        behavior: "smooth",
-      });
+      carouselRef.current.scrollLeft -= scrollAmount;
     }
   };
 
   const handleNext = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({
-        left: scrollAmount,
-        behavior: "smooth",
-      });
+      carouselRef.current.scrollLeft += scrollAmount;
     }
   };
 
@@ -47,11 +42,7 @@ export default function WordSpellEntry() {
         <div className="carousel-container" ref={carouselRef}>
           <div style={{ display: "flex", flexDirection: "row" }}>
             {images.map((src, index) => (
-              <div
-                key={index}
-                className="carousel-item"
-                style={{ margin: "0px 20px" }}
-              >
+              <div key={index} className="carousel-item">
                 <img src={src} alt="carousel" className="carousel-image" />
                 <div className="image-caption">图片描述 {index + 1}</div>
               </div>
@@ -85,6 +76,9 @@ export default function WordSpellEntry() {
           width: 100%;
           height: 100%;
           overflow: hidden;
+        }
+        .carousel-item {
+          margin: 0px 20px;
         }
         .carousel-images {
           display: flex;
@@ -144,6 +138,7 @@ export default function WordSpellEntry() {
           transition: scroll-left 0.5s ease;
           margin: 0 25px;
           scrollbar-width: none; /* Firefox */
+          scroll-behavior: smooth;
         }
         .carousel-container::-webkit-scrollbar {
           display: none; /* Chrome, Safari, Opera */
@@ -154,10 +149,11 @@ export default function WordSpellEntry() {
           align-items: center;
           justify-content: center; /* 垂直居中 */
           transition: flex 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
-          flex: 1; /* 默认每个项目占据相同的空间 */
+          flex: 0 0 calc(100% / 5); /* 每个项目占据 1/4.5 的宽度 */
+          overflow: visible; /* 确保溢出内容可见 */
         }
         .carousel-item:hover {
-          flex: 1.5; /* 鼠标悬停时增加空间 */
+          flex: 0 0 calc(100% / 4); /* 鼠标悬停时增加空间 */
         }
         .carousel-image {
           width: 100%; /* 让图片占满父容器的宽度 */
