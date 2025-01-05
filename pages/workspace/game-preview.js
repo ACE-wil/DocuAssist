@@ -31,7 +31,7 @@ export default function GamePreview() {
         { text: "接近", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
+      npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
       backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
     },
     {

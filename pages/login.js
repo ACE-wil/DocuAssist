@@ -33,7 +33,7 @@ export default function Login() {
     dispatch(setLoading(true));
 
     try {
-      const response = await fetch("http://your-flask-backend/api/login", {
+      const response = await fetch("http://127.0.0.1:5000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,7 +47,7 @@ export default function Login() {
       });
 
       const data = await response.json();
-
+      console.log("data", data);
       if (response.ok) {
         // 登录成功
         setToastMessage("登录成功!");
