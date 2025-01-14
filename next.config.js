@@ -1,8 +1,14 @@
 /** @type {import('next').NextConfig} */
 
-const path = require("path"); // 添加这一行
+const path = require("path");
+const withLess = require("next-with-less");
 
-const nextConfig = {
+const nextConfig = withLess({
+  lessLoaderOptions: {
+    lessOptions: {
+      javascriptEnabled: true,
+    },
+  },
   reactStrictMode: true,
   webpack: (config) => {
     config.module.rules.push({
@@ -17,6 +23,6 @@ const nextConfig = {
     };
     return config;
   },
-};
+});
 
 module.exports = nextConfig;

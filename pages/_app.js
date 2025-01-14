@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import "../styles/globals.css";
+import "@/styles/word-entry.less";
+import "swiper/less";
+import "swiper/less/navigation";
+import "swiper/less/pagination";
+import "swiper/less/scrollbar";
 import Head from "next/head";
 import Layout from "../components/Layout";
 import { Provider } from "react-redux";
