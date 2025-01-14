@@ -7,6 +7,19 @@ import { useRouter } from "next/router";
 const Souye = () => {
   const [time, setTime] = useState(4735); // 初始时间为 01:19:15 的秒数
   const router = useRouter();
+  const [swiperRef, setSwiperRef] = useState(null);
+
+  const handlePrev = () => {
+    if (swiperRef) {
+      swiperRef.slidePrev();
+    }
+  };
+
+  const handleNext = () => {
+    if (swiperRef) {
+      swiperRef.slideNext();
+    }
+  };
 
   useEffect(() => {
     const hasRefreshed = localStorage.getItem("hasRefreshed");
@@ -137,6 +150,49 @@ const Souye = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className="souye">
+        <div
+          onClick={handlePrev}
+          style={{
+            position: "absolute",
+            left: "15px",
+            top: "43%",
+            zIndex: 10,
+            cursor: "pointer",
+            width: "170px",
+            height: "170px",
+          }}
+        >
+          <img
+            src="/assets/img/btn.svg"
+            alt="Previous"
+            style={{
+              transform: "scaleX(-1)",
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        </div>
+        <div
+          onClick={handleNext}
+          style={{
+            position: "absolute",
+            right: "15px",
+            top: "43%",
+            zIndex: 10,
+            cursor: "pointer",
+            width: "170px",
+            height: "170px",
+          }}
+        >
+          <img
+            src="/assets/img/btn.svg"
+            alt="Next"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        </div>
         {/* 导航 */}
         <div className="navigat">
           <div className="left">
@@ -269,13 +325,8 @@ const Souye = () => {
             modules={[Navigation, Pagination, Scrollbar, A11y]}
             spaceBetween={30}
             slidesPerView="auto"
-            navigation={{
-              nextEl: ".swiper-button-next1",
-              prevEl: ".swiper-button-prev1",
-            }}
-            scrollbar={{ draggable: true }}
-            onSlideChange={() => console.log("slide change")}
-            onSwiper={(swiper) => console.log(swiper)}
+            onSwiper={(swiper) => setSwiperRef(swiper)}
+            className="mySwiper"
           >
             {itemBox.map((item) => (
               <SwiperSlide key={item.id} style={{ width: "270px" }}>
@@ -295,12 +346,6 @@ const Souye = () => {
               </SwiperSlide>
             ))}
           </Swiper>
-          <div className="swiper-button-prev1">
-            <img src={btnSvg} alt="Previous" />
-          </div>
-          <div className="swiper-button-next1">
-            <img src={btnSvg} alt="Next" />
-          </div>
         </div>
         {/* 底部优惠倒计时 */}
         <div className="footer">
