@@ -176,12 +176,53 @@ function DocumentParser() {
   };
 
   const handleNodeAction = (nodeData) => {
-    console.log("Node action triggered:", nodeData);
-    setInputValue(
-      `节点名称：${nodeData.name}，执行操作：${nodeData.action}，输出格式：${nodeData.output}`
-    );
+    // console.log("Node action triggered:", nodeData);
     setCurrentRunNodeId(nodeData.nodeId);
-    setInputHasChanged(!inputHasChanged);
+
+    const userMessage = {
+      role: "user",
+      content: `节点名称：${nodeData.name}，执行操作：${nodeData.action}，输出格式：${nodeData.output}`,
+      nodeId: nodeData.nodeId,
+    };
+    setChatHistory((prev) => [...prev, userMessage]);
+    setIsLoading(true); // 开始加载动画
+
+    // 发消息和完整的对话历史到后端
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: `节点名称：${nodeData.name}，执行操作：${nodeData.action}，输出格式：${nodeData.output}`,
+        messages: chatHistory, // 送完整的对话历史
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const assistantMessage = {
+          role: "assistant",
+          content: data.response,
+        };
+        setIsStreaming(true); // 开始流式输出
+        streamAssistantMessage(assistantMessage.content);
+        setChatHistory((prev) => [...prev, assistantMessage]);
+        setInputValue("");
+        setIsLoading(false);
+        setNodeLightColor((colors) => ({
+          ...colors,
+          [currentRunNodeId]: "#5EC29D", // 成功为绿色，失败为红色
+        }));
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("发送失败，请重试");
+        setNodeLightColor((colors) => ({
+          ...colors,
+          [currentRunNodeId]: "#D96A79", // 成功为绿色，失败为红色
+        }));
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -218,6 +259,7 @@ function DocumentParser() {
         setIsStreaming(true); // 开始流式输出
         streamAssistantMessage(assistantMessage.content);
         setChatHistory((prev) => [...prev, assistantMessage]);
+        console.log("chatHistory:", chatHistory);
         setInputValue("");
         setIsLoading(false);
         setNodeLightColor((colors) => ({
@@ -448,7 +490,7 @@ function DocumentParser() {
                   onFocus={(e) => (e.target.style.borderColor = "#4a90e2")}
                   onBlur={(e) => (e.target.style.borderColor = "#ddd")}
                   onChange={(e) => handleInputChange(e, newNodeId, "output")}
-                  defaultValue="json"
+                  defaultValue=""
                 >
                   <option value="">选择输出格式</option>
                   <option value="json">JSON</option>
@@ -784,11 +826,15 @@ function DocumentParser() {
                       backgroundColor:
                         message.role === "assistant"
                           ? "rgba(247, 247, 248, 0.9)"
+                          : message.nodeId
+                          ? "transparent"
                           : "rgba(25, 195, 125, 0.1)",
                       padding: "12px 16px 16px 16px",
                       borderRadius: "12px",
                       maxWidth: "85%",
-                      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
+                      boxShadow: message.nodeId
+                        ? "none"
+                        : "0 2px 4px rgba(0, 0, 0, 0.05)",
                       maxHeight: "300px",
                       overflow: "overlay",
                     }}
@@ -799,6 +845,36 @@ function DocumentParser() {
                       ) : (
                         renderMarkdown(message.content)
                       )
+                    ) : message.nodeId ? (
+                      <p>
+                        <div
+                          style={{
+                            color: "white",
+                            backgroundColor: "#19c37d",
+                            padding: "10px 15px",
+                            borderRadius: "8px",
+                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                            transition:
+                              "transform 0.3s ease, box-shadow 0.3s ease",
+                            cursor: "pointer",
+                            display: "inline-block",
+                            fontWeight: "bold",
+                            textAlign: "center",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.transform = "scale(1.05)";
+                            e.target.style.boxShadow =
+                              "0 6px 12px rgba(0, 0, 0, 0.3)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.transform = "scale(1)";
+                            e.target.style.boxShadow =
+                              "0 4px 8px rgba(0, 0, 0, 0.2)";
+                          }}
+                        >
+                          {message.nodeId}
+                        </div>
+                      </p>
                     ) : (
                       <p>{message.content}</p>
                     )}

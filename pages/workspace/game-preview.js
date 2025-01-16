@@ -24,10 +24,10 @@ export default function GamePreview() {
     {
       word: "access",
       dialog:
-        "在《绿皮书》中，托尼为了给家人更好的生活，迫切需要找到进入上流社会的access。他毅然接受了护送黑人钢琴家雪利的任务，心中既充满期待又不免忐忑，这扇门能否通向更美好的未来？",
+        "在《绿皮书》中，托尼站在黑人酒吧的门外，心中忐忑不安。他知道，只有找到进入这个世界的access，才能真正理解唐雪利的音乐和生活。那一刻，他深吸一口气，推开了那扇通往新世界的门。",
       options: [
-        { text: "入口", isCorrect: "true", nextScene: 1 },
         { text: "通道", isCorrect: "false", nextScene: -1 },
+        { text: "入口", isCorrect: "true", nextScene: 1 },
         { text: "接近", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
@@ -37,137 +37,127 @@ export default function GamePreview() {
     {
       word: "accessory",
       dialog:
-        "托尼的车在荒凉的南方小镇突然抛锚，他焦急地四处寻找必要的accessory。那一刻，他感受到了前所未有的无助，但为了雪利的巡演，他必须坚强地解决问题。",
+        "电影中的绿皮书不仅是托尼的行车指南，更是他旅途中的忠实accessory。每当夜深人静，托尼总会翻阅它，仿佛在这本小册子里，能找到前行的勇气和智慧。",
       options: [
-        { text: "装饰品", isCorrect: "false", nextScene: -1 },
+        { text: "辅助工具", isCorrect: "true", nextScene: 2 },
         { text: "附件", isCorrect: "false", nextScene: -1 },
-        { text: "配件", isCorrect: "true", nextScene: 2 },
+        { text: "配件", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
+      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
     },
     {
       word: "accident",
       dialog:
-        "在一次深夜的accident中，雪利和托尼的车被警察粗暴地拦下。托尼的心猛地一���，他意识到这不仅是一次简单的意外，更是种族歧视的无情打击。",
+        "一次意外的accident让托尼和唐雪利在乡间小路上被迫停下。在等待救援的漫长时间里，两人从最初的尴尬沉默，到后来的坦诚相谈，这段意外的旅程，竟成为了他们友谊的开端。",
       options: [
-        { text: "事故", isCorrect: "true", nextScene: 3 },
-        { text: "巧合", isCorrect: "false", nextScene: -1 },
         { text: "事件", isCorrect: "false", nextScene: -1 },
+        { text: "意外", isCorrect: "false", nextScene: -1 },
+        { text: "事故", isCorrect: "true", nextScene: 3 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
+      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
     },
     {
       word: "accidental",
       dialog:
-        "托尼在一次accidental的深夜长谈中，发现雪利内心深处的孤独和脆弱。那一刻，托尼的心被深深触动，他开始真正理解这位表面光鲜的钢琴家。",
+        "托尼在加油站的一次accidental发现，让唐雪利得以在南方小镇上享用了一顿久违的家乡美食。那一刻，两人眼中都闪烁着惊喜的光芒，仿佛这场意外的邂逅，是命运最美的安排。",
       options: [
-        { text: "随机的", isCorrect: "false", nextScene: -1 },
+        { text: "无意的", isCorrect: "false", nextScene: -1 },
         { text: "偶然的", isCorrect: "true", nextScene: 4 },
         { text: "意外的", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
+      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
     },
     {
       word: "accompany",
       dialog:
-        "托尼全程accompany雪利，从繁华的北方都市到充满敌意的南方小镇。每一次的陪伴，都是一次心灵的碰撞，他们渐渐从陌生人变成了彼此生命中不可或缺的朋友。",
+        "在唐雪利的钢琴独奏会上，托尼静静地坐在台下，用目光accompany着每一个音符的起伏。他从未想过，自己会如此投入地聆听一场古典音乐会，更未想过，这段旅程会让他对音乐有了全新的理解。",
       options: [
-        { text: "陪伴", isCorrect: "true", nextScene: 5 },
-        { text: "陪同", isCorrect: "false", nextScene: -1 },
         { text: "跟随", isCorrect: "false", nextScene: -1 },
+        { text: "陪同", isCorrect: "false", nextScene: -1 },
+        { text: "陪伴", isCorrect: "true", nextScene: 5 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
+      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
     },
     {
       word: "accomplish",
       dialog:
-        "尽管面对重重阻碍和歧视，雪利眼中依然闪烁着坚定的光芒，他誓要accomplish这场意义非凡的巡演。托尼被他的执着深深感染，决心全力支持。",
+        "当唐雪利在南方庄园的舞台上，优雅地弹奏完最后一曲，全场爆发出雷鸣般的掌声。那一刻，托尼心中涌起一股强烈的自豪感，他们一起accomplish了一场看似不可能的演出。",
       options: [
+        { text: "实现", isCorrect: "false", nextScene: -1 },
         { text: "达成", isCorrect: "false", nextScene: -1 },
         { text: "完成", isCorrect: "true", nextScene: 6 },
-        { text: "实现", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
+      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
     },
     {
       word: "accord",
       dialog:
-        "在旅途中，托尼和雪利逐渐学会了��互尊重和理解，他们的行为开始accord彼此的期望。那份默契的温暖，悄然融化了两颗曾经陌生的心。",
+        "在旅途中，托尼和唐雪利逐渐学会了在彼此的生活习惯和价值观中找到accord。尽管他们的世界看似截然不同，但在这段共同的旅程中，他们发现，理解和尊重才是最宝贵的和谐。",
       options: [
+        { text: "协议", isCorrect: "false", nextScene: -1 },
+        { text: "和谐", isCorrect: "true", nextScene: 7 },
         { text: "一致", isCorrect: "false", nextScene: -1 },
-        { text: "协调", isCorrect: "false", nextScene: -1 },
-        { text: "符合", isCorrect: "true", nextScene: 7 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
+      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
     },
     {
       word: "accordance",
       dialog:
-        "托尼严格按照雪利的要求，在accordance with他的生活习惯和演出安排，细心照料每一个细节。这份细致入微的关怀，让雪利感受到了久违的温暖。",
+        "每当遇到种族歧视的困境，托尼总是严格按照绿皮书中的指示行事，以确保唐雪利的安全。这种对规则的严格遵守，不仅是对法律的尊重，更是对朋友深深的关爱和accordance。",
       options: [
-        { text: "按照", isCorrect: "false", nextScene: -1 },
-        { text: "根据", isCorrect: "true", nextScene: 8 },
+        { text: "根据", isCorrect: "false", nextScene: -1 },
+        { text: "遵守", isCorrect: "true", nextScene: 8 },
         { text: "依照", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
+      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
     },
     {
       word: "afraid",
       dialog:
-        "在南方种族歧视的阴影下，雪利��常感到afraid，夜深人静时，他的眼神流露出无尽的孤独和恐惧。托尼的坚定守护，成了他唯一的慰藉。",
+        "在南方小镇的夜晚，托尼独自走在回旅馆的路上，心中不禁有些afraid。他知道，这里的种族偏见如同一只无形的猛兽，随时可能对他们发起攻击。但想到唐雪利还在等他，他咬紧牙关，加快了脚步。",
       options: [
-        { text: "恐惧", isCorrect: "false", nextScene: -1 },
         { text: "担忧", isCorrect: "false", nextScene: -1 },
         { text: "害怕", isCorrect: "true", nextScene: 9 },
+        { text: "恐惧", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
+      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
     },
     {
       word: "punish",
       dialog:
-        "当托尼因为保护雪利而违反规定，被警察无情punish时，雪利挺身而出，义正言辞地为他辩护。那一刻，两人的友谊升华成了无畏的并肩作战。",
+        "当托尼因为维护唐雪利的尊严而与当地警察发生冲突时，他毫不畏惧地面对可能的punish。那一刻，他不再是那个粗鲁的夜总会保安，而是一个勇敢捍卫正义的战士。",
       options: [
-        { text: "处罚", isCorrect: "false", nextScene: -1 },
         { text: "惩罚", isCorrect: "true", nextScene: 10 },
-        { text: "责罚", isCorrect: "false", nextScene: -1 },
+        { text: "处罚", isCorrect: "false", nextScene: -1 },
+        { text: "制裁", isCorrect: "false", nextScene: -1 },
       ],
       npcName: "绿皮书",
-      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
+      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
     },
     {
       word: "none",
-      dialog: "恭喜你完成了游戏的所有关卡，点击重玩游���，重新开始游戏",
+      dialog: "恭喜你完成了游戏的所有关卡，点击重玩游戏，重新开始游戏",
       options: [{ text: "重玩游戏", isCorrect: "true", nextScene: 0 }],
       npcName: "绿皮书",
-      npcAvatar: "http://snjxzerf4.hn-bkt.clouddn.com/avatar/lvpishu.jpeg",
-      backgroundVideo:
-        "http://snjxzerf4.hn-bkt.clouddn.com/video/lvpishu_1.mp4",
+      npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
+      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
     },
   ];
 

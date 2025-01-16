@@ -19,6 +19,9 @@ export default function AppDetail() {
         case "english":
           router.push(`/app/english/${appId}`);
           break;
+        case "enzh":
+          router.push(`/app/enzh/word-entry`);
+          break;
         default:
           router.push("/app/index");
           break;
