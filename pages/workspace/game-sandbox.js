@@ -49,10 +49,10 @@ export default function GameSandbox() {
   // 模拟AI生成代码的函数
   const generateCode = async (prompt) => {
     setIsGenerating(true);
-    
+
     // 这里是示例代码生成逻辑，实际项目中应该调用API
     let newCode = {};
-    
+
     if (prompt.includes("计算器")) {
       newCode = {
         "/App.js": `import { useState } from "react";
@@ -311,33 +311,39 @@ h1 {
 }`,
       };
     }
-    
+
     // 模拟延迟
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
     setFiles(newCode);
     setIsGenerating(false);
-    
+
     // 添加AI回复
-    setChatMessages(prev => [
+    setChatMessages((prev) => [
       ...prev,
-      { 
-        role: "assistant", 
-        content: `已为您生成${prompt.includes("计算器") ? "计算器" : prompt.includes("时钟") ? "时钟" : ""}应用代码，请查看右侧预览。`
-      }
+      {
+        role: "assistant",
+        content: `已为您生成${
+          prompt.includes("计算器")
+            ? "计算器"
+            : prompt.includes("时钟")
+            ? "时钟"
+            : ""
+        }应用代码，请查看右侧预览。`,
+      },
     ]);
   };
 
   const handleSendMessage = async () => {
     if (!userInput.trim() || isGenerating) return;
-    
+
     // 添加用户消息
     const newMessage = { role: "user", content: userInput };
-    setChatMessages(prev => [...prev, newMessage]);
-    
+    setChatMessages((prev) => [...prev, newMessage]);
+
     // 清空输入框
     setUserInput("");
-    
+
     // 生成代码
     await generateCode(userInput);
   };
@@ -352,62 +358,134 @@ h1 {
   return (
     <div style={{ display: "flex", height: "95vh", overflow: "hidden" }}>
       {/* 左侧聊天区域 */}
-      <div style={{ 
-        width: "30%", 
-        borderRight: "1px solid #ddd", 
-        display: "flex", 
-        flexDirection: "column",
-        backgroundColor: "#f5f5f5"
-      }}>
-        <div style={{ 
-          flex: 1, 
-          overflowY: "auto", 
-          padding: "20px",
+      <div
+        style={{
+          width: "30%",
+          borderRight: "1px solid #ddd",
+          backgroundColor: "#fff",
+          borderRadius: "20px",
           display: "flex",
           flexDirection: "column",
-          gap: "10px"
-        }}>
-          {chatMessages.map((msg, index) => (
-            <div 
-              key={index} 
+          marginRight: "10px",
+          // backgroundColor: "#f5f5f5"
+        }}
+      >
+        <div
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            padding: "20px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            }}
+          >
+            <img
+              src={"/logo.png"}
               style={{
-                alignSelf: msg.role === "user" ? "flex-end" : "flex-start",
-                backgroundColor: msg.role === "user" ? "#007bff" : "#fff",
-                color: msg.role === "user" ? "#fff" : "#333",
-                padding: "10px 15px",
-                borderRadius: "18px",
-                maxWidth: "80%",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.1)"
+                width: "40px",
+                height: "40px",
+                borderRadius: "10px",
               }}
-            >
-              {msg.content}
+            />
+            <span style={{ fontSize: "18px", marginLeft: "10px" }}>
+              AI编程助手
+            </span>
+          </div>
+          <div
+            style={{
+              width: "90%",
+              height: "1px",
+              backgroundColor: "#E7E7E8",
+              margin: "8px 0",
+            }}
+          ></div>
+          {chatMessages.map((msg, index) => (
+            <div style={{ width: "100%" }}>
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent:
+                    msg.role === "user" ? "flex-end" : "flex-start",
+                }}
+              >
+                {msg.role !== "user" && (
+                  <img
+                    src={"/logo.png"}
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                )}
+                <div
+                  key={index}
+                  style={{
+                    backgroundColor: msg.role === "user" ? "#007bff" : "#fff",
+                    color: msg.role === "user" ? "#fff" : "#333",
+                    padding: "10px 15px",
+                    marginLeft: msg.role === "user" ? "" : "5px",
+                    marginRight: msg.role === "user" ? "5px" : "",
+                    borderRadius: "18px",
+                    maxWidth: "80%",
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+                  }}
+                >
+                  {msg.content}
+                </div>
+                {msg.role == "user" && (
+                  <img
+                    src={"/avatar.png"}
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                )}
+              </div>
             </div>
           ))}
           {isGenerating && (
-            <div style={{
-              alignSelf: "flex-start",
-              backgroundColor: "#fff",
-              color: "#333",
-              padding: "10px 15px",
-              borderRadius: "18px",
-              maxWidth: "80%",
-              boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px"
-            }}>
+            <div
+              style={{
+                alignSelf: "flex-start",
+                backgroundColor: "#fff",
+                color: "#333",
+                padding: "10px 15px",
+                borderRadius: "18px",
+                maxWidth: "80%",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
               <FiRefreshCw style={{ animation: "spin 1s linear infinite" }} />
               正在生成代码...
             </div>
           )}
         </div>
-        
-        <div style={{ 
-          padding: "15px", 
-          borderTop: "1px solid #ddd",
-          display: "flex",
-          backgroundColor: "#fff"
-        }}>
+
+        <div
+          style={{
+            padding: "15px",
+            borderTop: "1px solid #ddd",
+            display: "flex",
+            backgroundColor: "#fff",
+          }}
+        >
           <textarea
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
@@ -416,11 +494,12 @@ h1 {
             style={{
               flex: 1,
               border: "1px solid #ddd",
-              borderRadius: "4px",
+              borderRadius: "10px",
               padding: "10px",
               resize: "none",
               height: "60px",
-              fontFamily: "inherit"
+              fontFamily: "inherit",  
+              outline: "none",
             }}
           />
           <button
@@ -433,15 +512,19 @@ h1 {
               border: "none",
               borderRadius: "4px",
               padding: "0 15px",
-              cursor: isGenerating || !userInput.trim() ? "not-allowed" : "pointer",
-              opacity: isGenerating || !userInput.trim() ? 0.7 : 1
+              width: "40px",
+              height: "40px",
+              marginTop: "10px",
+              cursor:
+                isGenerating || !userInput.trim() ? "not-allowed" : "pointer",
+              opacity: isGenerating || !userInput.trim() ? 0.7 : 1,
             }}
           >
             <FiSend />
           </button>
         </div>
       </div>
-      
+
       {/* 右侧代码编辑和预览区域 */}
       <div style={{ flex: 1 }}>
         <DynamicSandpack
@@ -452,16 +535,20 @@ h1 {
             showTabs: true,
             editorHeight: "100vh",
             visibleFiles: ["/App.js", "/styles.css"],
-            activeFile: "/App.js"
+            activeFile: "/App.js",
           }}
           theme="light"
         />
       </div>
-      
+
       <style jsx global>{`
         @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
         }
       `}</style>
     </div>
