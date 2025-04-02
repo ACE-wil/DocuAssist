@@ -1,0 +1,39 @@
+.sandbox-container {
+  display: flex;
+  height: 100vh;
+}
+
+.left-panel {
+  background: #2d2d2d;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.right-panel {
+  flex: 1;
+  background: #1e1e1e;
+}
+
+.file-explorer {
+  padding: 10px;
+  border-top: 1px solid #444;
+}
+
+.file-item {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.preview-section {
+  height: 30vh;
+  border-top: 2px solid #333;
+}
+
+.run-button {
+  background: #4CAF50;
+  padding: 8px 15px;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
