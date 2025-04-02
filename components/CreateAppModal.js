@@ -37,7 +37,7 @@ const customStyles = {
   },
 };
 
-export default function CreateAppModal({ isOpen, onClose }) {
+export default function CreateAppModal({ isOpen, onClose, appId, apptype }) {
   const [appName, setAppName] = useState("");
   const [appDescription, setAppDescription] = useState("");
   const [creatorName, setCreatorName] = useState("");
@@ -230,39 +230,42 @@ export default function CreateAppModal({ isOpen, onClose }) {
               marginTop: "0.5rem",
             }}
           >
-            <div className="form-group">
-              <label>剧情选择</label>
-              <select
-                value={storyType}
-                onChange={(e) => setStoryType(e.target.value)}
-                style={{
-                  padding: "0.5rem",
-                  borderRadius: "4px",
-                  border: "1px solid #ddd",
-                  width: "100%",
-                }}
-              >
-                <option value="adventure">冒险片</option>
-                <option value="enlightenment">启蒙片</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>类型选择</label>
-              <select
-                value={gameType}
-                onChange={(e) => setGameType(e.target.value)}
-                style={{
-                  padding: "0.5rem",
-                  borderRadius: "4px",
-                  border: "1px solid #ddd",
-                  width: "100%",
-                }}
-              >
-                <option value="english">英语</option>
-                {/* <option value="chinese">中文</option> */}
-              </select>
-            </div>
+            {apptype !== "E002" && (
+              <div className="form-group">
+                <label>剧情选择</label>
+                <select
+                  value={storyType}
+                  onChange={(e) => setStoryType(e.target.value)}
+                  style={{
+                    padding: "0.5rem",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd",
+                    width: "100%",
+                  }}
+                >
+                  <option value="adventure">冒险片</option>
+                  <option value="enlightenment">启蒙片</option>
+                </select>
+              </div>
+            )}
+            {apptype !== "E002" && (
+              <div className="form-group">
+                <label>类型选择</label>
+                <select
+                  value={gameType}
+                  onChange={(e) => setGameType(e.target.value)}
+                  style={{
+                    padding: "0.5rem",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd",
+                    width: "100%",
+                  }}
+                >
+                  <option value="english">英语</option>
+                  {/* <option value="chinese">中文</option> */}
+                </select>
+              </div>
+            )}
           </div>
 
           <div

@@ -37,6 +37,7 @@ export default function RecommendedTemplates() {
   const [templates, setTemplates] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAppId, setSelectedAppId] = useState(null);
+  const [selectType, setSelectType] = useState("");
   const [file, setFile] = useState(null);
   const [option, setOption] = useState("");
   const [difficulty, setDifficulty] = useState("medium");
@@ -65,8 +66,9 @@ export default function RecommendedTemplates() {
     fetchData();
   }, [dispatch]);
 
-  const handleBoxClick = (appId) => {
+  const handleBoxClick = (appId, type) => {
     setSelectedAppId(appId);
+    setSelectType(type);
     setIsCreateAppModalOpen(true);
   };
 
@@ -95,7 +97,7 @@ export default function RecommendedTemplates() {
           <div
             key={index}
             className={styles.template}
-            onClick={() => handleBoxClick(template.appId)}
+            onClick={() => handleBoxClick(template.appId,template.type)}
             style={{ cursor: "pointer" }}
           >
             <img
@@ -379,6 +381,8 @@ export default function RecommendedTemplates() {
       <CreateAppModal
         isOpen={isCreateAppModalOpen}
         onClose={() => setIsCreateAppModalOpen(false)}
+        appId={selectedAppId}
+        apptype={selectType}
       />
     </div>
   );
