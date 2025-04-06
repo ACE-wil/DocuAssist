@@ -63,7 +63,6 @@ export default function GameSandbox() {
   }, [chatMessages]);
 
   // 智能代码生成函数
-  // 修改generateCode函数中的API调用部分
   const generateCode = async (prompt) => {
     setIsGenerating(true);
 
@@ -77,7 +76,11 @@ export default function GameSandbox() {
         },
       ]);
 
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      // 启动API请求，但不等待它完成
+      const apiPromise = fetchCodeFromAPI(prompt, chatMessages, selectedModel);
+
+      // 异步显示各个步骤的消息
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
       // 步骤2: 生成代码框架
       setChatMessages((prev) => [
@@ -88,39 +91,9 @@ export default function GameSandbox() {
         },
       ]);
 
-      // 步骤3: 调用API生成代码 - 一次性请求所有代码
-      const apiEndpoint =
-        selectedModel === "qwen"
-          ? `${process.env.NEXT_PUBLIC_API_URL}/api/chat-qwen`
-          : `${process.env.NEXT_PUBLIC_API_URL}/api/chat`;
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
-      const response = await fetch(apiEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          // 修改请求参数格式，适配千问API
-          messages: [
-            ...chatMessages.filter(
-              (msg) =>
-                !msg.content.includes("正在") &&
-                !msg.content.includes("已为您生成代码")
-            ),
-            {
-              role: "user",
-              content: `请根据以下需求生成React代码：${prompt}。
-          请按照以下格式返回React代码，返回App.js和styles.css：
-          1. App.js代码：\`\`\`jsx\n代码内容\n\`\`\`
-          2. styles.css代码：\`\`\`css\n代码内容\n\`\`\``,
-            },
-          ],
-        }),
-      });
-
-      const data = await response.json();
-
-      // 步骤4: 提取App.js代码
+      // 步骤3: 生成应用逻辑
       setChatMessages((prev) => [
         ...prev,
         {
@@ -129,13 +102,9 @@ export default function GameSandbox() {
         },
       ]);
 
-      let appJsCode = "";
-      const appJsMatch =
-        data.response.match(/```jsx\s*([\s\S]*?)\s*```/) ||
-        data.response.match(/```javascript\s*([\s\S]*?)\s*```/) ||
-        data.response.match(/```js\s*([\s\S]*?)\s*```/);
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
-      // 步骤5: 提取CSS代码
+      // 步骤4: 设计界面样式
       setChatMessages((prev) => [
         ...prev,
         {
@@ -144,23 +113,33 @@ export default function GameSandbox() {
         },
       ]);
 
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
+      // 步骤5: 优化代码
+      setChatMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "正在优化代码...",
+        },
+      ]);
+
+      // 等待API响应完成
+      const data = await apiPromise;
+
+      // 处理API返回的代码
+      let appJsCode = "";
+      const appJsMatch =
+        data.response.match(/```jsx\s*([\s\S]*?)\s*```/) ||
+        data.response.match(/```javascript\s*([\s\S]*?)\s*```/) ||
+        data.response.match(/```js\s*([\s\S]*?)\s*```/);
+
       let cssCode = "";
       const cssMatch = data.response.match(/```css\s*([\s\S]*?)\s*```/);
 
       if (appJsMatch && appJsMatch[1] && cssMatch && cssMatch[1]) {
         appJsCode = appJsMatch[1];
         cssCode = cssMatch[1];
-
-        // 步骤6: 优化和组装代码
-        setChatMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: "正在优化代码...",
-          },
-        ]);
-
-        await new Promise((resolve) => setTimeout(resolve, 800));
 
         // 设置完整代码
         const newCode = {
@@ -174,7 +153,7 @@ export default function GameSandbox() {
         setCodeHistory((prev) => [...prev.slice(0, historyIndex + 1), newCode]);
         setHistoryIndex(historyIndex + 1);
 
-        // 步骤7: 完成并通知用户
+        // 完成并通知用户
         setChatMessages((prev) => [
           ...prev,
           {
@@ -203,6 +182,40 @@ export default function GameSandbox() {
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  // 新增：从API获取代码的函数
+  const fetchCodeFromAPI = async (prompt, chatMessages, selectedModel) => {
+    const apiEndpoint =
+      selectedModel === "qwen"
+        ? `${process.env.NEXT_PUBLIC_API_URL}/api/chat-qwen`
+        : `${process.env.NEXT_PUBLIC_API_URL}/api/chat`;
+
+    const response = await fetch(apiEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        // 修改请求参数格式，适配千问API
+        messages: [
+          ...chatMessages.filter(
+            (msg) =>
+              !msg.content.includes("正在") &&
+              !msg.content.includes("已为您生成代码")
+          ),
+          {
+            role: "user",
+            content: `请根据以下需求生成React代码：${prompt}。
+        请按照以下格式返回React代码，返回App.js和styles.css：
+        1. App.js代码：\`\`\`jsx\n代码内容\n\`\`\`
+        2. styles.css代码：\`\`\`css\n代码内容\n\`\`\``,
+          },
+        ],
+      }),
+    });
+
+    return await response.json();
   };
 
   // 本地代码生成备用方案
