@@ -186,10 +186,9 @@ export default function GameSandbox() {
 
   // 新增：从API获取代码的函数
   const fetchCodeFromAPI = async (prompt, chatMessages, selectedModel) => {
-    const apiEndpoint =
-      selectedModel === "qwen"
-        ? `${process.env.NEXT_PUBLIC_API_URL}/api/chat-qwen`
-        : `${process.env.NEXT_PUBLIC_API_URL}/api/chat`;
+    const apiEndpoint = selectedModel.includes("qwen")
+      ? `${process.env.NEXT_PUBLIC_API_URL}/api/chat-qwen`
+      : `${process.env.NEXT_PUBLIC_API_URL}/api/chat`;
 
     const response = await fetch(apiEndpoint, {
       method: "POST",
@@ -197,6 +196,7 @@ export default function GameSandbox() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        model: selectedModel,
         // 修改请求参数格式，适配千问API
         messages: [
           ...chatMessages.filter(
@@ -644,7 +644,21 @@ h1 {
               border: "1px solid #ddd",
             }}
           >
-            <option value="qwen">千问接口</option>
+            <option value="qwen-coder-plus-latest">
+              qwen-coder-plus-latest
+            </option>
+            <option value="qwen2.5-coder-32b-instruct">
+              qwen2.5-Coder-32B
+            </option>
+            <option value="qwen-turbo">qwen-turbo</option>
+            <option value="qwen-plus">qwen-plus</option>
+            <option value="qvq-max-2025-03-25">qvq-max-2025-03-25</option>
+            <option value="qwq-plus-latest">qwq-plus-latest</option>
+            <option value="deepseek-v3">deepseek-v3</option>
+            <option value="chatglm3-6b">chatglm3-6b</option>
+            <option value="llama3.3-70b-instruct">llama3.3-70b-instruct</option>
+            <option value="yi-large">yi-large</option>
+
             {/* <option value="default">智谱接口</option> */}
           </select>
         </div>
