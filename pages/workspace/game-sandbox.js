@@ -48,7 +48,7 @@ export default function GameSandbox() {
   const [codeHistory, setCodeHistory] = useState([initialCode]);
   const [historyIndex, setHistoryIndex] = useState(0);
   const chatContainerRef = useRef(null);
-  const [selectedModel, setSelectedModel] = useState("qwen"); // 添加模型选择状态
+  const [selectedModel, setSelectedModel] = useState("qwen-coder-plus-latest"); // 添加模型选择状态
 
   useEffect(() => {
     dispatch(setLoading(false));
@@ -62,67 +62,64 @@ export default function GameSandbox() {
     }
   }, [chatMessages]);
 
-  // 智能代码生成函数
+  // 智能代码生成函数// 智能代码生成函数
   const generateCode = async (prompt) => {
     setIsGenerating(true);
 
     try {
-      // 步骤1: 分析用户需求
+      // 添加一个状态消息，后续会不断更新这条消息
       setChatMessages((prev) => [
         ...prev,
         {
           role: "assistant",
           content: "正在分析您的需求...",
+          isProcessing: true, // 标记为处理中的消息
         },
       ]);
 
       // 启动API请求，但不等待它完成
       const apiPromise = fetchCodeFromAPI(prompt, chatMessages, selectedModel);
 
-      // 异步显示各个步骤的消息
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      // 异步更新状态消息
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      setChatMessages((prev) => {
+        const newMessages = [...prev];
+        const lastIndex = newMessages.length - 1;
+        if (newMessages[lastIndex].isProcessing) {
+          newMessages[lastIndex].content = "正在设计应用结构...";
+        }
+        return newMessages;
+      });
 
-      // 步骤2: 生成代码框架
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "正在设计应用结构...",
-        },
-      ]);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      setChatMessages((prev) => {
+        const newMessages = [...prev];
+        const lastIndex = newMessages.length - 1;
+        if (newMessages[lastIndex].isProcessing) {
+          newMessages[lastIndex].content = "正在生成应用逻辑...";
+        }
+        return newMessages;
+      });
 
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      setChatMessages((prev) => {
+        const newMessages = [...prev];
+        const lastIndex = newMessages.length - 1;
+        if (newMessages[lastIndex].isProcessing) {
+          newMessages[lastIndex].content = "正在设计界面样式...";
+        }
+        return newMessages;
+      });
 
-      // 步骤3: 生成应用逻辑
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "正在生成应用逻辑...",
-        },
-      ]);
-
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
-      // 步骤4: 设计界面样式
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "正在设计界面样式...",
-        },
-      ]);
-
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
-      // 步骤5: 优化代码
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "正在优化代码...",
-        },
-      ]);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      setChatMessages((prev) => {
+        const newMessages = [...prev];
+        const lastIndex = newMessages.length - 1;
+        if (newMessages[lastIndex].isProcessing) {
+          newMessages[lastIndex].content = "正在优化代码...";
+        }
+        return newMessages;
+      });
 
       // 等待API响应完成
       const data = await apiPromise;
@@ -153,29 +150,39 @@ export default function GameSandbox() {
         setCodeHistory((prev) => [...prev.slice(0, historyIndex + 1), newCode]);
         setHistoryIndex(historyIndex + 1);
 
-        // 完成并通知用户
-        setChatMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content:
-              "已为您生成代码，请查看右侧预览。您可以继续提问或要求修改。",
-          },
-        ]);
+        // 更新最后的处理消息为完成消息
+        setChatMessages((prev) => {
+          const newMessages = [...prev];
+          const lastIndex = newMessages.length - 1;
+          if (newMessages[lastIndex].isProcessing) {
+            newMessages[lastIndex] = {
+              role: "assistant",
+              content:
+                "已为您生成代码，请查看右侧预览。您可以继续提问或要求修改。",
+              isProcessing: false,
+            };
+          }
+          return newMessages;
+        });
       } else {
         throw new Error("无法解析代码");
       }
     } catch (error) {
       console.error("代码生成出错:", error);
 
-      // 添加错误消息并说明正在尝试备用方案
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "抱歉，代码生成过程中遇到了问题。正在尝试备用方案...",
-        },
-      ]);
+      // 更新最后的处理消息为错误消息
+      setChatMessages((prev) => {
+        const newMessages = [...prev];
+        const lastIndex = newMessages.length - 1;
+        if (newMessages[lastIndex].isProcessing) {
+          newMessages[lastIndex] = {
+            role: "assistant",
+            content: "抱歉，代码生成过程中遇到了问题。正在尝试备用方案...",
+            isProcessing: false,
+          };
+        }
+        return newMessages;
+      });
 
       // 使用备用方案
       await fallbackCodeGeneration(prompt);
@@ -186,9 +193,7 @@ export default function GameSandbox() {
 
   // 新增：从API获取代码的函数
   const fetchCodeFromAPI = async (prompt, chatMessages, selectedModel) => {
-    const apiEndpoint = selectedModel.includes("qwen")
-      ? `${process.env.NEXT_PUBLIC_API_URL}/api/chat-qwen`
-      : `${process.env.NEXT_PUBLIC_API_URL}/api/chat`;
+    const apiEndpoint = `${process.env.NEXT_PUBLIC_API_URL}/api/chat-qwen`;
 
     const response = await fetch(apiEndpoint, {
       method: "POST",
@@ -687,7 +692,7 @@ h1 {
                     msg.role === "user" ? "flex-end" : "flex-start",
                 }}
               >
-                {msg.role !== "user" && (
+                {msg.role !== "user" && !msg.isProcessing && (
                   <img
                     src={"/logo.png"}
                     style={{
@@ -703,7 +708,12 @@ h1 {
                     backgroundColor: msg.role === "user" ? "#007bff" : "#fff",
                     color: msg.role === "user" ? "#fff" : "#333",
                     padding: "10px 15px",
-                    marginLeft: msg.role === "user" ? "" : "5px",
+                    marginLeft:
+                      msg.role === "user"
+                        ? ""
+                        : msg.content.includes("正在")
+                        ? "0px"
+                        : "5px",
                     marginRight: msg.role === "user" ? "5px" : "",
                     borderRadius: "18px",
                     maxWidth: "80%",
@@ -770,6 +780,7 @@ h1 {
               height: "40px",
               lineHeight: "20px",
               outline: "none",
+              overflow: "hidden",
             }}
             disabled={isGenerating}
           />
