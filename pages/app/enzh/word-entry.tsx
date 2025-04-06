@@ -198,7 +198,7 @@ const itemBox = [
             </li>
             <li>
               <svg
-                t="1734070669291"
+                data-t="1734070669291"
                 className="icon"
                 viewBox="0 0 1024 1024"
                 version="1.1"
@@ -232,7 +232,7 @@ const itemBox = [
             </li>
             <li>
               <svg
-                t="1734070760582"
+                data-t="1734070760582"
                 className="icon"
                 viewBox="0 0 1024 1024"
                 version="1.1"
