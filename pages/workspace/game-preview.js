@@ -32,7 +32,7 @@ export default function GamePreview() {
       ],
       npcName: "绿皮书",
       npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
-      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
+      backgroundVideo: "/lvpishu.mp4",
     },
     {
       word: "accessory",
@@ -45,7 +45,7 @@ export default function GamePreview() {
       ],
       npcName: "绿皮书",
       npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
-      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
+      backgroundVideo: "/lvpishu.mp4",
     },
     {
       word: "accident",
@@ -58,7 +58,7 @@ export default function GamePreview() {
       ],
       npcName: "绿皮书",
       npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
-      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
+      backgroundVideo: "/lvpishu.mp4",
     },
     {
       word: "accidental",
@@ -71,7 +71,7 @@ export default function GamePreview() {
       ],
       npcName: "绿皮书",
       npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
-      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
+      backgroundVideo: "/lvpishu.mp4",
     },
     {
       word: "accompany",
@@ -84,7 +84,7 @@ export default function GamePreview() {
       ],
       npcName: "绿皮书",
       npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
-      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
+      backgroundVideo: "/lvpishu.mp4",
     },
     {
       word: "accomplish",
@@ -97,7 +97,7 @@ export default function GamePreview() {
       ],
       npcName: "绿皮书",
       npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
-      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
+      backgroundVideo: "/lvpishu.mp4",
     },
     {
       word: "accord",
@@ -110,7 +110,7 @@ export default function GamePreview() {
       ],
       npcName: "绿皮书",
       npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
-      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
+      backgroundVideo: "/lvpishu.mp4",
     },
     {
       word: "accordance",
@@ -123,7 +123,7 @@ export default function GamePreview() {
       ],
       npcName: "绿皮书",
       npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
-      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
+      backgroundVideo: "/lvpishu.mp4",
     },
     {
       word: "afraid",
@@ -136,7 +136,7 @@ export default function GamePreview() {
       ],
       npcName: "绿皮书",
       npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
-      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
+      backgroundVideo: "/lvpishu.mp4",
     },
     {
       word: "punish",
@@ -149,7 +149,7 @@ export default function GamePreview() {
       ],
       npcName: "绿皮书",
       npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
-      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
+      backgroundVideo: "/lvpishu.mp4",
     },
     {
       word: "none",
@@ -157,7 +157,7 @@ export default function GamePreview() {
       options: [{ text: "重玩游戏", isCorrect: "true", nextScene: 0 }],
       npcName: "绿皮书",
       npcAvatar: "http://cdn.docuparser.top/avatar/lvpishu.jpeg",
-      backgroundVideo: "http://cdn.docuparser.top/video/lvpishu.mp4",
+      backgroundVideo: "/lvpishu.mp4",
     },
   ];
 
