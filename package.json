@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
-    "@codesandbox/sandpack-react": "^2.20.0",
+    "@babel/runtime": "^7.27.0",
+    "@codesandbox/sandpack-react": "^2.6.9",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.13.3",
     "@emotion/server": "^11.11.0",
