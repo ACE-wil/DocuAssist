@@ -951,11 +951,20 @@ h1 {
               editorHeight: "90vh",
               editorWidthPercentage: 50,
               activeFile: activeFile,
+              bundlerURL: "https://sandpack-bundler.pages.dev",
+              startRoute: "/",
+              timeout: 30000,
+              showLoadingScreen: true, // 添加加载界面
+              recompileMode: "delayed", // 延迟重新编译
+              recompileDelay: 500, // 重新编译延迟时间
             }}
             customSetup={{
               dependencies: {
                 react: "^18.0.0",
                 "react-dom": "^18.0.0",
+              },
+              env: {
+                NODE_ENV: "development", // 确保使用开发环境
               },
             }}
           />
