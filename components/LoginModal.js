@@ -47,6 +47,7 @@ export default function LoginModal({ isOpen, onClose }) {
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
   const [isLoading, setIsLoading] = useState(false);
+  const [isRegisterMode, setIsRegisterMode] = useState(false); // 添加注册模式状态
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,25 +66,66 @@ export default function LoginModal({ isOpen, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.username.trim() || !formData.password.trim()) {
-      showToastMessage("请填写完整的登录信息", "error");
+      showToastMessage("请填写完整的信息", "error");
       return;
     }
 
     setIsLoading(true);
     try {
-      // 这里添加实际的登录逻辑
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // 模拟请求
-      showToastMessage("登录成功!");
-      localStorage.setItem("token", "your-token");
-      if (rememberMe) {
-        localStorage.setItem("username", formData.username);
+      // 根据当前模式选择API端点
+      const endpoint = isRegisterMode ? "register" : "login";
+      const apiEndpoint = `${process.env.NEXT_PUBLIC_API_URL}/api/${endpoint}`;
+      
+      const response = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password
+        }),
+      });
+
+      // 检查响应类型
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("服务器返回了非JSON格式的响应，请检查API端点是否正确");
       }
-      setTimeout(() => onClose(), 1000);
+
+      const data = await response.json();
+      
+      if (data.status === 'error') {
+        throw new Error(data.message);
+      }
+      
+      if (isRegisterMode) {
+        // 注册成功后切换到登录模式
+        showToastMessage("注册成功，请登录!");
+        setIsRegisterMode(false);
+        setFormData({username: formData.username, password: ""});
+      } else {
+        // 登录成功，保存token和用户信息
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.user.id);
+        localStorage.setItem("username", data.user.username);
+        
+        showToastMessage("登录成功!");
+        setTimeout(() => onClose(), 1000);
+      }
     } catch (error) {
-      showToastMessage(error.message || "登录失败,请重试", "error");
+      console.error(`${isRegisterMode ? "注册" : "登录"}错误:`, error);
+      showToastMessage(error.message || `${isRegisterMode ? "注册" : "登录"}失败,请重试`, "error");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // 切换登录/注册模式
+  const toggleMode = () => {
+    setIsRegisterMode(!isRegisterMode);
+    setFormData({username: "", password: ""});
   };
 
   return (
@@ -106,8 +148,8 @@ export default function LoginModal({ isOpen, onClose }) {
           <button onClick={onClose} className="close-button">
             ×
           </button>
-          <h2>欢迎回来</h2>
-          <p className="subtitle">请登录您的账号</p>
+          <h2>{isRegisterMode ? "创建账号" : "欢迎回来"}</h2>
+          <p className="subtitle">{isRegisterMode ? "请填写注册信息" : "请登录您的账号"}</p>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -129,36 +171,41 @@ export default function LoginModal({ isOpen, onClose }) {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="请输入密码"
+                placeholder={isRegisterMode ? "请设置密码" : "请输入密码"}
                 disabled={isLoading}
               />
             </div>
 
-            <div className="form-options">
-              <label className="remember-me">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  disabled={isLoading}
-                />
-                <span>记住我</span>
-              </label>
-              <a href="/forgot-password" className="forgot-password">
-                忘记密码?
-              </a>
-            </div>
+            {!isRegisterMode && (
+              <div className="form-options">
+                <label className="remember-me">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    disabled={isLoading}
+                  />
+                  <span>记住我</span>
+                </label>
+                <a href="/forgot-password" className="forgot-password">
+                  忘记密码?
+                </a>
+              </div>
+            )}
 
             <button
               type="submit"
               className={`submit-button ${isLoading ? "loading" : ""}`}
               disabled={isLoading}
             >
-              {isLoading ? "登录中..." : "登录"}
+              {isLoading ? (isRegisterMode ? "注册中..." : "登录中...") : (isRegisterMode ? "注册" : "登录")}
             </button>
 
             <div className="register-link">
-              还没有账号? <a href="/register">立即注册</a>
+              {isRegisterMode ? "已有账号?" : "还没有账号?"} 
+              <a href="#" onClick={(e) => {e.preventDefault(); toggleMode();}}>
+                {isRegisterMode ? "立即登录" : "立即注册"}
+              </a>
             </div>
           </form>
         </div>
@@ -293,6 +340,11 @@ export default function LoginModal({ isOpen, onClose }) {
             color: ${theme.link.primary};
             text-decoration: none;
             margin-left: 0.5rem;
+            cursor: pointer;
+          }
+
+          .register-link a:hover {
+            text-decoration: underline;
           }
 
           .close-button {
@@ -310,6 +362,15 @@ export default function LoginModal({ isOpen, onClose }) {
 
           .close-button:hover {
             color: ${theme.text.primary};
+          }
+
+          /* 添加模式切换动画 */
+          .login-container {
+            transition: height 0.3s ease-out;
+          }
+
+          form {
+            transition: opacity 0.2s ease-out;
           }
         `}</style>
       </Modal>

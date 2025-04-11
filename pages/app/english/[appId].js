@@ -56,7 +56,9 @@ export default function EnglishApp() {
     const fetchScenes = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/get-my-apps`
+          `${
+            process.env.NEXT_PUBLIC_API_URL
+          }/api/get-my-apps?user_id=${localStorage.getItem("userId")}`
         );
 
         const scenesData = response.data.myApps.find(

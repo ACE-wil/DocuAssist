@@ -78,7 +78,7 @@ export default function CreateAppModal({ isOpen, onClose, appId, apptype }) {
     formData.append("creator_name", creatorName);
     formData.append("story_type", storyType);
     formData.append("game_type", gameType);
-
+    formData.append("user_id", localStorage.getItem("userId"));
     if (appIcon) formData.append("app_avatar", appIcon);
     if (docFile) formData.append("doc_file", docFile);
 
